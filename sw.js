@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='pequenos-exploradores-mobile-v2';
+const CACHE='pequenos-exploradores-mobile-v3';
 const ROOT=new URL('./',self.location.href).href;
 const SHELL=['./','index.html','style.css','expansion.css','discovery.css','mobile.css','art.js','app.js','adventures.js','discovery.js','mobile.js','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png','icons/icon-maskable-512.png','icons/apple-touch-icon.png'].map(p=>new URL(p,ROOT).href);
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL))));
