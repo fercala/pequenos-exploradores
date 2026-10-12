@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "Pequeños Exploradores",
+  "short_name": "Exploradores",
+  "description": "Explora la selva, el desierto y el mar con tu compañero. Aprende jugando con el mouse o la pantalla táctil.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fffdf3",
+  "theme_color": "#244c3b",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
