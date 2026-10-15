@@ -1,5 +1,7 @@
 # VillaChispa
 
+[**Jugar online e instalar**](https://fercala.github.io/pequenos-exploradores/villachispa/)
+
 Primera versión jugable de un pueblo educativo 2D con profundidad visual para 3–6 años. Recursos gráficos vectoriales originales, sin paquetes ni servicios de producción externos.
 
 ## Contenido real de esta versión
@@ -27,6 +29,8 @@ npm run dev
 Abrir la dirección que muestra el servidor. Ratón o dedo para objetos; botones junto al escenario para una alternativa sin arrastre. `Escape` vuelve al pueblo. Los menús y botones se manejan también con teclado; el mundo visual no se presenta como plenamente accesible a lectores de pantalla.
 
 ## GitHub Pages
+
+Esta entrega ya está publicada en la carpeta `villachispa/` de `fercala/pequenos-exploradores`. Véase `PUBLICACION.md`. Las instrucciones siguientes sirven si se desea moverla después a un repositorio dedicado.
 
 1. Subir **el contenido de esta carpeta** a un repositorio dedicado, en su rama `main`.
 2. En Settings → Pages, elegir GitHub Actions como origen.

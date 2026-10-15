@@ -22,6 +22,6 @@
 
 La emulación no sustituye la prueba en un teléfono físico. No se han verificado instalación real en iOS o Android, Safari, Firefox, calidad de voces españolas en cada dispositivo, accesibilidad completa con lector de pantalla, uso con niños ni resultados de aprendizaje. Los recorridos completos usaron botones alternativos y la prueba específica de interacción añadió arrastre y orientación sostenida con ratón.
 
-La publicación en GitHub Pages necesita un repositorio de destino. El proyecto contiene el flujo de publicación y sus rutas relativas, pero una compilación local no prueba que exista una web pública.
+Publicación completada y comprobada: https://fercala.github.io/pequenos-exploradores/villachispa/ . El despliegue de GitHub Pages terminó correctamente. La prueba `tests/hosted.mjs` verificó que los archivos públicos coinciden con la entrega local, que la aventura guarda y se recupera, que el ámbito de la PWA es la subcarpeta correcta, que la recarga sin conexión funciona y que una instalación del juego contenedor permite abrir VillaChispa. No hubo excepciones de JavaScript en esa comprobación.
 
 La ejecución de `npm test` requiere únicamente Node.js. `tests/browser.mjs` utiliza Playwright y Chrome del entorno donde se desarrolló; para otro entorno configurar `VILLA_PLAYWRIGHT`, `VILLA_BROWSER` y, si procede, `VILLA_URL`.
