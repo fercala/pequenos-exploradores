@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f2e8">
+  <meta name="description" content="Un pequeño pueblo, grandes aventuras. Aprende, ayuda y construye tu mundo de juguete.">
+  <title>VillaChispa · Un mundo por descubrir</title>
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="VillaChispa, volver al pueblo"><span class="brand-mark" aria-hidden="true">✳</span><span>Villa<span class="brand-accent">Chispa</span><small>UN MUNDO POR DESCUBRIR</small></span></a>
+    <div class="top-actions"><button id="age-button" class="level-button" aria-label="Cambiar nivel">3 años <span>⌄</span></button><span class="coin-balance" aria-label="Monedas disponibles"><span class="coin" aria-hidden="true">✦</span><b id="balance">5</b></span><button id="sound-button" class="round-button" aria-label="Desactivar voz y sonidos">♪</button><button id="adult-button" class="round-button" aria-label="Zona de personas adultas">⚙</button></div>
+  </header>
+  <main>
+    <div class="intro"><div><span class="eyebrow" id="eyebrow">TU PEQUEÑO GRAN MUNDO</span><h1 id="page-title">Hoy empieza una aventura.</h1><p id="page-description">Un pueblo lleno de cosas por hacer. ¿Adónde vamos?</p></div><div class="welcome-tag"><span class="sun-symbol">☀</span><span>Sin prisas.<br><strong>A tu manera.</strong></span></div></div>
+    <section class="play-layout" aria-label="Zona de juego">
+      <div class="world-wrap"><canvas id="world" width="1200" height="760" aria-label="Pueblo de VillaChispa. Usa también los botones de lugares o acciones situados junto al escenario."></canvas><div class="world-badge" id="world-badge"><span></span> TU PUEBLO ESTÁ DESPIERTO</div><button id="help-button" class="help-button" aria-label="Escuchar la instrucción y ver una pista">? <span>Una pista</span></button><div class="scene-caption" id="scene-caption">Elige un lugar y entra a jugar</div><div class="scene-progress" id="scene-progress" hidden></div></div>
+      <aside class="companion"><div class="guide-heading"><span class="guide-avatar" aria-hidden="true"><i></i></span><div><b>Luma</b><span>TU COMPAÑERA DE AVENTURAS</span></div><button id="repeat-button" class="tiny-button" aria-label="Repetir instrucción">↻</button></div><div id="guide-message" class="guide-message" aria-live="polite">¡Hola! Este es tu pueblo. Podemos ayudar a los bomberos o descubrir los días de la semana.</div><div id="action-list" class="action-list"></div><div id="guide-footer" class="guide-footer"><span class="small-star">✳</span> Cada pequeño paso cuenta.</div></aside>
+    </section>
+    <nav class="bottom-nav" aria-label="Lugares del juego"><button data-nav="map" class="active"><span aria-hidden="true">⌂</span>Mi pueblo</button><button data-nav="fire"><span aria-hidden="true">♜</span>Bomberos</button><button data-nav="week"><span aria-hidden="true">▦</span>La semana</button><button data-nav="park"><span aria-hidden="true">♧</span>Mi parque</button><button data-nav="shop"><span aria-hidden="true">◇</span>La tienda</button></nav>
+    <footer class="page-footer"><span>HECHO PARA EXPLORAR, IMAGINAR Y APRENDER</span><button id="install-button" hidden>Instalar el juego ↗</button><span id="connection-status">Guardado en este dispositivo</span></footer>
+  </main>
+  <dialog id="modal"><div id="modal-content"></div></dialog>
+  <div id="toast" role="status" class="toast"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

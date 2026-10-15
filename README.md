@@ -15,3 +15,9 @@ El avance se guarda en ese navegador y dispositivo. El avance del sitio anterior
 ## Publicación
 
 GitHub Pages publica desde la rama `main`, carpeta raíz. No requiere compilación. Los recursos del juego son locales. Al cambiar archivos, aumenta la versión de la caché en `sw.js`.
+
+## VillaChispa
+
+[**Jugar a VillaChispa**](https://fercala.github.io/pequenos-exploradores/villachispa/)
+
+Nuevo pueblo de aventuras para 3–6 años: bomberos, calendario semanal, parque creativo y juguetes con monedas. Sus archivos y documentación están en `villachispa/`.
