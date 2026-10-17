@@ -69,7 +69,19 @@ Evidencia detallada: [MEJORAS-V3.md](MEJORAS-V3.md), [MEJORAS-V4.md](MEJORAS-V4.
 
 ## Mejoras automáticas posteriores
 
-No hay todavía mejoras automáticas registradas al inicializar este archivo. El siguiente ID disponible es **AUTO-001**. Antes de asignarlo, comprueba `main` y las propuestas abiertas por si una ejecución posterior ya lo reservó.
+Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las propuestas abiertas. Reanuda primero cualquier mejora pendiente.
+
+### AUTO-001 · Conservar el combustible de la nave durante la exploración exterior
+
+- **Inicio / última actualización:** 2026-10-17 22:23 UTC / 22:25 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** `mission-control.js` envía el mismo deslizador de propulsión a `consumeResources` tanto en nave como a pie, en rover y durante un paseo espacial. `systems.js` lo aplica siempre al depósito de la nave. Así, con recursos limitados, moverse fuera de ella gasta su combustible aunque permanezca estacionada.
+- **Relación:** O4-010 (recursos), O4-008 (mochila), O2-007 (caminata) y O2-008 (rover). Es una corrección del consumo por vehículo; no una nueva implementación de esas funciones.
+- **Criterio de aceptación:** caminar, conducir el rover o propulsarse con la mochila no reduce el combustible de la nave; la mochila sigue consumiendo su propia reserva; el vuelo y el piloto automático de la nave mantienen su consumo. Pausa, acoplamiento y guardados conservan su comportamiento.
+- **Rama prevista:** `codex/orbita-auto-001-combustible-exterior`.
+- **Cambio:** `systems.js` descuenta combustible solo cuando el vehículo activo es la nave; `mission-control.js` transmite ese vehículo y explica la separación de reservas en Recursos. Versión 0.4.1; caché propia v7 para distribuir el arreglo sin conexión.
+- **Validación:** 44 pruebas satisfactorias y construcción estática. Dos regresiones nuevas cubren caminata, rover y EVA, los tres modelos, marcha atrás, consumo de vuelo/piloto y reserva propia de la mochila. Reproducción anterior: 10 s de mochila al máximo bajaban el depósito de 100 a 98,2 %. En navegador, después del paseo el depósito permanece en 100,0 %, la mochila baja al 97 % y la energía sigue activa (99,7 %). Sin errores de consola. Texto revisado en 390 × 844; teléfonos físicos pendientes.
+- **Propuesta / commit / publicación:** pendientes de incorporación y despliegue; se completarán con evidencia real.
 
 ### Plantilla de entrada
 

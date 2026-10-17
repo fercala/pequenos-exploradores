@@ -26,8 +26,8 @@ export function cleanCampaign(raw,ids){
  const lesson=LESSONS.some(l=>l.id===raw.lesson)?raw.lesson:null;
  return {...base,ship:SHIPS.some(x=>x.id===raw.ship)?raw.ship:base.ship,advanced:raw.advanced===true,fuel:percent(raw.fuel),energy:percent(raw.energy),systems:Object.fromEntries(['engine','thermal','hull'].map(k=>[k,percent(raw.systems?.[k])])),docked:raw.docked===true,route,routeIndex:Math.trunc(clamp(Number(raw.routeIndex)||0,0,route.length)),routeRunning:false,routePhase:'travel',notebook,storyStep:Math.trunc(clamp(Number(raw.storyStep)||0,0,STORY.length)),storyActive:raw.storyActive===true,lesson,answers:Array.isArray(raw.answers)?raw.answers.filter(a=>a&&LESSONS.some(l=>l.id===a.lesson)&&Number.isInteger(a.question)&&a.question>=0&&a.question<2&&Number.isInteger(a.choice)&&a.choice>=0&&a.choice<3).slice(-30).map(a=>({lesson:a.lesson,question:a.question,choice:a.choice})):[],evaFuel:percent(raw.evaFuel),solarHour:typeof raw.solarHour==='number'&&Number.isFinite(raw.solarHour)?clamp(raw.solarHour,0,24):null};
 }
-export function consumeResources(c,dt,{throttle=0,auto=false,lights=false,docked=false,ship=c.ship}={}){
- if(!c.advanced||docked)return;const model=SHIPS.find(s=>s.id===ship)||SHIPS[0];c.fuel=clamp(c.fuel-dt*(Math.abs(throttle)*.18+(auto?.12:0))*model.burn,0,100);c.energy=clamp(c.energy-dt*(.015+(lights?.04:0)),0,100);
+export function consumeResources(c,dt,{throttle=0,auto=false,lights=false,docked=false,ship=c.ship,vehicle='ship'}={}){
+ if(!c.advanced||docked)return;const model=SHIPS.find(s=>s.id===ship)||SHIPS[0];if(vehicle==='ship')c.fuel=clamp(c.fuel-dt*(Math.abs(throttle)*.18+(auto?.12:0))*model.burn,0,100);c.energy=clamp(c.energy-dt*(.015+(lights?.04:0)),0,100);
 }
 export function thrustFactor(c){return (SHIPS.find(s=>s.id===c.ship)||SHIPS[0]).thrust*(.2+.8*c.systems.engine/100)*(!c.advanced||c.fuel>0&&c.energy>0?1:0);}
 export function damageSystems(c,{impact=0,heat=0,dt=0}){if(impact>12){c.systems.hull=clamp(c.systems.hull-(impact-12)*.5,0,100);c.systems.engine=clamp(c.systems.engine-(impact-12)*.15,0,100);}if(heat>65)c.systems.thermal=clamp(c.systems.thermal-(heat-65)*dt*.015,0,100);}
