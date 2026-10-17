@@ -29,7 +29,7 @@ function makeTexture(id,cloud=false){
           const oval=dx*dx+dy*dy;
           if(oval<1){const t=(1-oval)*.8;col=col.map((v,i)=>v*(1-t)+[166,99,68][i]*t);}
         }
-      }else{const t=clamp(.52+n*.4+f*.17,0,1);col=palettes[id][0].map((v,i)=>v+(palettes[id][1][i]-v)*t);if(id==='mars'&&Math.abs(ny)>.98)col=[211,203,182];}
+      }else{const t=clamp(.52+n*.4+f*.17,0,1);const palette=palettes[id]||palettes.moon;col=palette[0].map((v,i)=>v+(palette[1][i]-v)*t);if(id==='mars'&&Math.abs(ny)>.98)col=[211,203,182];}
       for(let k=0;k<3;k++)img.data[index+k]=clamp(col[k],0,255);img.data[index+3]=alpha;
     }
   }
@@ -87,7 +87,7 @@ export class Universe{
     this.body=new T.Mesh(g,m);this.planetGroup.add(this.body);
     if(p.id==='earth'){const ocean=new T.Mesh(new T.SphereGeometry(599.7,96,64),new T.MeshStandardMaterial({color:'#0c3856',roughness:.35,metalness:.2}));this.planetGroup.add(ocean);this.clouds=new T.Mesh(new T.SphereGeometry(626,96,64),new T.MeshStandardMaterial({map:makeTexture(p.id,true),transparent:true,depthWrite:false,opacity:.72,roughness:1}));this.planetGroup.add(this.clouds);}
     if(p.id==='venus'){this.clouds=new T.Mesh(new T.SphereGeometry(642,96,64),new T.MeshStandardMaterial({color:'#dfc28a',map:makeTexture('saturn'),transparent:true,opacity:1,roughness:1,depthWrite:false}));this.planetGroup.add(this.clouds);}
-    if(!['mercury','moon','europa'].includes(p.id)){const color=p.id==='venus'||p.id==='titan'?'#b58b45':p.id==='mars'?'#b76d42':p.id==='earth'?'#4b9deb':p.id==='saturn'?'#c5b080':p.id==='jupiter'?'#c8a78a':'#73bccd';this.atmos=new T.Mesh(new T.SphereGeometry(p.id==='venus'?657:630,64,48),atmosphere(color));this.planetGroup.add(this.atmos);}
+    if(!['mercury','moon','europa','ganymede','enceladus','pluto','ceres','vesta','comet67p'].includes(p.id)){const color=p.id==='venus'||p.id==='titan'?'#b58b45':p.id==='mars'?'#b76d42':p.id==='earth'?'#4b9deb':p.id==='saturn'?'#c5b080':p.id==='jupiter'?'#c8a78a':'#73bccd';this.atmos=new T.Mesh(new T.SphereGeometry(p.id==='venus'?657:630,64,48),atmosphere(color));this.planetGroup.add(this.atmos);}
     if(['saturn','uranus','neptune','jupiter'].includes(p.id))this.createRings(p);
     this.createLandingZone(p);this.cloudVolumes=null;
     if(!p.rocky){

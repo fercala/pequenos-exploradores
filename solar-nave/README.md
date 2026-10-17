@@ -1,43 +1,37 @@
-> Actualización 0.3.0: mapa de superficie, regiones de relieve LOLA/MOLA, escáner, luces y accesibilidad. Consulta [MEJORAS-V3.md](MEJORAS-V3.md).
+# Órbita 4 · Explorador del sistema solar
 
-# Órbita 2 · Explorador del sistema solar
+Simulador web 3D en español, con mouse o pantalla táctil, instalable y descargable para usar sin conexión. Versión 0.4.0.
 
-Aplicación web 3D en español, manejable con mouse o pantalla táctil. Ocho planetas, tres lunas, vuelo continuo, astronauta, rover, misiones, atlas orbital, audio opcional y fotografía. Versión 0.2.0.
+**Publicado:** https://fercala.github.io/pequenos-exploradores/solar-nave/
 
-## Abrir y desarrollar
+## Explorar
 
-Con Node.js 20 o posterior, hacer doble clic en Iniciar.cmd o ejecutar npm run dev y abrir http://127.0.0.1:4186/solar-nave/ . Los módulos y el service worker necesitan HTTP/HTTPS; no abrir index.html directamente.
+Diecisiete destinos: ocho planetas, Luna, Europa, Titán, Ganímedes, Encélado, Plutón, Ceres, Vesta y cometa 67P. Vuelo continuo, descensos asistidos/manuales, caminata, rover, tres naves, atlas orbital, fotografías y guardado de expedición.
 
-- npm test: física, guardados, importación, órbitas, misiones y caché.
-- npm run build: prepara dist/ con todos los recursos locales.
-- No requiere instalar dependencias, registro, backend ni claves privadas.
+- **Centro de misión:** rutas con escalas, piloto configurable, estación y acoplamiento, paseo espacial, hangar, combustible/energía opcionales, daños y mantenimiento, día/noche, lugares históricos, instrumentos, cuaderno, campaña y modo docente.
+- **Expedición:** salir a pie, conducir el rover, saltar, tomar muestras, sondas, fotografías y exportar/importar partidas.
+- **Superficie:** mapa global, coordenadas y destinos, sitios históricos y regiones medidas de Tycho y monte Olimpo.
+- **Escáner / Luces:** asistencia para aproximación y focos de exploración.
+- **Accesibilidad:** texto grande, contraste, avisos, movimiento reducido y botones para orientar sin gestos.
 
-## Uso
+Las rutas pausan tras un descenso para explorar; usa Reanudar desde siguiente escala. Cambia de nave aterrizado o acoplado. Para pasear en el espacio, desacopla y alcanza una región de vacío; la línea de seguridad permite volver. Los recursos limitados son opcionales. Los daños específicos se activan desde Ajustes → Desafío con daños.
 
-Arrastrar orienta la nave; Propulsión avanza o retrocede; DETENER frena. Flechas y giro completan los seis ejes. En móvil, el joystick desplaza y la zona derecha orienta. Ajustes permite cambiar tamaño, ubicación y distribución para zurdos.
+## Ejecutar en tu ordenador
 
-Destinos inicia un viaje continuo asistido de 16 segundos. Se puede cancelar y continuar manualmente. Crucero permite recorrer distancias grandes y se desactiva al aproximarse a un cuerpo. Descender aterriza automáticamente en los cuerpos rocosos o explora la atmósfera de los gigantes. Para aterrizar manualmente, desplegar el tren, reducir la velocidad y nivelar la nave.
+Necesita Node.js 20 o posterior, sin instalar dependencias. Doble clic en `Iniciar.cmd`, o ejecuta `npm run dev`. Abre la dirección que muestra el servidor. `npm run build` prepara `dist/`; `npm test` ejecuta las pruebas. No abras `index.html` directamente: los módulos y el almacenamiento sin conexión requieren HTTP/HTTPS.
 
-Expedición permite caminar, saltar, desplegar/conducir un rover, medir, tomar muestras y desplegar sondas. Para embarcar, acercarse a menos de 35 unidades de la nave. El rover usa la misma propulsión y admite marcha atrás.
+## Móvil y sin conexión
 
-Atlas 3D ofrece órbitas animadas, pausa/aceleración, escala jugable/científica y enfoque por destino. La cabina ofrece horizonte artificial y telemetría. Fotografía oculta el HUD y permite ajustar exposición y descargar un PNG con destino y fecha.
+PWA con manifiesto e iconos locales. Ajustes ofrece instalación o instrucciones para Safari/iPhone. La descarga inicial, de unos 10 MB, incluye motor, módulos, mapas y datos de elevación. El navegador puede liberar almacenamiento. No es una aplicación de tienda.
 
-## Partida e instalación
+La partida conserva nave, acoplamiento, recursos, sistemas, vehículos, misiones, cuaderno, campaña y respuestas. Las rutas se recuperan pausadas. Exporta la partida para cambiar de dispositivo; exporta el cuaderno para conservar observaciones y resultados docentes. Las versiones anteriores migran con valores iniciales compatibles.
 
-Guardado local cada diez segundos. Exportar genera un JSON para importar en otro dispositivo. Se comprueban estructura, valores y destinos antes de escribir. Se migran partidas anteriores. Las preferencias de controles se guardan en el navegador, no en el archivo portátil.
+## Ciencia y límites
 
-PWA con manifiesto, iconos y service worker relativo. Ajustes permite instalar cuando el navegador lo admite o consultar instrucciones para iPhone. La descarga completa ocupa unos 10 MB e incluye los once mundos y sus mapas. El navegador puede liberar almacenamiento.
+Órbitas circulares y trayectorias asistidas; escalas, física y tiempos adaptados. El atlas científico usa una escala común de radios/distancias, con etiquetas ampliadas. Las estaciones, flota, recursos y campaña son ficticios. Los instrumentos usan el modelo o plantillas didácticas, no datos astronómicos en directo.
 
-## Alcance y créditos
+LOLA y MOLA aportan rejillas reducidas de elevación para Tycho y Olimpo. El resto del relieve es generado. Las texturas de los seis cuerpos nuevos reutilizan bases de otros mundos y se identifican como ilustrativas. Vesta y 67P tienen gravedad radial y geometría aproximadas. No se afirma la existencia de vida ni se simula acceso a océanos internos.
 
-Las veinte mejoras están descritas en MEJORAS.md. Se usa un modelo educativo: órbitas circulares, referencia local flotante, tamaños comprimidos para volar y paisajes locales recreados. La escala científica se aplica al atlas. Los mapas no definen topografía real y el clima no usa datos vivos. Los escudos son ficticios. No hay océano subterráneo visitable en Europa ni suelo de aterrizaje en los gigantes.
+Fuentes y licencias: `assets/textures/CREDITS.md`, `assets/terrain/CREDITS.md`, `catalog-v4.js`. Motor Three.js r180 bajo MIT en `vendor/`.
 
-- Three.js r180, MIT: vendor/LICENSE.txt.
-- Mapas y licencias: assets/textures/CREDITS.md (Solar System Scope / INOVE, NASA/JPL y colaboradores).
-- Datos de referencia: NASA Science, con enlaces en las fichas.
-- Modelos, audio y terreno: generados mediante código para Órbita.
-- Sin fuentes remotas, analítica ni cookies de seguimiento.
-
-## Publicación
-
-Destino autorizado: solar-nave/ en fercala/pequenos-exploradores, publicado con GitHub Pages. Las rutas relativas permiten convivir con las otras aplicaciones. El flujo anidado .github/workflows/pages.yml sirve como plantilla para un repositorio dedicado; el contenedor conserva su despliegue existente.
+Detalles: [MEJORAS-V4.md](MEJORAS-V4.md), [MEJORAS-V3.md](MEJORAS-V3.md), [MEJORAS.md](MEJORAS.md), [VERIFICACION.md](VERIFICACION.md).
