@@ -1,47 +1,41 @@
-# Órbita · Explorador del sistema solar
+# Órbita 2 · Explorador del sistema solar
 
-Aplicación web 3D para mouse y pantallas táctiles, en español. Primera versión jugable, sin registro, servicios de pago ni servidor de aplicación.
+Aplicación web 3D en español, manejable con mouse o pantalla táctil. Ocho planetas, tres lunas, vuelo continuo, astronauta, rover, misiones, atlas orbital, audio opcional y fotografía. Versión 0.2.0.
 
-## Ejecutar
+## Abrir y desarrollar
 
-En Windows, con Node.js 20 o posterior instalado, hacer doble clic en `Iniciar.cmd`. También se puede ejecutar `npm run dev` y abrir `http://127.0.0.1:4186/solar-nave/`. No abrir index.html directamente desde el explorador de archivos: los módulos y el service worker necesitan HTTP o HTTPS.
+Con Node.js 20 o posterior, hacer doble clic en Iniciar.cmd o ejecutar npm run dev y abrir http://127.0.0.1:4186/solar-nave/ . Los módulos y el service worker necesitan HTTP/HTTPS; no abrir index.html directamente.
 
-`npm test` verifica la frontera de colisión, guardados, presión atmosférica y protección ante impactos. `npm run build` prepara `dist/`, una web estática sin dependencias externas de ejecución. Three.js r180 se incluye localmente con licencia MIT.
+- npm test: física, guardados, importación, órbitas, misiones y caché.
+- npm run build: prepara dist/ con todos los recursos locales.
+- No requiere instalar dependencias, registro, backend ni claves privadas.
 
-## Jugar
+## Uso
 
-- Arrastrar la escena orienta la nave. Mirar permite observar sin cambiar rumbo.
-- El deslizador controla el empuje, incluida reversa. DETENER frena inmediatamente.
-- Las flechas desplazan la nave y los botones ↶ ↷ permiten girarla. En móvil se usa joystick; los controles ampliados de Ajustes añaden giro y freno.
-- Destinos muestra el sistema solar y permite viajar a cualquiera de sus ocho planetas en 16 segundos de simulación activa.
-- Descender inicia una aproximación asistida de 12 segundos. Regresar al espacio inicia un ascenso de 10 segundos.
-- Mercurio, Venus, Tierra y Marte permiten aterrizar. Los gigantes permiten sumergirse en nubes hasta un límite simulado de profundidad con ascenso automático de seguridad.
-- El viaje y la física se pausan cuando se abre un panel o la aplicación pasa a segundo plano.
-- Cabina, seguimiento y observación ofrecen vistas diferentes. Se puede fotografiar la escena.
+Arrastrar orienta la nave; Propulsión avanza o retrocede; DETENER frena. Flechas y giro completan los seis ejes. En móvil, el joystick desplaza y la zona derecha orienta. Ajustes permite cambiar tamaño, ubicación y distribución para zurdos.
 
-## Instalación y descarga
+Destinos inicia un viaje continuo asistido de 16 segundos. Se puede cancelar y continuar manualmente. Crucero permite recorrer distancias grandes y se desactiva al aproximarse a un cuerpo. Descender aterriza automáticamente en los cuerpos rocosos o explora la atmósfera de los gigantes. Para aterrizar manualmente, desplegar el tren, reducir la velocidad y nivelar la nave.
 
-La PWA incluye manifiesto, iconos de 192/512 píxeles y service worker con ámbito relativo a su carpeta. En navegadores compatibles aparece la opción de instalación. iPhone muestra instrucciones de Safari para añadir a inicio. Ajustes permite descargar la aplicación completa para usar los ocho mundos sin conexión y borrar únicamente las cachés propias.
+Expedición permite caminar, saltar, desplegar/conducir un rover, medir, tomar muestras y desplegar sondas. Para embarcar, acercarse a menos de 35 unidades de la nave. El rover usa la misma propulsión y admite marcha atrás.
 
-Los terrenos y texturas se generan localmente. La descarga completa es pequeña, por lo que no se necesitan ocho paquetes separados. No se promete funcionamiento offline antes de que la descarga haya terminado. El almacenamiento del navegador puede ser liberado por el sistema.
+Atlas 3D ofrece órbitas animadas, pausa/aceleración, escala jugable/científica y enfoque por destino. La cabina ofrece horizonte artificial y telemetría. Fotografía oculta el HUD y permite ajustar exposición y descargar un PNG con destino y fecha.
 
-## Alcance y simplificaciones
+## Partida e instalación
 
-Esta versión usa una escena local por planeta y un mapa del sistema solar con distancias comprimidas. El viaje entre escenas es asistido; no simula un continuo orbital físico entre todos los cuerpos. Los planetas no completan órbitas o rotaciones astronómicas durante el vuelo. La inclinación se refleja en los anillos; los demás ejes se documentan en las fichas. Las sombras reales de anillos y una escala científica intercambiable quedan para siguientes versiones.
+Guardado local cada diez segundos. Exportar genera un JSON para importar en otro dispositivo. Se comprueban estructura, valores y destinos antes de escribir. Se migran partidas anteriores. Las preferencias de controles se guardan en el navegador, no en el archivo portátil.
 
-Los paisajes no son reconstrucciones cartográficas. La Tierra muestra continentes procedurales ilustrativos. Se usa el mismo campo de altura para geometría, aterrizaje y colisiones. La región de aterrizaje contiene rocas adicionales. Las nubes y anillos son representaciones simplificadas. No hay astronauta a pie, ciudades, misiones espaciales históricas, combustible, vehículos terrestres, multijugador ni lunas visitables en esta versión.
+PWA con manifiesto, iconos y service worker relativo. Ajustes permite instalar cuando el navegador lo admite o consultar instrucciones para iPhone. La descarga completa ocupa unos 10 MB e incluye los once mundos y sus mapas. El navegador puede liberar almacenamiento.
 
-La escala local usa un radio base de 600 unidades por planeta para que el vuelo sea estable. La interfaz identifica altitudes y profundidades como simuladas. Los datos astronómicos de las fichas no se sustituyen por los datos de juego. El escudo, el viaje rápido y la supervivencia dentro de atmósferas extremas son ficticios. La gravedad de vuelo está reducida y la asistencia puede compensarla. La iluminación exterior se realza para permitir observar los mundos distantes. La temperatura y presión mostradas son referencias aproximadas, no un modelo climático.
+## Alcance y créditos
 
-## Publicar
+Las veinte mejoras están descritas en MEJORAS.md. Se usa un modelo educativo: órbitas circulares, referencia local flotante, tamaños comprimidos para volar y paisajes locales recreados. La escala científica se aplica al atlas. Los mapas no definen topografía real y el clima no usa datos vivos. Los escudos son ficticios. No hay océano subterráneo visitable en Europa ni suelo de aterrizaje en los gigantes.
 
-Para un repositorio dedicado, subir estos archivos, usar rama `main` y seleccionar GitHub Actions en Settings → Pages. El flujo `.github/workflows/pages.yml` ejecuta pruebas, genera `dist` y lo publica. Las rutas relativas permiten usar una subcarpeta de un repositorio existente sin modificar sus otras aplicaciones. En ese caso, el flujo anidado es solo un ejemplo y no se ejecuta; se utiliza el despliegue ya configurado del repositorio contenedor.
+- Three.js r180, MIT: vendor/LICENSE.txt.
+- Mapas y licencias: assets/textures/CREDITS.md (Solar System Scope / INOVE, NASA/JPL y colaboradores).
+- Datos de referencia: NASA Science, con enlaces en las fichas.
+- Modelos, audio y terreno: generados mediante código para Órbita.
+- Sin fuentes remotas, analítica ni cookies de seguimiento.
 
-Un service worker de una aplicación contenedora podría interceptar subcarpetas: verificarlo antes de publicar. La aplicación registra únicamente su propio ámbito.
+## Publicación
 
-## Créditos
-
-- Diseño, modelos de nave, texturas y terrenos: generados mediante código para Órbita.
-- Motor: Three.js r180, Copyright 2010–2025 Three.js Authors, licencia MIT; ver `vendor/LICENSE.txt`.
-- Fuentes científicas: NASA Science, con enlace específico en cada ficha y en `data.js`.
-- No se utilizan imágenes externas, fuentes remotas, analítica ni cookies de seguimiento.
+Destino autorizado: solar-nave/ en fercala/pequenos-exploradores, publicado con GitHub Pages. Las rutas relativas permiten convivir con las otras aplicaciones. El flujo anidado .github/workflows/pages.yml sirve como plantilla para un repositorio dedicado; el contenedor conserva su despliegue existente.
