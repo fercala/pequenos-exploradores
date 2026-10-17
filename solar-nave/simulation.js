@@ -1,3 +1,5 @@
+import {EXTRA_BODIES} from './catalog-v4.js';
+import {cleanCampaign} from './systems.js';
 import {PLANETS} from './data.js';
 import {clamp,terrainHeight} from './core.js';
 
@@ -7,19 +9,19 @@ export const MOONS=[
  moon('europa','Europa','jupiter',1560.8,1.315,'#c7baa0','3,55 días',{description:'Una corteza de hielo surcada por fracturas.',detail:'La superficie helada de Europa está cruzada por fracturas. Hay fuertes evidencias de un océano bajo la corteza. Esta versión no permite acceder al océano ni afirma haber encontrado vida. El relieve es ilustrativo.',temperature:'≈−160 °C · superficie de referencia',atmosphere:'Exosfera extremadamente tenue de oxígeno',source:'https://science.nasa.gov/jupiter/moons/europa/'}),
  moon('titan','Titán','saturn',2574.7,1.352,'#c6a36c','15,95 días',{description:'Bruma naranja, dunas y lagos de hidrocarburos.',detail:'Una atmósfera densa, principalmente de nitrógeno, oculta el suelo. Sus lagos y mares superficiales contienen hidrocarburos líquidos. El paisaje y los lagos son una recreación, no una cartografía de sus costas.',temperature:'≈−179 °C · superficie',pressure:'≈1,5 bar en superficie',atmosphere:'Nitrógeno con metano',source:'https://science.nasa.gov/saturn/moons/titan/facts/'})
 ];
-export const BODIES=[...PLANETS,...MOONS];
+export const BODIES=[...PLANETS,...MOONS,...EXTRA_BODIES];
 export const bodyById=id=>BODIES.find(p=>p.id===id)||PLANETS[2];
-export const bodyRadius=p=>({mercury:300,venus:580,earth:600,mars:400,jupiter:2000,saturn:1700,uranus:1050,neptune:1000,moon:170,europa:155,titan:245})[typeof p==='string'?p:p.id]||600;
+export const bodyRadius=p=>BODIES.find(b=>b.id===(typeof p==='string'?p:p.id))?.playRadius||({mercury:300,venus:580,earth:600,mars:400,jupiter:2000,saturn:1700,uranus:1050,neptune:1000,moon:170,europa:155,titan:245})[typeof p==='string'?p:p.id]||600;
 const periods=[87.97,224.7,365.26,686.98,4332.59,10759.22,30688.5,60182];
 const spin=[58.646,-243.025,.99727,1.02596,.41354,.444,-.71833,.67125];
 const orbits=[7000,10500,15000,22000,40000,55000,75000,100000];
 export function orbitalPosition(id,days=0,scale='play'){
  const p=bodyById(id),i=PLANETS.findIndex(b=>b.id===id);
- if(p.parent){const parent=orbitalPosition(p.parent,days,scale),period={moon:27.32,europa:3.551,titan:15.945}[id],distance=scale==='real'?({moon:384400,europa:671100,titan:1221870}[id]/149597870.7*10000):({moon:2400,europa:4200,titan:3900}[id]);const a=.6+days/period*Math.PI*2;return [parent[0]+Math.cos(a)*distance,parent[1]+Math.sin(a)*distance*.08,parent[2]+Math.sin(a)*distance];}
- const distance=scale==='real'?p.au*10000:orbits[i],angle=-2.4+i*.2+days/periods[i]*Math.PI*2;
+ if(p.parent){const parent=orbitalPosition(p.parent,days,scale),period=p.periodDays||{moon:27.32,europa:3.551,titan:15.945}[id],distance=scale==='real'?((p.moonDistanceKm||{moon:384400,europa:671100,titan:1221870}[id])/149597870.7*10000):(p.playDistance||{moon:2400,europa:4200,titan:3900}[id]);const a=.6+days/period*Math.PI*2;return [parent[0]+Math.cos(a)*distance,parent[1]+Math.sin(a)*distance*.08,parent[2]+Math.sin(a)*distance];}
+ const distance=scale==='real'?p.au*10000:(p.playOrbit||orbits[i]),angle=-2.4+(i>=0?i*.2:BODIES.indexOf(p)*.3)+days/(p.periodDays||periods[i])*Math.PI*2;
  return [Math.cos(angle)*distance,Math.sin(angle)*distance*.015,Math.sin(angle)*distance];
 }
-export function rotationAngle(id,days){const i=PLANETS.findIndex(p=>p.id===id);const period=i>=0?spin[i]:({moon:27.32,europa:3.551,titan:15.945}[id]);return days/period*Math.PI*2;}
+export function rotationAngle(id,days){const i=PLANETS.findIndex(p=>p.id===id);const period=bodyById(id).spinDays||(i>=0?spin[i]:({moon:27.32,europa:3.551,titan:15.945}[id]));return days/period*Math.PI*2;}
 export function scientificRadius(p){return p.radius/149597870.7*10000;}
 export function atmosphericDensity(p,alt){const base=({venus:8,earth:1,mars:.02,titan:1.7,jupiter:2,saturn:1.3,uranus:1.6,neptune:2})[p.id]||0;return base*Math.exp(-Math.max(0,alt)/45);}
 export function entryHeating(p,alt,speed){return clamp(atmosphericDensity(p,alt)*Math.pow(Math.max(0,speed)/65,3)*22,0,100);}
@@ -36,8 +38,8 @@ export function validatePortable(raw){
  if(!vector(raw.position,3,1000000)||Math.hypot(...raw.position)<1||!vector(raw.quaternion,4,1.1)||Math.abs(Math.hypot(...raw.quaternion)-1)>.02)throw Error('La posición o la orientación de la partida no son válidas.');
  for(const k of ['visited','landed','explored'])if(!Array.isArray(raw[k])||raw[k].length>30||raw[k].some(id=>!BODIES.some(p=>p.id===id)))throw Error('El progreso contiene destinos desconocidos.');
  if(!Number.isFinite(raw.elapsed)||raw.elapsed<0||raw.elapsed>1e10)throw Error('El tiempo de la partida no es válido.');
- const vehicle=['ship','walk','rover'].includes(raw.vehicle)?raw.vehicle:'ship';if(vehicle!=='ship'&&!bodyById(raw.planet).rocky)throw Error('No se puede explorar a pie un gigante gaseoso.');
+ const vehicle=['ship','walk','rover','eva'].includes(raw.vehicle)?raw.vehicle:'ship';if(['walk','rover'].includes(vehicle)&&!bodyById(raw.planet).rocky)throw Error('No se puede explorar a pie un gigante gaseoso.');
  if(vehicle!=='ship'&&(!vector(raw.parkedPosition,3,1000000)||Math.hypot(...raw.parkedPosition)<1))throw Error('Falta la posición de la nave estacionada.');
- const missions=Array.isArray(raw.missions)?raw.missions.filter(s=>typeof s==='string'&&/^(mercury|venus|earth|mars|jupiter|saturn|uranus|neptune|moon|europa|titan):(scan|sample|rover|probe|photo)$/.test(s)).slice(0,60):[];
- return {version:2,planet:raw.planet,position:[...raw.position],quaternion:[...raw.quaternion],visited:[...new Set(raw.visited)],landed:[...new Set(raw.landed)],explored:[...new Set(raw.explored)],elapsed:raw.elapsed,photos:clamp(Number(raw.photos)||0,0,100000),shield:clamp(Number(raw.shield)||100,1,100),onGround:!!raw.onGround&&bodyById(raw.planet).rocky,vehicle,parkedPosition:vector(raw.parkedPosition,3,1000000)?[...raw.parkedPosition]:null,parkedQuaternion:vector(raw.parkedQuaternion,4,1.1)&&Math.abs(Math.hypot(...raw.parkedQuaternion)-1)<.02?raw.parkedQuaternion:null,spinAngle:clamp(Number(raw.spinAngle)||0,-10000000,10000000),days:clamp(Number(raw.days)||0,-1000000,1000000),missions,tutorial:Math.trunc(clamp(Number(raw.tutorial)||0,0,5)),roverDistance:clamp(Number(raw.roverDistance)||0,0,1e7)};
+ const missions=Array.isArray(raw.missions)?raw.missions.filter(s=>typeof s==='string'&&BODIES.some(p=>s.startsWith(p.id+':'))&&/:(scan|sample|rover|probe|photo)$/.test(s)).slice(0,60):[];
+ return {campaign:cleanCampaign(raw.campaign,BODIES.map(p=>p.id)),version:2,planet:raw.planet,position:[...raw.position],quaternion:[...raw.quaternion],visited:[...new Set(raw.visited)],landed:[...new Set(raw.landed)],explored:[...new Set(raw.explored)],elapsed:raw.elapsed,photos:clamp(Number(raw.photos)||0,0,100000),shield:clamp(Number(raw.shield)||100,1,100),onGround:!!raw.onGround&&bodyById(raw.planet).rocky,vehicle,parkedPosition:vector(raw.parkedPosition,3,1000000)?[...raw.parkedPosition]:null,parkedQuaternion:vector(raw.parkedQuaternion,4,1.1)&&Math.abs(Math.hypot(...raw.parkedQuaternion)-1)<.02?raw.parkedQuaternion:null,spinAngle:clamp(Number(raw.spinAngle)||0,-10000000,10000000),days:clamp(Number(raw.days)||0,-1000000,1000000),missions,tutorial:Math.trunc(clamp(Number(raw.tutorial)||0,0,5)),roverDistance:clamp(Number(raw.roverDistance)||0,0,1e7)};
 }

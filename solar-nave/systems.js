@@ -1,0 +1,42 @@
+import {clamp} from './core.js';
+export const SHIPS=[
+ {id:'explorer',name:'Exploradora',description:'Equilibrada para viajar y aterrizar.',thrust:1,speed:1,burn:1,color:'#c7d8dc',scale:[1,1,1]},
+ {id:'scout',name:'Centella',description:'Nave ligera: más aceleración y menor autonomía.',thrust:1.4,speed:1.3,burn:1.45,color:'#ecba66',scale:[.76,.82,1.2]},
+ {id:'research',name:'Aurora',description:'Laboratorio con depósitos laterales: vuelo más pausado y mayor autonomía.',thrust:.72,speed:.8,burn:.65,color:'#8abed6',scale:[1.2,1.15,.95]}
+];
+export const STORY=[
+ {body:'earth',event:'gravity',title:'Un punto de referencia',text:'Mide la gravedad de la Tierra con el gravímetro del laboratorio.'},
+ {body:'moon',event:'historic',title:'Huellas en el vacío',text:'Aterriza cerca del sitio del Apollo 11 y registra la visita desde Lugares históricos.'},
+ {body:'moon',event:'sample',title:'Una muestra de otro mundo',text:'Sal a pie y toma una muestra lunar desde Expedición.'},
+ {body:'mars',event:'spectrum',title:'Leer la luz',text:'Acércate a menos de 150 u de Marte y utiliza el espectrómetro.'},
+ {body:'comet67p',event:'spectrum',title:'El archivo del hielo',text:'Aterriza en 67P y registra un espectro. Después revisa los resultados en el cuaderno.'}
+];
+export const LESSONS=[
+ {id:'gravity',title:'Comparar gravedad',route:['earth','moon','mars'],questions:[{q:'¿Dónde es menor la gravedad superficial de referencia?',options:['En la Luna','En la Tierra','En Marte'],answer:0,why:'La Luna tiene aproximadamente 1,62 m/s²; Marte, 3,71; la Tierra, 9,81.'},{q:'¿Qué ocurre al alejarse del centro de un mundo?',options:['La gravedad aumenta','La gravedad disminuye','La gravedad se anula inmediatamente'],answer:1,why:'En el modelo, la gravedad disminuye con el cuadrado de la distancia al centro.'}]},
+ {id:'air',title:'Atmósferas y exploración',route:['earth','moon','titan'],questions:[{q:'¿Dónde permite el simulador un paseo espacial en vacío?',options:['Bajo las nubes de Venus','En la superficie de Titán','En el espacio, lejos de una atmósfera densa'],answer:2,why:'El paseo espacial requiere altura suficiente y densidad atmosférica de juego muy baja.'},{q:'¿De qué están hechos los mares superficiales de Titán?',options:['Agua líquida','Hidrocarburos como metano y etano','Lava'],answer:1,why:'A sus bajas temperaturas, el metano y el etano pueden permanecer líquidos.'}]},
+ {id:'geology',title:'Leer paisajes planetarios',route:['moon','mars','ceres'],questions:[{q:'¿Qué instrumento produjo los datos de relieve de Olimpo?',options:['MOLA','Una cámara del rover del juego','Un termómetro'],answer:0,why:'MOLA midió alturas mediante altimetría láser desde Mars Global Surveyor.'},{q:'¿Qué significa una textura marcada como recreación?',options:['Que sus colores prueban la presencia de vida','Que es una fotografía actual','Que ilustra el paisaje y no es cartografía observacional'],answer:2,why:'Las recreaciones ayudan a explorar, pero no sustituyen mapas científicos.'}]}
+];
+export function defaultCampaign(){return {ship:'explorer',advanced:false,fuel:100,energy:100,systems:{engine:100,thermal:100,hull:100},docked:false,route:[],routeIndex:0,routeRunning:false,routePhase:'travel',notebook:[],storyStep:0,storyActive:false,lesson:null,answers:[],evaFuel:100,solarHour:null};}
+export function cleanCampaign(raw,ids){
+ const base=defaultCampaign();if(!raw||typeof raw!=='object')return base;
+ const percent=(x,fallback=100)=>typeof x==='number'&&Number.isFinite(x)?clamp(x,0,100):fallback;
+ const route=Array.isArray(raw.route)?raw.route.filter(r=>r&&ids.includes(r.body)&&['orbit','flyby','land'].includes(r.action)).slice(0,12).map(r=>({body:r.body,action:r.action})):[];
+ const notebook=Array.isArray(raw.notebook)?raw.notebook.filter(r=>r&&ids.includes(r.body)&&typeof r.title==='string'&&typeof r.text==='string').slice(-80).map(r=>({body:r.body,title:r.title.slice(0,90),text:r.text.slice(0,800),kind:['gravity','temperature','spectrum','sample','photo','historic','note','service'].includes(r.kind)?r.kind:'note',elapsed:Math.max(0,Number(r.elapsed)||0),lat:clamp(Number(r.lat)||0,-90,90),lon:clamp(Number(r.lon)||0,-180,180),thumbnail:typeof r.thumbnail==='string'&&/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(r.thumbnail)&&r.thumbnail.length<35000?r.thumbnail:null})):[];
+ let photos=0;for(const n of notebook)if(n.thumbnail&&++photos>6)n.thumbnail=null;
+ const lesson=LESSONS.some(l=>l.id===raw.lesson)?raw.lesson:null;
+ return {...base,ship:SHIPS.some(x=>x.id===raw.ship)?raw.ship:base.ship,advanced:raw.advanced===true,fuel:percent(raw.fuel),energy:percent(raw.energy),systems:Object.fromEntries(['engine','thermal','hull'].map(k=>[k,percent(raw.systems?.[k])])),docked:raw.docked===true,route,routeIndex:Math.trunc(clamp(Number(raw.routeIndex)||0,0,route.length)),routeRunning:false,routePhase:'travel',notebook,storyStep:Math.trunc(clamp(Number(raw.storyStep)||0,0,STORY.length)),storyActive:raw.storyActive===true,lesson,answers:Array.isArray(raw.answers)?raw.answers.filter(a=>a&&LESSONS.some(l=>l.id===a.lesson)&&Number.isInteger(a.question)&&a.question>=0&&a.question<2&&Number.isInteger(a.choice)&&a.choice>=0&&a.choice<3).slice(-30).map(a=>({lesson:a.lesson,question:a.question,choice:a.choice})):[],evaFuel:percent(raw.evaFuel),solarHour:typeof raw.solarHour==='number'&&Number.isFinite(raw.solarHour)?clamp(raw.solarHour,0,24):null};
+}
+export function consumeResources(c,dt,{throttle=0,auto=false,lights=false,docked=false,ship=c.ship}={}){
+ if(!c.advanced||docked)return;const model=SHIPS.find(s=>s.id===ship)||SHIPS[0];c.fuel=clamp(c.fuel-dt*(Math.abs(throttle)*.18+(auto?.12:0))*model.burn,0,100);c.energy=clamp(c.energy-dt*(.015+(lights?.04:0)),0,100);
+}
+export function thrustFactor(c){return (SHIPS.find(s=>s.id===c.ship)||SHIPS[0]).thrust*(.2+.8*c.systems.engine/100)*(!c.advanced||c.fuel>0&&c.energy>0?1:0);}
+export function damageSystems(c,{impact=0,heat=0,dt=0}){if(impact>12){c.systems.hull=clamp(c.systems.hull-(impact-12)*.5,0,100);c.systems.engine=clamp(c.systems.engine-(impact-12)*.15,0,100);}if(heat>65)c.systems.thermal=clamp(c.systems.thermal-(heat-65)*dt*.015,0,100);}
+export function canDock(distance,speed,angle){return distance<=22&&speed<=3&&angle<.35;}
+export function repairSystem(c,id,{reachable=false,auto=false}={}){if(!['engine','thermal','hull'].includes(id))return {ok:false,reason:'Sistema desconocido.'};if(!reachable||auto)return {ok:false,reason:'Aterriza, acopla o acércate a la nave durante una salida.'};if(c.systems[id]>=100)return {ok:false,reason:'Este sistema ya está completamente reparado.'};if(c.advanced&&c.energy<5)return {ok:false,reason:'Necesitas 5 puntos de energía. Acopla o solicita suministros.'};if(c.advanced)c.energy-=5;c.systems[id]=Math.min(100,c.systems[id]+25);return {ok:true};}
+export function illumination(normal,sunDirection){return clamp(normal.x*sunDirection.x+normal.y*sunDirection.y+normal.z*sunDirection.z,0,1);}
+export function scienceReading(kind,p,{altitude=0,light=1}={}){
+ if(kind==='gravity')return {title:'Gravímetro',text:`${(p.gravity*Math.pow(p.playRadius||({earth:600,moon:170,mars:400})[p.id]||600,2)/Math.pow(Math.max(1,(p.playRadius||({earth:600,moon:170,mars:400})[p.id]||600)+altitude),2)).toFixed(3)} m/s² · gravedad del modelo a esta altura. Referencia superficial: ${p.gravity} m/s².`};
+ if(kind==='temperature'){const values=({mercury:[-173,427],moon:[-173,127],earth:[-20,35],mars:[-100,-10],venus:[460,470],titan:[-181,-177]})[p.id]||[-200,-150],temp=values[0]+(values[1]-values[0])*Math.sqrt(light);return {title:'Radiómetro térmico',text:`${temp.toFixed(0)} °C · escenario didáctico interpolado según iluminación. No es meteorología ni una predicción física. Catálogo: ${p.temperature}.`};}
+ const ice=['europa','titan','ganymede','enceladus','pluto','ceres','comet67p'].includes(p.id);return {title:'Espectrómetro',text:ice?'Plantilla educativa: bandas de absorción de hielos y materiales oscuros. La composición exacta no se deduce de esta simulación.':'Plantilla educativa: señal de silicatos y roca; en Marte se añaden óxidos de hierro. No es un espectro observado.',bands:ice?[.9,.7,.18,.75,.23,.8]:[.3,.55,.8,.6,.45,.7]};
+}
+export function storyAdvance(c,body,event){const stage=STORY[c.storyStep];if(c.storyActive&&stage?.body===body&&stage.event===event){c.storyStep++;return true;}return false;}

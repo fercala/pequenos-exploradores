@@ -11,6 +11,9 @@ export function terrainHeight(id,x,y,z){
   if(id==='mercury')return n*12+fine*3;
   if(id==='moon')return n*7+fine*1.5;
   if(id==='europa')return n*2+Math.abs(Math.sin(x*45+z*28+y*19))*.8;
+  if(id==='comet67p')return -150+190*Math.abs(x)+n*20;
+  if(id==='vesta')return n*32+fine*4;
+  if(['ganymede','enceladus','pluto','ceres'].includes(id))return n*(id==='enceladus'?3:9)+fine;
   if(id==='titan')return n*8+Math.sin(x*85+z*31)*.5;
   return 0;
 }

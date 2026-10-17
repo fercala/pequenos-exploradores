@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#080d18"><meta name="description" content="Pilota tu nave por ocho planetas y tres lunas. Explora a pie, conduce un rover y completa misiones en 3D.">
+  <meta name="theme-color" content="#080d18"><meta name="description" content="Pilota tres naves por diecisiete mundos. Explora, acopla, camina y aprende en una expedición 3D.">
   <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Órbita — Tu próxima frontera</title>
   <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./assets/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./assets/icon-192.png">
@@ -52,10 +52,10 @@
     <div class="bottom-note"><span>ARRASTRA PARA ORIENTAR · EXPLORA SIN LÍMITES</span><span>ESCALA ADAPTADA PARA EXPLORAR</span></div>
   </main>
 
-  <section class="planet-strip" aria-label="Selección rápida de planetas"><div class="strip-label">SISTEMA SOLAR <span id="visited-counter">1 / 8</span></div><div id="planet-list"></div><button id="journal-btn" aria-label="Diario de exploración">↗ <span>Diario</span></button></section>
+  <section class="planet-strip" aria-label="Selección rápida de planetas"><div class="strip-label">SISTEMA SOLAR <span id="visited-counter">1 / 17</span></div><div id="planet-list"></div><button id="journal-btn" aria-label="Diario de exploración">↗ <span>Diario</span></button></section>
 
   <dialog id="panel"><div class="dialog-header"><span id="panel-eyebrow">CENTRO DE EXPLORACIÓN</span><button id="close-panel" class="icon-button" aria-label="Cerrar panel">×</button></div><div id="panel-content"></div></dialog>
-  <dialog id="welcome"><div class="welcome-orbit" aria-hidden="true">✧</div><p class="eyebrow">EL UNIVERSO EMPIEZA AQUÍ</p><h2>Tu próxima<br><em>frontera.</em></h2><p>Ocho planetas, tres lunas y una nave. Camina, conduce y explora.</p><div class="welcome-tips"><span>◉ Elige tu destino</span><span>↗ Pilota con mouse o tacto</span><span>↧ Explora cada mundo</span></div><button id="start-btn" class="primary-button">Comenzar expedición <span>→</span></button><button id="resume-btn" class="secondary-button" hidden>Continuar expedición</button><p class="welcome-footnote">Una exploración inspirada en la ciencia, con vuelo y escalas adaptados.</p></dialog>
+  <dialog id="welcome"><div class="welcome-orbit" aria-hidden="true">✧</div><p class="eyebrow">EL UNIVERSO EMPIEZA AQUÍ</p><h2>Tu próxima<br><em>frontera.</em></h2><p>Diecisiete mundos y tres naves. Pilota, investiga y explora.</p><div class="welcome-tips"><span>◉ Elige tu destino</span><span>↗ Pilota con mouse o tacto</span><span>↧ Explora cada mundo</span></div><button id="start-btn" class="primary-button">Comenzar expedición <span>→</span></button><button id="resume-btn" class="secondary-button" hidden>Continuar expedición</button><p class="welcome-footnote">Una exploración inspirada en la ciencia, con vuelo y escalas adaptados.</p></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <div id="fatal" class="fatal" hidden><h1>No pudimos iniciar el visor 3D</h1><p>Prueba con un navegador actualizado y la aceleración gráfica activada.</p><button onclick="location.reload()">Volver a intentar</button></div>
   <script type="module" src="./app.js"></script>
