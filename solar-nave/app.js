@@ -158,7 +158,7 @@ function updateHud(now){
   $('status-banner').hidden=!state.paused&&!state.landed&&!state.auto&&!(alt<35&&speed>25);
   $('status-banner').textContent=state.paused?'EXPEDICIÓN EN PAUSA · Pulsa continuar':state.landed?'ATERRIZAJE COMPLETADO · Explora la vista o vuelve a despegar':state.auto?'PILOTO AUTOMÁTICO · Puedes cancelar la maniobra':'PRECAUCIÓN · Reduce la velocidad cerca del terreno';
 }
-function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,1);last=now;
+function frame(now){requestAnimationFrame(frame);const dt=Math.max(0,Math.min((now-last)/1000,1));last=now;
   const frozen=freeze()||expansion.photo||expansion.editing;if(!frozen){state.elapsed+=dt;saveClock+=dt;expansion.updateTime(dt);if(!world.overview){if(state.auto)updateAuto(dt);else{let remaining=dt;while(remaining>0){const step=Math.min(remaining,1/60);updatePhysics(step);remaining-=step;}}}if(saveClock>10){saveClock=0;persist();}}
   const n=state.position.clone().normalize(),alt=state.position.length()-world.groundRadius(n);expansion.tick(dt,frozen,joy,holds);world.adjustPerformance(dt*1000);
   if(!contextLost)world.update(frozen?0:dt,state.position,state.quaternion,state.velocity,state.throttle,alt,state.settings.reducedMotion);
