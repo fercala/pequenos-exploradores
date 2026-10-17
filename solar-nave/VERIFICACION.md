@@ -1,10 +1,23 @@
-# Verificación de la primera versión
+# Verificación · Órbita 2
 
-- Nueve pruebas automáticas correctas: superficie de colisión en los cuatro mundos rocosos, presión atmosférica, protección ante impactos, persistencia, curvas de llegada, catálogo astronómico, arranque sin conexión simulado, recursos de la descarga y aislamiento de aplicaciones.
-- Comprobación en el navegador integrado: inicio, descenso y aterrizaje en la Tierra, recarga y recuperación del aterrizaje guardado, mapa, viaje completo a Saturno, descenso atmosférico hasta 38 unidades de profundidad y ascenso al espacio; viaje, aterrizaje y recuperación de la partida en Marte.
-- Comprobación de interfaz a 1280 × 800 y 390 × 844: selección de destinos, ajustes de calidad y controles ampliados. El navegador de comprobación usa entrada de mouse; no sustituye un teléfono físico.
-- Descarga completa confirmada por la aplicación. Las pruebas automáticas simulan una red caída para comprobar la recuperación desde caché; queda pendiente una prueba de desconexión real y de instalación en Android e iPhone físicos.
-- Sin errores de JavaScript o avisos del motor en las comprobaciones de Tierra y Saturno.
-- No se ha medido un objetivo de FPS ni se afirma un rendimiento garantizado.
+## Comprobaciones automáticas
 
-La matriz completa de aterrizaje manual en cada planeta, el vuelo extremo por el lado nocturno y las pruebas prolongadas en teléfonos físicos quedan pendientes. El alcance y las simplificaciones se describen en README.md y en Ajustes.
+Veinte pruebas correctas: fronteras de terreno, presión, daños, persistencia, importación y migración, once destinos, separación de lunas, conservación de posición entre referencias, escala científica, periodos y rotaciones, gravedad, calentamiento, aterrizaje con tren/actitud, permisos de misiones, tutorial y caché/aislamiento del service worker.
+
+Los mapas JPEG fueron validados por dimensiones y decodificación. Sus fuentes y licencias están en assets/textures/CREDITS.md. Las imágenes son recursos locales del despliegue.
+
+## Comprobaciones en navegador integrado
+
+- Inicio, aterrizaje en Tierra, recuperación de partida y salida a pie.
+- Toma de una muestra y registro de misión.
+- Despliegue del rover, avance, marcha atrás, frenado y retorno a la nave.
+- Atlas 3D, escala científica y reloj orbital.
+- Viaje continuo desde Tierra hasta Luna, llegada y aterrizaje lunar.
+- Modo fotografía: ocultación del HUD, creación de imagen y enlace PNG con nombre del destino.
+- Exportación: generación del enlace de partida JSON. El validador y la migración se verifican en pruebas automáticas.
+- Distribución de escritorio a 1280×800 y móvil a 390×844; recuperación de partida lunar.
+- Sin errores de JavaScript ni mapas ausentes en los recorridos comprobados.
+
+## Límites de la verificación
+
+El navegador de prueba utiliza mouse; no sustituye una pantalla táctil física. Quedan pendientes instalación en teléfonos Android/iPhone físicos, audio escuchado en distintos dispositivos, transferencia manual del archivo entre dos dispositivos y una matriz exhaustiva de vuelos/aterrizajes manuales en todos los destinos. No se garantiza un FPS universal. El clima, las órbitas y la física son modelos simplificados documentados en MEJORAS.md.

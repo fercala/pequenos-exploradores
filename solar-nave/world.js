@@ -2,7 +2,7 @@ import * as T from './vendor/three.module.js';
 import {noise,random,terrainHeight,isOcean,clamp} from './core.js';
 
 const UP=new T.Vector3(0,1,0);
-const palettes={mercury:[[93,89,83],[159,151,137]],venus:[[91,60,29],[167,121,64]],mars:[[100,43,27],[197,127,79]],jupiter:[[126,80,56],[227,208,171]],saturn:[[160,142,101],[232,218,174]],uranus:[[102,164,171],[175,221,218]],neptune:[[64,108,148],[121,177,200]]};
+const palettes={moon:[[70,69,68],[174,170,158]],europa:[[120,101,82],[223,215,190]],titan:[[88,58,25],[172,136,75]],mercury:[[93,89,83],[159,151,137]],venus:[[91,60,29],[167,121,64]],mars:[[100,43,27],[197,127,79]],jupiter:[[126,80,56],[227,208,171]],saturn:[[160,142,101],[232,218,174]],uranus:[[102,164,171],[175,221,218]],neptune:[[64,108,148],[121,177,200]]};
 function makeTexture(id,cloud=false){
   const c=document.createElement('canvas');c.width=1024;c.height=512;const ctx=c.getContext('2d'),img=ctx.createImageData(c.width,c.height);
   for(let y=0;y<c.height;y++){
@@ -87,7 +87,7 @@ export class Universe{
     this.body=new T.Mesh(g,m);this.planetGroup.add(this.body);
     if(p.id==='earth'){const ocean=new T.Mesh(new T.SphereGeometry(599.7,96,64),new T.MeshStandardMaterial({color:'#0c3856',roughness:.35,metalness:.2}));this.planetGroup.add(ocean);this.clouds=new T.Mesh(new T.SphereGeometry(626,96,64),new T.MeshStandardMaterial({map:makeTexture(p.id,true),transparent:true,depthWrite:false,opacity:.72,roughness:1}));this.planetGroup.add(this.clouds);}
     if(p.id==='venus'){this.clouds=new T.Mesh(new T.SphereGeometry(642,96,64),new T.MeshStandardMaterial({color:'#dfc28a',map:makeTexture('saturn'),transparent:true,opacity:1,roughness:1,depthWrite:false}));this.planetGroup.add(this.clouds);}
-    if(p.id!=='mercury'){const color=p.id==='venus'?'#b58b45':p.id==='mars'?'#b76d42':p.id==='earth'?'#4b9deb':p.id==='saturn'?'#c5b080':p.id==='jupiter'?'#c8a78a':'#73bccd';this.atmos=new T.Mesh(new T.SphereGeometry(p.id==='venus'?657:630,64,48),atmosphere(color));this.planetGroup.add(this.atmos);}
+    if(!['mercury','moon','europa'].includes(p.id)){const color=p.id==='venus'||p.id==='titan'?'#b58b45':p.id==='mars'?'#b76d42':p.id==='earth'?'#4b9deb':p.id==='saturn'?'#c5b080':p.id==='jupiter'?'#c8a78a':'#73bccd';this.atmos=new T.Mesh(new T.SphereGeometry(p.id==='venus'?657:630,64,48),atmosphere(color));this.planetGroup.add(this.atmos);}
     if(['saturn','uranus','neptune','jupiter'].includes(p.id))this.createRings(p);
     this.createLandingZone(p);this.cloudVolumes=null;
     if(!p.rocky){
@@ -115,15 +115,16 @@ export class Universe{
     this.localGroup.add(rocks);
     const ring=new T.Mesh(new T.RingGeometry(12,12.4,64),new T.MeshBasicMaterial({color:'#bafa73',transparent:true,opacity:.55,side:T.DoubleSide,depthWrite:false}));ring.rotation.x=-Math.PI/2;ring.position.y=.25;rocks.add(ring);this.beacon=ring;
   }
-  update(dt,position,quaternion,velocity,throttle,altitude,reducedMotion=false){
+  groundRadius(n){return 600+terrainHeight(this.planet.id,n.x,n.y,n.z);}
+  update(dt,position,quaternion,velocity,throttle,altitude,reducedMotion=false,render=true){
     this.time+=dt;this.ship.position.copy(position);this.ship.quaternion.copy(quaternion);
     const p=this.planet;if(!p)return;
     const close=altitude<160;
-    this.body.visible=p.rocky||position.length()>610;
+    this.body.visible=p.rocky||position.length()>(this.radius||600)+10;
     if(this.cloudVolumes){this.cloudVolumes.visible=altitude<110;this.cloudVolumes.position.copy(position);this.cloudVolumes.rotation.y=this.time*.015;}
     if(this.clouds){if(p.id==='venus')this.clouds.material.opacity=clamp((altitude-25)/100,0,1);else{this.clouds.rotation.y+=dt*.001;this.clouds.material.opacity=altitude<35?.12:.72;}}
-    const fogColors={earth:'#94b4c1',mars:'#b58e73',venus:'#b49762',jupiter:'#a88f79',saturn:'#bfac83',uranus:'#88babe',neptune:'#6491ae'};
-    if(close&&p.id!=='mercury'){
+    const fogColors={earth:'#94b4c1',mars:'#b58e73',venus:'#b49762',titan:'#b39251',jupiter:'#a88f79',saturn:'#bfac83',uranus:'#88babe',neptune:'#6491ae'};
+    if(close&&!['mercury','moon','europa'].includes(p.id)){
       const opacity=clamp((160-altitude)/160,0,1),color=new T.Color(fogColors[p.id]);this.scene.background.copy(new T.Color('#050911').lerp(color,opacity*(p.rocky?.82:.97)));
       this.scene.fog=new T.FogExp2(color,opacity*(p.id==='venus'?.008:p.rocky?.00055:.002));this.stars.material.opacity=1-opacity;
     }else{this.scene.background.set('#050911');this.scene.fog=null;this.stars.material.opacity=.85;}
@@ -136,11 +137,11 @@ export class Universe{
     offset.applyQuaternion(quaternion);
     const targetPos=position.clone().add(offset);
     // Do not let the external camera sink through the spherical ground.
-    if(p.rocky){const norm=targetPos.clone().normalize(),surface=600+terrainHeight(p.id,norm.x,norm.y,norm.z)+2;if(targetPos.length()<surface)targetPos.copy(norm).multiplyScalar(surface);}
+    if(p.rocky){const norm=targetPos.clone().normalize(),surface=this.groundRadius(norm)+2;if(targetPos.length()<surface)targetPos.copy(norm).multiplyScalar(surface);}
     this.camera.position.copy(targetPos);this.camera.up.copy(new T.Vector3(0,1,0).applyQuaternion(quaternion));
     if(this.cameraMode==='observe'){this.camera.lookAt(position.clone().add(new T.Vector3(0,0,-25).applyQuaternion(quaternion)));}
     else{const direction=new T.Vector3(0,0,-1).applyQuaternion(viewQ).applyQuaternion(quaternion);this.camera.lookAt(this.cameraMode==='cockpit'?this.camera.position.clone().addScaledVector(direction,400):position.clone().addScaledVector(direction,24));}
-    this.ship.visible=this.cameraMode!=='cockpit';this.stars.position.copy(position);this.renderer.render(this.scene,this.camera);this.frameReady=true;
+    this.ship.visible=this.cameraMode!=='cockpit';this.stars.position.copy(position);if(render)this.renderer.render(this.scene,this.camera);this.frameReady=true;
   }
   photograph(){return new Promise(resolve=>this.renderer.domElement.toBlob(resolve,'image/png'));}
 }
