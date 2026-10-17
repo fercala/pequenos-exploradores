@@ -73,15 +73,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-001 · Conservar el combustible de la nave durante la exploración exterior
 
-- **Inicio / última actualización:** 2026-10-17 22:23 UTC / 22:25 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-17 22:23 UTC / 22:27 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** `mission-control.js` envía el mismo deslizador de propulsión a `consumeResources` tanto en nave como a pie, en rover y durante un paseo espacial. `systems.js` lo aplica siempre al depósito de la nave. Así, con recursos limitados, moverse fuera de ella gasta su combustible aunque permanezca estacionada.
 - **Relación:** O4-010 (recursos), O4-008 (mochila), O2-007 (caminata) y O2-008 (rover). Es una corrección del consumo por vehículo; no una nueva implementación de esas funciones.
 - **Criterio de aceptación:** caminar, conducir el rover o propulsarse con la mochila no reduce el combustible de la nave; la mochila sigue consumiendo su propia reserva; el vuelo y el piloto automático de la nave mantienen su consumo. Pausa, acoplamiento y guardados conservan su comportamiento.
-- **Rama prevista:** `codex/orbita-auto-001-combustible-exterior`.
+- **Rama:** `codex/orbita-auto-001-combustible-exterior`.
 - **Cambio:** `systems.js` descuenta combustible solo cuando el vehículo activo es la nave; `mission-control.js` transmite ese vehículo y explica la separación de reservas en Recursos. Versión 0.4.1; caché propia v7 para distribuir el arreglo sin conexión.
 - **Validación:** 44 pruebas satisfactorias y construcción estática. Dos regresiones nuevas cubren caminata, rover y EVA, los tres modelos, marcha atrás, consumo de vuelo/piloto y reserva propia de la mochila. Reproducción anterior: 10 s de mochila al máximo bajaban el depósito de 100 a 98,2 %. En navegador, después del paseo el depósito permanece en 100,0 %, la mochila baja al 97 % y la energía sigue activa (99,7 %). Sin errores de consola. Texto revisado en 390 × 844; teléfonos físicos pendientes.
-- **Propuesta / commit / publicación:** pendientes de incorporación y despliegue; se completarán con evidencia real.
+- **Propuesta:** [#7](https://github.com/fercala/pequenos-exploradores/pull/7). Commit de código: `401a159f1e279e152aa7fdf176849df4ab11dfdb`; incorporación a main: `ffac750e1106849edc611375967708f255c05c11`.
+- **Publicación confirmada:** 2026-10-17 22:27 UTC. [GitHub Pages: ejecución 39075076241 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39075076241). Los módulos públicos devuelven HTTP 200, incluyen el guardado de combustible por vehículo y transmiten el vehículo activo; el gestor propio sirve caché v7. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
