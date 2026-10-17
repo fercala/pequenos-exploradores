@@ -35,3 +35,5 @@ LOLA y MOLA aportan rejillas reducidas de elevación para Tycho y Olimpo. El res
 Fuentes y licencias: `assets/textures/CREDITS.md`, `assets/terrain/CREDITS.md`, `catalog-v4.js`. Motor Three.js r180 bajo MIT en `vendor/`.
 
 Detalles: [MEJORAS-V4.md](MEJORAS-V4.md), [MEJORAS-V3.md](MEJORAS-V3.md), [MEJORAS.md](MEJORAS.md), [VERIFICACION.md](VERIFICACION.md).
+
+Registro para evitar duplicados y seguir la mejora horaria: [MEJORAS-AUTOMATICAS.md](MEJORAS-AUTOMATICAS.md).
