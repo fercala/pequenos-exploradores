@@ -1,3 +1,5 @@
+> Actualización 0.3.0: mapa de superficie, regiones de relieve LOLA/MOLA, escáner, luces y accesibilidad. Consulta [MEJORAS-V3.md](MEJORAS-V3.md).
+
 # Órbita 2 · Las veinte mejoras
 
 Funciones jugables de una aplicación educativa; no equivalen a simulaciones astronómicas o atmosféricas de alta precisión.
