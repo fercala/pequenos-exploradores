@@ -1,6 +1,6 @@
-const CACHE='orbita-solar-v4';
+const CACHE='orbita-solar-v5';
 const ROOT=new URL('./',self.location.href);
-const FILES=['./','index.html','style.css','app.js','world.js','world-v2.js','simulation.js','expansion.js','audio.js','core.js','data.js','manifest.webmanifest','assets/icon.svg','assets/icon-192.png','assets/icon-512.png','vendor/three.module.js','vendor/three.core.js',...['mercury','venus_surface','venus_atmosphere','earth_daymap','earth_clouds','mars','jupiter','saturn','uranus','neptune','moon','europa','titan'].map(n=>`assets/textures/${n}.jpg`),'assets/textures/CREDITS.md'];
+const FILES=['./','index.html','style.css','app.js','world.js','world-v2.js','simulation.js','expansion.js','audio.js','surface.js','exploration.js','assets/terrain/regions.js','assets/terrain/CREDITS.md','core.js','data.js','manifest.webmanifest','assets/icon.svg','assets/icon-192.png','assets/icon-512.png','vendor/three.module.js','vendor/three.core.js',...['mercury','venus_surface','venus_atmosphere','earth_daymap','earth_clouds','mars','jupiter','saturn','uranus','neptune','moon','europa','titan'].map(n=>`assets/textures/${n}.jpg`),'assets/textures/CREDITS.md'];
 async function download(){const cache=await caches.open(CACHE);await cache.addAll(FILES.map(f=>new Request(new URL(f,ROOT),{cache:'reload'})));}
 self.addEventListener('install',event=>{event.waitUntil(download().then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const name of await caches.keys())if(name.startsWith('orbita-solar-')&&name!==CACHE)await caches.delete(name);await self.clients.claim();})());});

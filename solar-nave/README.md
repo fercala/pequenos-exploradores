@@ -1,3 +1,5 @@
+> Actualización 0.3.0: mapa de superficie, regiones de relieve LOLA/MOLA, escáner, luces y accesibilidad. Consulta [MEJORAS-V3.md](MEJORAS-V3.md).
+
 # Órbita 2 · Explorador del sistema solar
 
 Aplicación web 3D en español, manejable con mouse o pantalla táctil. Ocho planetas, tres lunas, vuelo continuo, astronauta, rover, misiones, atlas orbital, audio opcional y fotografía. Versión 0.2.0.

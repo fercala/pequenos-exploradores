@@ -1,5 +1,6 @@
 import * as T from './vendor/three.module.js';
 import {BODIES,bodyRadius,orbitalPosition,rotationAngle,atmosphericDensity,entryHeating,missionList,missionAllowed,validatePortable,TUTORIAL,tutorialAdvance} from './simulation.js';
+import {createExploration} from './exploration.js';
 import {SpaceAudio} from './audio.js';
 import {clamp,writeSave} from './core.js';
 const v=a=>new T.Vector3(...a);
@@ -15,12 +16,12 @@ export function createExpansion(api){
  const heat=document.createElement('div');heat.id='entry-glow';document.body.append(heat);
  const photo=document.createElement('div');photo.id='photo-controls';photo.hidden=true;photo.innerHTML='<strong>Modo fotografía</strong><label>Exposición <input id="photo-exposure" type="range" min="0.3" max="2.5" step="0.1" value="1.1"></label><button id="capture-photo">Capturar imagen</button><button id="close-photo">Volver al vuelo</button>';document.body.append(photo);
  $('photo-exposure').oninput=e=>w.renderer.toneMappingExposure=Number(e.target.value);$('close-photo').onclick=()=>ex.togglePhoto(false);$('capture-photo').onclick=()=>ex.capture();
- function panel(title,html){resetInputs();$('panel-eyebrow').textContent='EXPEDICIÓN · ÓRBITA 2';$('panel-content').innerHTML=`<h2>${title}</h2>${html}`;if(!$('panel').open)$('panel').showModal();return $('panel-content');}
+ function panel(title,html){resetInputs();$('panel-eyebrow').textContent='EXPEDICIÓN · ÓRBITA 3';$('panel-content').innerHTML=`<h2>${title}</h2>${html}`;if(!$('panel').open)$('panel').showModal();return $('panel-content');}
  function button(id,fn){$(id).onclick=fn;}
  function complete(key){const id=`${s.planet.id}:${key}`;if(s.missions.has(id))return;s.missions.add(id);toast(`Misión completada: ${missionList(s.planet).find(m=>m.key===key)?.title||key}.`);audio.chime();persist();}
  ex.complete=complete;
  ex.event=event=>{const next=tutorialAdvance(s.tutorial,event);if(next!==s.tutorial){s.tutorial=next;audio.chime();persist();}};
- ex.applySettings=()=>{document.documentElement.style.setProperty('--control-scale',clamp(s.settings.buttonScale,.85,1.5));document.documentElement.style.setProperty('--joystick-size',`${clamp(s.settings.joystickSize,76,145)}px`);document.body.classList.toggle('left-handed',!!s.settings.leftHanded);if(s.settings.joyPosition){const [x,y]=s.settings.joyPosition;$('joystick').style.left=`${clamp(x,.02,.8)*100}vw`;$('joystick').style.top=`${clamp(y,.15,.75)*100}dvh`;$('joystick').style.bottom='auto';}w.weatherEnabled=s.settings.weather;};ex.applySettings();
+ ex.applySettings=()=>{document.documentElement.style.setProperty('--control-scale',clamp(s.settings.buttonScale,.85,1.5));document.documentElement.style.setProperty('--joystick-size',`${clamp(s.settings.joystickSize,76,145)}px`);document.body.classList.toggle('left-handed',!!s.settings.leftHanded);if(s.settings.joyPosition){const [x,y]=s.settings.joyPosition;$('joystick').style.left=`${clamp(x,.02,.8)*100}vw`;$('joystick').style.top=`${clamp(y,.15,.75)*100}dvh`;$('joystick').style.bottom='auto';}w.weatherEnabled=s.settings.weather&&!s.settings.reducedMotion;ex.exploration?.apply();};ex.applySettings();
  button('gear-btn',()=>{s.gear=!s.gear;w.gear=s.gear;toast(s.gear?'Tren de aterrizaje desplegado.':'Tren retraído. Despliégalo antes de tocar tierra.');});
  button('cruise-btn',()=>{if(s.landed||s.vehicle!=='ship'){toast('El crucero solo está disponible durante el vuelo.');return;}ex.cruise=!ex.cruise;$('cruise-btn').setAttribute('aria-pressed',ex.cruise);toast(ex.cruise?'Crucero activado: orienta la nave y usa propulsión. Se desactiva al acercarte a un mundo.':'Velocidad de aproximación activada.');});
  button('vehicle-btn',()=>ex.changeVehicle(s.vehicle==='ship'?'walk':'ship'));
@@ -70,6 +71,7 @@ export function createExpansion(api){
  ex.checkReference=()=>{const alt=s.position.length()-bodyRadius(s.planet),absolute=v(orbitalPosition(s.planet.id,s.days)).add(s.position);for(const p of BODIES){if(p.id===s.planet.id)continue;const distance=absolute.distanceTo(v(orbitalPosition(p.id,s.days)))-bodyRadius(p);if(distance<1500&&distance<alt-200){changeReference(p.id,absolute);return;}}};
  ex.updateTime=dt=>{s.days+=dt*(w.overview?ex.atlasTime:s.timeScale)/86400;w.clockDays=s.days;w.timeScale=s.timeScale;};
  ex.tick=(dt,frozen,joy,holds)=>{
+  ex.exploration.tick(dt);
   w.vehicle=s.vehicle;w.gear=s.gear;const n=s.position.clone().normalize(),alt=s.position.length()-w.groundRadius(n),speed=s.velocity.length(),heatValue=entryHeating(s.planet,alt,speed);s.heat=heatValue;
   if(!frozen&&heatValue>70&&s.settings.mode==='challenge'&&s.vehicle==='ship')s.shield=Math.max(1,s.shield-dt*(heatValue-60)*.025);
   $('entry-glow').style.opacity=String(heatValue/100*.65);$('entry-readout').textContent=`CALOR DE ENTRADA ${Math.round(heatValue)}%`;
@@ -84,5 +86,6 @@ export function createExpansion(api){
   if(ex.cruise&&alt<400){ex.cruise=false;$('cruise-btn').setAttribute('aria-pressed',false);s.velocity.clampLength(0,80);toast('Aproximación: crucero desactivado automáticamente.');}
   audio.update(s.throttle,atmosphericDensity(s.planet,alt),w.cameraMode==='cockpit',frozen);
  };
+ ex.exploration=createExploration(api,panel);
  return ex;
 }
