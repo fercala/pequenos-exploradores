@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080d18"><meta name="description" content="Pilota tu nave y descubre los ocho planetas. Un simulador 3D del sistema solar, para mouse y pantalla táctil.">
+  <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Órbita — Tu próxima frontera</title>
+  <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./assets/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./assets/icon-192.png">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="scene" aria-label="Simulador espacial 3D. Arrastra para orientar la nave."></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Órbita, inicio"><svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="7"/><ellipse cx="22" cy="22" rx="21" ry="10" transform="rotate(-35 22 22)"/></svg><span>ÓRBITA<small>EXPLORADOR DEL SISTEMA SOLAR</small></span></a>
+    <div class="mission"><span class="live-dot"></span><span id="mission-label">EXPEDICIÓN 001</span><span class="top-divider"></span><span id="mission-clock">00:00:00</span></div>
+    <nav aria-label="Menú principal"><button class="nav-button" id="map-btn"><span>◉</span> <span>Destinos</span></button><button class="icon-button" id="help-btn" aria-label="Cómo jugar">?</button><button class="icon-button" id="settings-btn" aria-label="Ajustes">⚙</button><button class="icon-button" id="pause-btn" aria-label="Pausar">Ⅱ</button></nav>
+  </header>
+
+  <main id="hud">
+    <section class="destination" aria-label="Planeta actual">
+      <div class="eyebrow"><span class="tiny-cross">+</span> <span id="location-tag">SECTOR 03 / PLANETA ROCOSO</span></div>
+      <h1 id="planet-title">Tierra<span>.</span></h1>
+      <p id="planet-subtitle">Nuestro punto de partida. Tu próxima frontera.</p>
+      <button class="text-button" id="info-btn">Conocer este mundo <span>↗</span></button>
+      <div class="planet-facts"><div><span>DISTANCIA AL SOL</span><strong id="solar-distance">1,00 <small>UA</small></strong></div><div><span>GRAVEDAD</span><strong id="gravity-value">9,81 <small>m/s²</small></strong></div></div>
+    </section>
+
+    <aside class="flight-readout" aria-label="Telemetría">
+      <div class="readout-heading"><span class="live-dot"></span> NAVE EXPLORADORA <b>01</b></div>
+      <div class="metric"><label>VELOCIDAD LOCAL</label><strong id="speed-value">0 <small>m/s</small></strong><div class="meter"><i id="speed-meter"></i></div></div>
+      <div class="metric"><label id="altitude-label">ALTITUD SIMULADA</label><strong id="altitude-value">1.050 <small>m</small></strong></div>
+      <div class="telemetry-pair"><span>V. VERTICAL</span><b id="vertical-value">0 m/s</b></div>
+      <div class="telemetry-pair"><span>PROTECCIÓN</span><b id="shield-value">100%</b></div>
+      <div class="telemetry-pair"><span>ESTADO</span><b class="mint" id="flight-state">EN ÓRBITA</b></div>
+      <div id="environment" class="environment" hidden></div>
+      <button id="stabilize-btn" class="assist-button" aria-pressed="true"><span class="live-dot"></span> ESTABILIZACIÓN ACTIVA</button>
+    </aside>
+
+    <div class="reticle" aria-hidden="true"><span></span><i></i><b></b><em></em><small id="reticle-label">TIERRA</small></div>
+    <div id="status-banner" class="status-banner" role="status" aria-live="polite" hidden></div>
+    <div id="travel-progress" class="travel-progress" hidden><span id="travel-label">Preparando trayectoria</span><button id="cancel-travel">Cancelar</button><div><i id="travel-bar"></i></div></div>
+
+    <section class="flight-controls" aria-label="Controles de vuelo">
+      <div class="control-panel steering"><div class="control-title">MANIOBRA <span>6 EJES</span></div><div class="direction-grid"><button data-hold="up" aria-label="Ascender">↑</button><button data-hold="left" aria-label="Desplazarse a la izquierda">←</button><button id="brake-btn" aria-label="Frenar">■</button><button data-hold="right" aria-label="Desplazarse a la derecha">→</button><button data-hold="down" aria-label="Descender">↓</button></div><div class="roll-controls"><button data-hold="rollLeft" aria-label="Girar a la izquierda">↶</button><span>GIRO</span><button data-hold="rollRight" aria-label="Girar a la derecha">↷</button></div></div>
+      <div class="control-panel throttle"><div class="control-title">PROPULSIÓN <output id="throttle-output">0%</output></div><input type="range" id="throttle" min="-40" max="100" value="0" step="1" aria-label="Potencia de propulsión"><div class="range-labels"><span>REVERSA</span><button id="zero-throttle">DETENER</button><span>AVANCE</span></div></div>
+      <div class="primary-actions"><button id="land-btn" class="primary-button"><span>↧</span> <span id="land-label">Descender al planeta</span></button><button id="orbit-btn" class="secondary-button">↗ Regresar al espacio</button></div>
+    </section>
+
+    <div id="joystick" class="joystick" aria-label="Joystick de desplazamiento"><div class="joystick-knob"></div></div>
+    <div class="camera-bar"><button id="camera-btn">◫ <span id="camera-label">Seguimiento</span></button><button id="look-btn" aria-pressed="false">◎ <span>Mirar</span></button><button id="zoom-out" aria-label="Alejar cámara">−</button><button id="zoom-in" aria-label="Acercar cámara">+</button><button id="photo-btn" aria-label="Fotografiar">▣</button></div>
+    <div class="bottom-note"><span>ARRASTRA PARA ORIENTAR · EXPLORA SIN LÍMITES</span><span>ESCALA ADAPTADA PARA EXPLORAR</span></div>
+  </main>
+
+  <section class="planet-strip" aria-label="Selección rápida de planetas"><div class="strip-label">SISTEMA SOLAR <span id="visited-counter">1 / 8</span></div><div id="planet-list"></div><button id="journal-btn" aria-label="Diario de exploración">↗ <span>Diario</span></button></section>
+
+  <dialog id="panel"><div class="dialog-header"><span id="panel-eyebrow">CENTRO DE EXPLORACIÓN</span><button id="close-panel" class="icon-button" aria-label="Cerrar panel">×</button></div><div id="panel-content"></div></dialog>
+  <dialog id="welcome"><div class="welcome-orbit" aria-hidden="true">✧</div><p class="eyebrow">EL UNIVERSO EMPIEZA AQUÍ</p><h2>Tu próxima<br><em>frontera.</em></h2><p>Ocho mundos. Una nave. Todo un sistema solar por descubrir.</p><div class="welcome-tips"><span>◉ Elige tu destino</span><span>↗ Pilota con mouse o tacto</span><span>↧ Explora cada mundo</span></div><button id="start-btn" class="primary-button">Comenzar expedición <span>→</span></button><button id="resume-btn" class="secondary-button" hidden>Continuar expedición</button><p class="welcome-footnote">Una exploración inspirada en la ciencia, con vuelo y escalas adaptados.</p></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="fatal" class="fatal" hidden><h1>No pudimos iniciar el visor 3D</h1><p>Prueba con un navegador actualizado y la aceleración gráfica activada.</p><button onclick="location.reload()">Volver a intentar</button></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
