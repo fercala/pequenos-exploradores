@@ -217,8 +217,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-010 · Conservar el rover estacionado al recuperar una partida
 
-- **Inicio / última actualización:** 2026-10-18 12:57 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-18 12:57 / 13:01 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** changeVehicle conserva roverParked solo en memoria; snapshot, restore y validatePortable lo omiten. Al salir del rover lejos de la nave y recuperar o importar la partida, desaparece el vehículo estacionado y no se puede embarcar allí.
 - **Relación / diferencia:** O2-008 (rover), O2-020 (partidas) y SOL-001 (mochila). No añade otro rover ni repite las balizas persistentes: conserva posición y orientación del vehículo existente y limita su ubicación al mundo guardado.
 - **Criterio de aceptación:** bajar del rover, guardar y recuperar/exportar/importar conserva su ubicación y orientación y permite embarcar cerca. Partidas antiguas sin ubicación siguen siendo compatibles. Datos inválidos o de otro mundo no generan un rover fantasma. Cambiar de mundo limpia el estacionamiento anterior.
@@ -226,7 +226,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Cambio:** versión 0.5.1; posición y orientación del rover estacionado en guardado local y archivo portátil, con validación compartida al recuperar/importar. El estacionamiento se limpia al cambiar de mundo y se dibuja con el mismo apoyo sobre el suelo que al conducir. Campo opcional compatible con partidas antiguas. Caché propia v17.
 - **Archivos:** expansion.js, simulation.js, world-v2.js, tests/expansion.test.mjs, package.json, README.md, sw.js y este registro.
 - **Validación:** 64 pruebas satisfactorias y construcción estática. Casos nuevos: ida/vuelta por guardado y serialización portátil, copia independiente de coordenadas, compatibilidad antigua, descarte de datos inválidos/de otro mundo/gigante gaseoso y transformación visual estacionada. Navegador real: Tierra, conducir 158 m lejos de la nave, bajar, recargar, Continuar y volver a conducir desde el rover estacionado. Escritorio y vista móvil 390 × 844, sin errores de consola. Evidencia local: outputs/orbita-auto-010-rover.png. El selector de importación y un teléfono físico no se probaron manualmente en esta ejecución; la ruta de validación portátil sí se cubre automáticamente.
-- **Propuesta / commit / publicación:** pendientes.
+- **Propuesta:** [#27](https://github.com/fercala/pequenos-exploradores/pull/27). Commit de código: 1a74cb7e8281c477cf0a490f8e5f4abc3e48f5da; incorporación a main: 4ff656613f71a30c90ea7512eb485b6933d5934a.
+- **Publicación confirmada:** 2026-10-18 13:01 UTC. [GitHub Pages: ejecución 39129675697 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39129675697), sobre el commit de incorporación. expansion.js, simulation.js y world-v2.js públicos devuelven HTTP 200 y contienen persistencia, validación y colocación del rover. package.json confirma 0.5.1 y sw.js confirma caché v17 (HTTP 200). [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
