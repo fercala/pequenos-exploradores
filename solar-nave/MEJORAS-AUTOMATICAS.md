@@ -231,8 +231,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-011 · Recoger muestras únicamente apoyado en el terreno
 
-- **Inicio / última actualización:** 2026-10-18 15:00 UTC; investigación iniciada en la ejecución anterior, sin cambios publicados.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-18 15:00 / 15:06 UTC; investigación iniciada en la ejecución anterior, sin cambios publicados.
+- **Estado:** Publicada.
 - **Problema comprobado:** missionAllowed permite sample con solo rocky y vehicle walk: devuelve true a 100 m de altura y durante un salto. La mochila SOL-001 protege su entrada, pero Expedición y Misiones llaman a science directamente y permiten registrar/completar muestras en el aire.
 - **Relación / diferencia:** O2-007 (saltos), O2-017 (muestras), O4-017 (cuaderno) y SOL-001 (mochila). AUTO-002 condiciona un espectro de la campaña final; esta corrección unifica la condición física de recogida de muestras en todos los menús. No añade otra actividad ni borra muestras anteriores.
 - **Criterio de aceptación:** solo el tripulante a pie, en mundo sólido, cerca del suelo y sin salto/maniobra puede recoger una muestra. Un intento inválido no completa misión ni añade registro y explica el requisito dentro del panel. Tras tocar suelo se puede recoger normalmente; mediciones y sondas conservan sus reglas.
@@ -240,7 +240,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Cambio:** versión 0.5.2; la condición compartida de muestras exige caminata en mundo sólido, altura del tripulante entre 0 y 2,1 unidades sobre el terreno, salto menor de 0,01 y ausencia de maniobra. Expedición, Misiones y Mochila pasan por la misma validación. El rechazo se explica en science-result con role status además del aviso existente. Las muestras ya guardadas no se alteran. Caché propia v18.
 - **Archivos:** simulation.js, expansion.js, tests/expansion.test.mjs, package.json, README.md, sw.js y este registro.
 - **Validación:** 65 pruebas satisfactorias y construcción estática. Regresión con altura excesiva, negativa, ausente y NaN; salto, vehículo incorrecto, gigante y maniobra; reanudación válida y reglas de medición/sonda conservadas. Navegador real: viaje y descenso en Luna, salida a pie, salto, rechazo desde Expedición y Misiones con muestra todavía pendiente; tras tocar suelo se registra la muestra y, al reabrir Misiones, aparece completada. Revisión de escritorio y 390 × 844, sin errores/advertencias de consola. Evidencia: outputs/orbita-auto-011-muestra.png. Teléfono físico y auditoría de lector de pantalla pendientes.
-- **Propuesta / commit / publicación:** pendientes.
+- **Propuesta:** [#29](https://github.com/fercala/pequenos-exploradores/pull/29). Commit de código: 9ccfc27d16bcc666dfa6745211ba91340dbbef9d; incorporación a main: 513b57b812f961985bf212767cf3ad897fce13c7.
+- **Publicación confirmada:** 2026-10-18 15:06 UTC. [GitHub Pages: ejecución 39138885738 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39138885738), sobre el commit de incorporación. simulation.js y expansion.js públicos devuelven HTTP 200 y contienen la condición de proximidad y transmisión del salto; package.json confirma 0.5.2 y sw.js caché v18, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
