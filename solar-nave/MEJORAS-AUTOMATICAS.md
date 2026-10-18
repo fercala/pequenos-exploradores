@@ -84,6 +84,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#7](https://github.com/fercala/pequenos-exploradores/pull/7). Commit de código: `401a159f1e279e152aa7fdf176849df4ab11dfdb`; incorporación a main: `ffac750e1106849edc611375967708f255c05c11`.
 - **Publicación confirmada:** 2026-10-17 22:27 UTC. [GitHub Pages: ejecución 39075076241 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39075076241). Los módulos públicos devuelven HTTP 200, incluyen el guardado de combustible por vehículo y transmiten el vehículo activo; el gestor propio sirve caché v7. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-002 · Exigir la superficie para el capítulo final de 67P
+
+- **Inicio / última actualización:** 2026-10-17 23:23 / 2026-10-18 05:53 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** el objetivo final dice «Aterriza en 67P y registra un espectro», pero `storyAdvance` solo comprueba mundo y tipo de lectura. Un espectro durante vuelo bajo puede completar la campaña sin haber aterrizado.
+- **Relación:** O4-018 (campaña) y O4-016 (instrumentos). Esta corrección comprueba la condición de superficie que ya exige el objetivo; no añade otra campaña ni otro instrumento.
+- **Criterio de aceptación:** un espectro desde vuelo, EVA, acoplamiento o una maniobra no completa el capítulo final. Una nueva lectura tras aterrizar, o durante caminata/rover cerca del suelo, sí lo completa. La lectura en vuelo sigue guardándose y explica el requisito pendiente. Se conservan los otros capítulos y las partidas ya completadas.
+- **Rama:** `codex/orbita-auto-002-final-en-superficie`.
+- **Cambio:** condición explícita de superficie para el último capítulo, comprobada desde el controlador con vehículo, aterrizaje, altura real del terreno, maniobra y acoplamiento. La lectura aérea se conserva y explica el requisito. Se limpia ese aviso al completar. Versión 0.4.2 y caché propia v8.
+- **Archivos:** systems.js, mission-control.js, tests/systems.test.mjs, tests/mission-control.test.mjs, package.json, README.md y sw.js, además de este registro.
+- **Validación:** 46 pruebas satisfactorias y construcción estática. Regresiones para vuelo bajo, EVA, maniobra, acoplamiento, altura excesiva, nave aterrizada, caminata, rover y partidas completadas. Navegador: prueba de integración con el laboratorio y controlador reales, estado de mundo controlado: lectura en vuelo conserva 4/5 y un registro; nueva lectura en superficie deja 5/5 y dos registros, sin aviso pendiente ni errores de consola. Mensaje revisado a 390 × 844; no probado en teléfono físico. La importación de la partida de prueba no conservó el escenario tras reanudar; se usó la prueba aislada y se deja el posible fallo de importación para otra ejecución, sin añadirlo a esta mejora.
+- **Propuesta / commit / publicación:** pendientes; no declarada publicada hasta verificar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
