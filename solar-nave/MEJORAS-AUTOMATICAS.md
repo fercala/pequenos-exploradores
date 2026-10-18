@@ -100,8 +100,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-003 · Conservar la partida importada durante la recarga
 
-- **Inicio / última actualización:** 2026-10-18 05:53 / 06:17 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-18 05:53 / 06:19 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** al importar se escribe el archivo validado y se recarga, pero pagehide y visibilitychange llaman a persist con la expedición antigua. En AUTO-002, dos importaciones de 67P reanudaron la Tierra. Reproducción del orden de escrituras: importada comet67p; tras persist de la sesión anterior, earth.
 - **Relación:** O2-020 (partidas portátiles); hallazgo pendiente documentado en AUTO-002. Corrige la sustitución del guardado durante la transición, sin añadir otra función de importación.
 - **Diferencia:** los archivos ya se validan; falta impedir que la sesión saliente vuelva a escribir después de una importación válida.
@@ -110,7 +110,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Cambio:** una sesión de guardado protege la sustitución válida hasta recargar. persist y los eventos de salida comparten esa protección. Una escritura fallida libera la protección. La siguiente página crea una sesión nueva que guarda normalmente. Ajustes y Expedición usan el mismo importador. Versión 0.4.3; caché propia v9.
 - **Archivos:** core.js, app.js, expansion.js, tests/expansion.test.mjs, package.json, README.md y sw.js, además de este registro.
 - **Validación:** 48 pruebas satisfactorias y construcción estática. Dos regresiones cubren escrituras tardías de salida/foco/guardado periódico, progreso/campaña/cuaderno importados, rechazo de archivo inválido, fallo de almacenamiento y guardado de la siguiente sesión. Navegador real: importar 67P desde una sesión en Tierra, continuar en 67P con tres destinos visitados, cuatro capítulos completados y la muestra lunar del archivo; añadir una nota nueva, recargar y recuperar ambas entradas. Archivo inválido mantiene la sesión abierta. Sin errores de consola. Progreso revisado a 390 × 844; teléfono físico pendiente. Evidencia local: outputs/orbita-auto-003-prueba.png y outputs/orbita-auto-003-campana.png.
-- **Propuesta / commit / publicación:** pendientes; no declarada publicada hasta verificar Pages.
+- **Propuesta:** [#11](https://github.com/fercala/pequenos-exploradores/pull/11). Commit de código: 8c830174cf65d1a50ab8d7dae3b63174fcabaebd; incorporación a main: be1c5c5797e8c0ad15f00ffb3f662b616c84dd9a.
+- **Publicación confirmada:** 2026-10-18 06:19 UTC. [GitHub Pages: ejecución 39103571101 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39103571101). core.js, app.js, expansion.js y sw.js públicos devuelven HTTP 200; contienen la protección de la sesión, su uso en persist y en el importador y caché v9. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
