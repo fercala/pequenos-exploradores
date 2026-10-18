@@ -28,5 +28,18 @@ const STORAGE_KEY='orbita-solar-v1';
 export function readSave(storage){try{const p=JSON.parse(storage.getItem(STORAGE_KEY));return validateSave(p)?p:null;}catch{return null;}}
 export function validateSave(p){return !!p&&[1,2].includes(p.version)&&typeof p.planet==='string'&&Array.isArray(p.position)&&p.position.length===3&&p.position.every(Number.isFinite)&&Math.hypot(...p.position)>1&&Math.hypot(...p.position)<1000000&&Array.isArray(p.quaternion)&&p.quaternion.length===4&&p.quaternion.every(Number.isFinite)&&Math.hypot(...p.quaternion)>.5&&Math.hypot(...p.quaternion)<1.5&&Array.isArray(p.visited)&&Array.isArray(p.landed)&&Array.isArray(p.explored)&&Number.isFinite(p.elapsed);}
 export function writeSave(storage,state){try{storage.setItem(STORAGE_KEY,JSON.stringify({...state,version:state.version||1}));return true;}catch{return false;}}
+// A successful replacement belongs to the next page; outgoing lifecycle saves must not overwrite it.
+export function createSaveSession(storage){
+ let replacing=false;
+ return {
+  save(snapshot){return replacing||writeSave(storage,snapshot);},
+  replace(snapshot){
+   if(replacing)return false;
+   replacing=true;
+   if(writeSave(storage,snapshot))return true;
+   replacing=false;return false;
+  }
+ };
+}
 export function pressureAtDepth(id,depth){const base=id==='jupiter'?1:id==='saturn'?.8:.5;return base*Math.exp(clamp(depth,0,120)/30);}
 export function landingResult(speed,vertical,mode){const impact=speed>12||Math.abs(vertical)>6;return {impact,damage:impact&&mode==='challenge'?clamp((speed-8)*2+Math.abs(vertical)*3,0,80):0};}

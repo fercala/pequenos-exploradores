@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {BODIES,MOONS,bodyRadius,orbitalPosition,scientificRadius,rotationAngle,localGravity,entryHeating,atmosphericDensity,safeLanding,missionAllowed,validatePortable,tutorialAdvance} from '../simulation.js';
+import {createSaveSession,readSave} from '../core.js';
 const norm=v=>Math.hypot(...v),sub=(a,b)=>a.map((x,i)=>x-b[i]);
 test('Seventeen destinations include the Moon, Europa and Titan, each outside its parent',()=>{assert.equal(BODIES.length,17);for(const moon of MOONS){const separation=norm(sub(orbitalPosition(moon.id),orbitalPosition(moon.parent)));assert.ok(separation>bodyRadius(moon)+bodyRadius(moon.parent));assert.ok(moon.source.startsWith('https://science.nasa.gov/'));}});
 test('Floating references preserve global position across planet and moon changes',()=>{const global=[22123,5400,-19441];for(const body of BODIES){const origin=orbitalPosition(body.id,12.5),local=sub(global,origin),restored=local.map((x,i)=>x+origin[i]);restored.forEach((x,i)=>assert.ok(Math.abs(x-global[i])<1e-8));}});
@@ -13,3 +14,21 @@ test('Missions cannot be completed from an invalid location or vehicle',()=>{ass
 test('Portable saves migrate v1 and preserve surface vehicles and missions',()=>{const raw={version:1,planet:'moon',position:[0,0,180],quaternion:[0,0,0,1],visited:['earth','moon'],landed:['moon'],explored:[],elapsed:10};assert.equal(validatePortable(raw).version,2);const saved={...raw,version:2,vehicle:'rover',parkedPosition:[0,0,174],missions:['moon:sample'],days:12,roverDistance:51};const result=validatePortable(JSON.parse(JSON.stringify(saved)));assert.equal(result.vehicle,'rover');assert.equal(result.roverDistance,51);assert.deepEqual(result.missions,['moon:sample']);});
 test('Invalid imports and unusable coordinates are rejected before changing storage',()=>{const raw={version:2,planet:'earth',position:[0,0,700],quaternion:[0,0,0,1],visited:['earth'],landed:[],explored:[],elapsed:10};for(const changed of [{planet:'unknown'},{position:[0,0,0]},{quaternion:[0,0,0,0]},{elapsed:-1},{visited:['missing']},{vehicle:'walk',parkedPosition:null}])assert.throws(()=>validatePortable({...raw,...changed}));});
 test('Tutorial advances in response to the intended action only',()=>{let stage=0;assert.equal(tutorialAdvance(stage,'land'),0);for(const event of ['orient','thrust','brake','destination','land'])stage=tutorialAdvance(stage,event);assert.equal(stage,5);});
+
+const portable=()=>({version:2,planet:'earth',position:[0,0,1650],quaternion:[0,0,0,1],visited:['earth'],landed:[],explored:[],elapsed:12});
+function memoryStore(){const data=new Map();return {getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v)};}
+test('Imported progress survives outgoing lifecycle saves and a new session resumes normal saving',()=>{
+ const storage=memoryStore(),session=createSaveSession(storage),old=portable();session.save(old);
+ const imported=validatePortable({...old,planet:'comet67p',visited:['earth','moon','comet67p'],landed:['moon'],missions:['moon:sample'],elapsed:314,campaign:{storyActive:true,storyStep:4,notebook:[{body:'moon',kind:'sample',title:'Muestra',text:'Roca lunar'}]}});
+ assert.equal(session.replace(imported),true);
+ for(const hook of ['pagehide','visibilitychange','blur','periodic']){assert.equal(session.save(old),true,hook);assert.deepEqual(readSave(storage),imported,hook);}
+ assert.equal(session.replace(old),false);assert.deepEqual(readSave(storage),imported);
+ const resumed=readSave(storage);assert.equal(resumed.campaign.storyStep,4);assert.equal(resumed.campaign.notebook.length,1);assert.equal(resumed.elapsed,314);
+ const next=createSaveSession(storage);assert.equal(next.save({...resumed,elapsed:400}),true);assert.equal(readSave(storage).elapsed,400);
+});
+test('Rejected import files and failed storage do not lock or replace the running save',()=>{
+ const storage=memoryStore(),session=createSaveSession(storage),old=portable();session.save(old);
+ assert.throws(()=>session.replace(validatePortable({...old,planet:'unknown'})));assert.deepEqual(readSave(storage),old);
+ const set=storage.setItem;storage.setItem=()=>{throw Error('Quota');};assert.equal(session.replace(validatePortable({...old,planet:'moon'})),false);assert.deepEqual(readSave(storage),old);
+ storage.setItem=set;assert.equal(session.save({...old,elapsed:30}),true);assert.equal(readSave(storage).elapsed,30);assert.equal(session.replace(validatePortable({...old,planet:'moon'})),true);assert.equal(readSave(storage).planet,'moon');
+});
