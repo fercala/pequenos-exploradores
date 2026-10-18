@@ -257,6 +257,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#31](https://github.com/fercala/pequenos-exploradores/pull/31). Commit de código: 2c9bd4f8f3347a0cb3a3bcd3666679a3c0ce4395; incorporación a main: e1086856fff6ba4e3610849ab39ccd1c15790d0d.
 - **Publicación confirmada:** 2026-10-18 16:00 UTC. [GitHub Pages: ejecución 39142995787 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39142995787), sobre el commit de incorporación. expansion.js público devuelve HTTP 200 y contiene la actualización del estado de misión; package.json confirma 0.5.3 y sw.js confirma caché v19, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-013 · Evitar que el rover herede el salto del tripulante
+
+- **Inicio / última actualización:** 2026-10-18 17:02 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** changeVehicle coloca el nuevo vehículo en el suelo pero no limpia jumpHeight/jumpSpeed. surfacePhysics aplica esos valores tanto al astronauta como al rover. Subir al rover desde un salto lo hace continuar la parábola; embarcar en la nave y volver a salir puede reanudar un salto antiguo.
+- **Relación / diferencia:** O2-007 (salto), O2-008 (rover), SOL-001 (mochila) y AUTO-011 (contacto con el suelo). Se corrige el estado físico de la transición de vehículo; no se añaden saltos, vehículos ni otro requisito de recogida.
+- **Criterio de aceptación:** un cambio exitoso de vehículo descarta altura e impulso de salto previos; el rover permanece en su altura normal de conducción y salir otra vez de la nave empieza en el suelo. Un cambio rechazado conserva el salto que aún está en curso. Los saltos normales a pie mantienen su comportamiento.
+- **Rama:** codex/orbita-auto-013-salto-vehiculo.
+- **Cambio:** versión 0.5.4; al completar un cambio de vehículo se ponen a cero la altura y velocidad del salto. Se mantiene la colocación sobre el terreno y las guardas de acceso existentes; un cambio rechazado retorna antes de limpiar el salto. Caché propia v20.
+- **Archivos:** expansion.js, tests/vehicle-transition.test.mjs, package.json, README.md, sw.js y este registro.
+- **Validación:** 68 pruebas satisfactorias y construcción estática. Tres regresiones ejecutan createExpansion y su física real con interfaz simulada: pasar del salto al rover mantiene altura r+1; embarcar en nave y salir otra vez mantiene r+1,7 y permite un salto nuevo; un cambio rechazado conserva el salto. Antes del arreglo fallaban los dos primeros casos (altura heredada 0,6352 e impulso 3,176). Navegador real: viaje/descenso lunar, salir a pie, saltar y abrir Expedición con altitud DOM 4 m; conducir rover, altitud 1 m y velocidad vertical 0. Escritorio y 390 × 844 inspeccionados; sin errores/advertencias de consola. Evidencia: outputs/orbita-auto-013-rover.png. Teléfono físico pendiente.
+- **Propuesta / commit / publicación:** pendientes.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.

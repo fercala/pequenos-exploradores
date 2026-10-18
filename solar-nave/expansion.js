@@ -41,7 +41,7 @@ export function createExpansion(api){
    if(vehicle==='rover'&&s.position.distanceTo(w.parkedPosition)>40&&(!w.roverParked||s.position.distanceTo(w.roverParked)>20)){toast('Acércate a la nave o al rover estacionado.');return;}
    if(s.vehicle==='rover'&&vehicle==='walk'){w.roverParked=s.position.clone();w.roverParkedQuaternion=s.quaternion.clone();}s.vehicle=vehicle;s.landed=false;const n=s.position.clone().normalize();s.position.copy(n).multiplyScalar(w.groundRadius(n)+(vehicle==='walk'?1.7:1));
   }
-  w.vehicle=s.vehicle;resetInputs();brake();toast(({ship:'De vuelta a bordo.',walk:'Exploración a pie. Usa el joystick o Caminar; abre Mochila para las actividades.',rover:'Rover desplegado. Usa los mismos controles para conducir.'})[vehicle]);persist();
+  ex.jumpHeight=0;ex.jumpSpeed=0;w.vehicle=s.vehicle;resetInputs();brake();toast(({ship:'De vuelta a bordo.',walk:'Exploración a pie. Usa el joystick o Caminar; abre Mochila para las actividades.',rover:'Rover desplegado. Usa los mismos controles para conducir.'})[vehicle]);persist();
  };
  ex.jump=()=>{if(s.vehicle!=='walk'){toast('Sal a pie para saltar.');return;}if(ex.jumpHeight<.01)ex.jumpSpeed=3.5;};
  ex.surfacePhysics=(dt,joy,holds)=>{
