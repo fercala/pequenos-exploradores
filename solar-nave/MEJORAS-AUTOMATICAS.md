@@ -315,8 +315,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-017 · Conservar la exploración al reconstruir el mismo mundo
 
-- **Inicio / última actualización:** 2026-10-18 21:05 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-18 21:05 / 21:07 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** el selector de calidad y la recuperación gráfica llaman a setPlanet con el mundo actual. SolarUniverse.setPlanet borra siempre roverParked y su orientación, aunque no cambie el destino, por lo que el rover desaparece y no se puede embarcar lejos de la nave. También reinicia el ángulo del terreno durante esa reconstrucción.
 - **Relación / diferencia:** O2-004 (calidad móvil), O2-008 (rover), O2-014 (rotación) y AUTO-010 (estacionamiento persistente). AUTO-010 cubre guardar/recuperar y evita rover fantasma al viajar; este caso conserva la referencia local al reconstruir el mismo destino en una sesión viva, sin cargar una partida.
 - **Criterio de aceptación:** cambiar calidad en el mismo mundo conserva ubicación/orientación del rover y giro del terreno; después se puede embarcar cerca del rover aunque la nave esté lejos. Cambiar a otro mundo sí limpia el estacionamiento y establece su orientación inicial. La carga inicial sigue funcionando.
@@ -324,7 +324,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Cambio:** versión 0.5.8; setPlanet distingue reconstrucción del mismo destino de un viaje. Conserva el anclaje/orientación del rover y la fase finita del terreno en el primer caso; limpia el estacionamiento e inicializa la rotación en el segundo. La fase ausente usa el cálculo inicial existente. Caché propia v24.
 - **Archivos:** world-v2.js, tests/world-rebuild.test.mjs, package.json, README.md, sw.js y este registro.
 - **Validación:** 76 pruebas satisfactorias y construcción estática. Tres casos ejecutan el método de reconstrucción con ensamblado base reducido: mismo mundo conserva transformaciones y fase, nuevo mundo limpia rover/inicializa fase, carga inicial/fase ausente usan cálculo inicial. El primer caso fallaba antes al desaparecer el anclaje. Navegador real: partida lunar, rover a 134 m de la nave, bajar, cambiar calidad Automática → Baja y volver a conducir junto al rover; altitud 1 m y progreso 135 m conservado. Escritorio y 390 × 844 revisados, sin errores/advertencias de consola. Evidencia: outputs/orbita-auto-017-calidad.png. No se provocó pérdida real de contexto gráfico ni se probó teléfono físico; la recuperación gráfica usa el mismo método comprobado.
-- **Propuesta / commit / publicación:** pendientes.
+- **Propuesta:** [#41](https://github.com/fercala/pequenos-exploradores/pull/41). Commit de código: 3bb2d81493bbb7f304a36f3270cff9404e138e1f; incorporación a main: 7779b0ecfef906649d12586fba42d64e154c82e0.
+- **Publicación confirmada:** 2026-10-18 21:07 UTC. [GitHub Pages: ejecución 39166396103 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39166396103), sobre el commit de incorporación. world-v2.js público devuelve HTTP 200 e incluye conservación de estado al reconstruir el mismo destino; package.json confirma 0.5.8 y sw.js confirma caché v24, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
