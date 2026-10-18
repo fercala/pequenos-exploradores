@@ -3,6 +3,7 @@ import {BODIES,bodyRadius,orbitalPosition,rotationAngle,atmosphericDensity,entry
 import {createMissionControl} from './mission-control.js';
 import {createExploration} from './exploration.js';
 import {SpaceAudio} from './audio.js';
+import {createFieldExpedition} from './field-expedition.js';
 import {clamp} from './core.js';
 const v=a=>new T.Vector3(...a);
 export function createExpansion(api){
@@ -40,7 +41,7 @@ export function createExpansion(api){
    if(vehicle==='rover'&&s.position.distanceTo(w.parkedPosition)>40&&(!w.roverParked||s.position.distanceTo(w.roverParked)>20)){toast('Acércate a la nave o al rover estacionado.');return;}
    if(s.vehicle==='rover'&&vehicle==='walk')w.roverParked=s.position.clone();s.vehicle=vehicle;s.landed=false;const n=s.position.clone().normalize();s.position.copy(n).multiplyScalar(w.groundRadius(n)+(vehicle==='walk'?1.7:1));
   }
-  w.vehicle=s.vehicle;resetInputs();brake();toast(({ship:'De vuelta a bordo.',walk:'Exploración a pie. Usa el joystick o la propulsión para caminar.',rover:'Rover desplegado. Usa los mismos controles para conducir.'})[vehicle]);persist();
+  w.vehicle=s.vehicle;resetInputs();brake();toast(({ship:'De vuelta a bordo.',walk:'Exploración a pie. Usa el joystick o Caminar; abre Mochila para las actividades.',rover:'Rover desplegado. Usa los mismos controles para conducir.'})[vehicle]);persist();
  };
  ex.jump=()=>{if(s.vehicle!=='walk'){toast('Sal a pie para saltar.');return;}if(ex.jumpHeight<.01)ex.jumpSpeed=3.5;};
  ex.surfacePhysics=(dt,joy,holds)=>{
@@ -50,10 +51,11 @@ export function createExpansion(api){
   if(w.isWater(nn)){s.position.copy(before);s.velocity.set(0,0,0);return;}
   if(ex.jumpSpeed!==0||ex.jumpHeight>0){ex.jumpSpeed-=s.planet.gravity*dt;ex.jumpHeight+=ex.jumpSpeed*dt;if(ex.jumpHeight<0){ex.jumpHeight=0;ex.jumpSpeed=0;}}
   s.position.copy(nn).multiplyScalar(w.groundRadius(nn)+(s.vehicle==='walk'?1.7:1)+ex.jumpHeight);s.quaternion.premultiply(new T.Quaternion().setFromUnitVectors(n,nn));s.velocity.copy(s.position).sub(before).divideScalar(dt);
+  if(s.vehicle==='walk')ex.field?.walkStep(before,s.position);
   if(s.vehicle==='rover'){s.roverDistance+=before.distanceTo(s.position);if(s.roverDistance>=100)complete('rover');}
  };
  ex.science=key=>{const n=s.position.clone().normalize(),alt=s.position.length()-w.groundRadius(n);if(!missionAllowed(key,{altitude:alt,rocky:s.planet.rocky,vehicle:s.vehicle,auto:s.auto})){toast(key==='sample'?'Debes estar a pie para tomar una muestra.':key==='probe'?'Desciende dentro de la atmósfera de un gigante para desplegar una sonda.':'Acércate a menos de 150 m simulados antes de medir.');return;}
-  if(key==='probe')w.addProbe(s.position);complete(key);const result=`${s.planet.name} · ${key==='sample'?'Muestra virtual registrada':key==='probe'?'Sonda virtual desplegada':'Medición registrada'}. Gravedad de referencia: ${s.planet.gravity} m/s². Temperatura: ${s.planet.temperature}. Atmósfera: ${s.planet.atmosphere}. Estos son datos aproximados del catálogo, no una lectura científica en tiempo real.`;ex.v4.record(key==='sample'?'sample':'note',key==='sample'?'Muestra virtual':'Exploración del entorno',result);if($('science-result'))$('science-result').textContent=result;else toast(result);
+  if(key==='probe')w.addProbe(s.position);complete(key);const result=`${s.planet.name} · ${key==='sample'?'Muestra virtual registrada':key==='probe'?'Sonda virtual desplegada':'Medición registrada'}. Gravedad de referencia: ${s.planet.gravity} m/s². Temperatura: ${s.planet.temperature}. Atmósfera: ${s.planet.atmosphere}. Estos son datos aproximados del catálogo, no una lectura científica en tiempo real.`;ex.v4.record(key==='sample'?'sample':'note',key==='sample'?'Muestra virtual':'Exploración del entorno',result);if($('science-result'))$('science-result').textContent=result;else toast(result);return true;
  };
  ex.renderMissions=()=>{panel(`Misiones · ${s.planet.name}`,`<p>Completa estas actividades a tu ritmo. El progreso se conserva en tu partida.</p>${missionList(s.planet).map(m=>`<div class="journal-row"><div><b>${m.title}</b><small>${m.hint}</small></div><span>${s.missions.has(`${s.planet.id}:${m.key}`)?'✓ Completada':'Pendiente'}</span></div>`).join('')}<div class="settings-actions"><button id="mission-measure" class="secondary-button">Medir entorno</button><button id="mission-sample" class="secondary-button">Tomar muestra</button><button id="mission-probe" class="secondary-button">Desplegar sonda</button></div><p id="science-result" class="info-note">La muestra y la sonda son actividades virtuales de exploración.</p>`);button('mission-measure',()=>ex.science('scan'));button('mission-sample',()=>ex.science('sample'));button('mission-probe',()=>ex.science('probe'));};
  ex.enterAtlas=()=>{if(s.auto){toast('Cancela el piloto automático antes de abrir el atlas.');return;}closePanel();resetInputs();w.overview=true;document.body.classList.add('atlas-mode');s.velocity.set(0,0,0);w.zoom=1;const bar=document.createElement('div');bar.id='atlas-controls';bar.innerHTML='<strong>Atlas 3D · órbitas circulares aproximadas</strong><label>Escala <select id="atlas-scale"><option value="play">Jugable · tamaños y distancias adaptados</option><option value="real">Científica · radios y distancias proporcionales</option></select></label><label>Enfocar <select id="atlas-focus"><option value="all">Sistema completo</option></select></label><label>Tiempo <select id="atlas-time"><option value="0">Pausa</option><option value="86400" selected>1 día / segundo</option><option value="864000">10 días / segundo</option><option value="8640000">100 días / segundo</option></select></label><p id="atlas-note">Arrastra para girar. Usa la rueda o pellizca para acercarte.</p><button id="atlas-back">Volver a la nave</button>';document.body.append(bar);for(const p of BODIES){const option=document.createElement('option');option.value=p.id;option.textContent=p.name;$('atlas-focus').append(option);}$('atlas-focus').onchange=e=>{w.atlasFocus=e.target.value;w.zoom=1;};w.atlasFocus='all';ex.atlasTime=86400;$('atlas-scale').onchange=e=>{w.realScale=e.target.value==='real';$('atlas-note').textContent=w.realScale?'Las esferas respetan radios y distancias relativos. Las etiquetas se amplían para poder localizar los mundos. Las órbitas son aproximadas, no efemérides.':'Escala comprimida para explorar. Las órbitas son circulares aproximadas.';};$('atlas-time').onchange=e=>ex.atlasTime=Number(e.target.value);button('atlas-back',()=>{w.overview=false;document.body.classList.remove('atlas-mode');bar.remove();w.zoom=1;w.viewYaw=w.viewPitch=0;});};
@@ -73,7 +75,7 @@ export function createExpansion(api){
  ex.checkReference=()=>{const alt=s.position.length()-bodyRadius(s.planet),absolute=v(orbitalPosition(s.planet.id,s.days)).add(s.position);for(const p of BODIES){if(p.id===s.planet.id)continue;const distance=absolute.distanceTo(v(orbitalPosition(p.id,s.days)))-bodyRadius(p);if(distance<1500&&distance<alt-200){changeReference(p.id,absolute);return;}}};
  ex.updateTime=dt=>{s.days+=dt*(w.overview?ex.atlasTime:s.timeScale)/86400;w.clockDays=s.days;w.timeScale=s.timeScale;};
  ex.tick=(dt,frozen,joy,holds)=>{
-  ex.exploration.tick(dt);ex.v4.tick(dt,frozen);
+  ex.exploration.tick(dt);ex.v4.tick(dt,frozen);ex.field.tick(dt);
   w.vehicle=s.vehicle;w.gear=s.gear;const n=s.position.clone().normalize(),alt=s.position.length()-w.groundRadius(n),speed=s.velocity.length(),heatValue=entryHeating(s.planet,alt,speed);s.heat=heatValue;
   if(!frozen&&heatValue>70&&s.settings.mode==='challenge'&&s.vehicle==='ship')s.shield=Math.max(1,s.shield-dt*(heatValue-60)*.025);
   $('entry-glow').style.opacity=String(heatValue/100*.65);$('entry-readout').textContent=`CALOR DE ENTRADA ${Math.round(heatValue)}%`;
@@ -81,7 +83,7 @@ export function createExpansion(api){
   $('horizon-disc').style.transform=`translateY(${clamp(pitch,-60,60)*.7}px) rotate(${-roll}deg)`;$('compass').textContent=`RUMBO ${Math.round((Math.atan2(forward.x,forward.z)*180/Math.PI+360)%360)}° · V/S ${s.velocity.dot(n).toFixed(1)} m/s`;
   instruments.hidden=w.cameraMode!=='cockpit'||w.overview;guide.hidden=!s.started||s.tutorial>=5||w.overview||ex.photo;$('tutorial-text').textContent=`${s.tutorial+1}/5 · ${TUTORIAL[s.tutorial]||'Tutorial completado'}`;
   $('vehicle-btn').hidden=!(s.landed||s.vehicle!=='ship');$('vehicle-btn').textContent=s.vehicle==='ship'?'Salir de la nave':'Volver a la nave';$('gear-btn').textContent=s.gear?'⚑ Tren desplegado':'⚑ Tren retraído';$('gear-btn').setAttribute('aria-pressed',s.gear);
-  if(s.vehicle!=='ship'){nav.textContent=`${s.vehicle==='eva'?'PASEO ESPACIAL':s.vehicle==='walk'?'A PIE':'ROVER'} · NAVE A ${Math.round(s.position.distanceTo(w.parkedPosition))} m · ${s.vehicle==='eva'?'Propulsión: mochila · Centro de misión: regreso':s.vehicle==='rover'?Math.floor(s.roverDistance)+' m recorridos':'Expedición → Saltar'}`;}
+  if(s.vehicle!=='ship'){nav.textContent=`${s.vehicle==='eva'?'PASEO ESPACIAL':s.vehicle==='walk'?'A PIE':'ROVER'} · NAVE A ${Math.round(s.position.distanceTo(w.parkedPosition))} m · ${s.vehicle==='eva'?'Propulsión: mochila · Centro de misión: regreso':s.vehicle==='rover'?Math.floor(s.roverDistance)+' m recorridos':'Saltar · Mochila y actividades'}`;}
   else if(s.auto?.type==='travel'){const target=s.auto.destination,absolute=v(orbitalPosition(s.planet.id,s.days)).add(s.position),to=v(orbitalPosition(target,s.days)).sub(absolute),distance=to.length(),braking=speed*speed/(2*65);nav.textContent=`${BODIES.find(p=>p.id===target).name.toUpperCase()} · ${Math.round(distance).toLocaleString('es-ES')} unidades · ${Math.max(0,Math.ceil(s.auto.duration-s.auto.time))} s · Frenado ≈${Math.round(braking)} u`;}
   else nav.textContent=`${s.planet.name.toUpperCase()} · ${s.vehicle==='ship'?'VUELO CONTINUO':s.vehicle} · Reloj ${s.days>=0?'+':''}${s.days.toFixed(3)} días`;
   if(!frozen&&s.vehicle==='ship'&&!s.auto&&!w.overview){const absolute=v(orbitalPosition(s.planet.id,s.days)).add(s.position);for(const p of BODIES){if(p.id===s.planet.id)continue;const distance=absolute.distanceTo(v(orbitalPosition(p.id,s.days)))-bodyRadius(p);if(distance<1500&&distance<alt-200){changeReference(p.id,absolute);break;}}}
@@ -90,5 +92,6 @@ export function createExpansion(api){
  };
  ex.exploration=createExploration(api,panel);
  ex.v4=createMissionControl(api,ex,panel);
+ ex.field=createFieldExpedition(api,ex,panel);
  return ex;
 }

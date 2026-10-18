@@ -27,3 +27,14 @@
 
 /* Keep all flight actions reachable on narrow phones, including pause. */
 @media(max-width:420px){.topbar{padding:0 12px}.topbar .brand{font-size:14px;letter-spacing:1px;gap:0}.topbar .brand svg,.topbar .brand small{display:none}}
+
+/* Surface expedition controls keep flight and exploration actions in the same place. */
+#field-kit{pointer-events:auto;flex:1;margin-left:auto;max-width:290px;padding:12px;background:#101e31ed;border:1px solid #bafa7350;border-radius:9px;color:#dbe8f5}
+#field-kit strong{display:block;font-size:10px;letter-spacing:1px;color:#bafa73}#field-kit p{font-size:11px;line-height:1.5;margin:8px 0}
+.field-quick{display:grid;grid-template-columns:1fr 1fr;gap:6px}.field-quick button{min-height:48px;padding:8px;border:1px solid #ffffff30;border-radius:6px;font-size:11px;background:#1c3049}.field-quick button:first-child{background:#bafa73;color:#152109}
+#field-launch{grid-column:1 / -1;background:#182c45;color:#dce8f6}
+.field-active .primary-actions{display:none}.field-goals{padding-left:22px;color:#c3d4e7}.field-goals li{padding:7px 0;line-height:1.5}
+.field-active .toast{bottom:240px;pointer-events:none}.on-foot .destination h1{font-size:36px;margin:12px 0}.on-foot .destination p,.on-foot .planet-facts{display:none}
+.large-text #field-kit p,.large-text .field-quick button{font-size:13px}.large-text #field-kit strong{font-size:11px}
+@media(max-width:700px){#field-kit{max-width:210px;padding:8px}#field-kit strong{font-size:8px;letter-spacing:.5px}#field-kit p{font-size:9px;margin:6px 0}.field-active .throttle{width:130px;flex:0 0 130px}.field-quick{grid-template-columns:repeat(2,minmax(0,1fr))}.field-quick button{font-size:9px;padding:5px;min-height:48px;min-width:44px;overflow-wrap:anywhere}.on-foot .camera-bar{bottom:calc(265px + env(safe-area-inset-bottom))}.field-active:not(.on-foot) .camera-bar{bottom:295px}.field-active .toast{bottom:calc(345px + env(safe-area-inset-bottom))}.on-foot .destination h1{font-size:32px}.large-text #field-kit p,.large-text .field-quick button{font-size:13px}.large-text #field-kit strong{font-size:11px}}
+@media(max-width:360px){.on-foot #joystick{bottom:calc(320px + env(safe-area-inset-bottom))}}

@@ -200,6 +200,20 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#23](https://github.com/fercala/pequenos-exploradores/pull/23). Commit de código: 0f35269c13dc2de286818238cb89a2101b4f473f; incorporación a main: 5eb95c4e2adbb8bdc841d71ab0bc0eb35196590d.
 - **Publicación confirmada:** 2026-10-18 12:03 UTC. [GitHub Pages: ejecución 39125648197 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39125648197). app.js público devuelve HTTP 200 e incluye Volver a la expedición y oculta la recuperación de disco en ese contexto; sw.js devuelve HTTP 200 y caché v15. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### SOL-001 · Expedición de superficie del tripulante (petición directa)
+
+- **Inicio / última actualización:** 2026-10-18 12:17 / 12:28 UTC; petición directa posterior a AUTO-009.
+- **Estado:** Verificada.
+- **Problema / petición:** el usuario quiere que el tripulante explore, camine y realice actividades. La caminata, salto, muestra, medición y rover existen (O2-007/008/017), pero están dispersos en menús y la animación del astronauta es estática.
+- **Diferencia / alcance:** acceso contextual al bajar de la nave, mandos de marcha claros, animación al caminar, mochila de actividades con progreso por mundo, recorrido a pie y baliza 3D persistente. Reutiliza las muestras, mediciones, rover y fotografías existentes; no las presenta como funciones nuevas.
+- **Relación:** O2-007, O2-008, O2-017, O4-017 y O2-020. Conserva AUTO-006 (borradores) y demás correcciones publicadas.
+- **Criterio de aceptación:** aterrizar, salir a pie, caminar con mouse/tacto, saltar, examinar, tomar una muestra, colocar una baliza visible y orientarse/volver a la nave sin teclado. Progreso y baliza se conservan al recuperar/exportar una partida; no hay caminata en gigantes gaseosos. El movimiento reducido y la descarga sin conexión siguen funcionando.
+- **Rama:** codex/orbita-explorador-superficie.
+- **Cambio:** versión 0.5.0, kit de superficie contextual, marcha identificada, mochila con acciones/objetivos, recorrido por mundo, baliza 3D persistente, orientación de regreso y animación del tripulante. Se reutilizan salto, muestra, medición, foto y rover. Cámara de seguimiento adaptada con zoom. La nave conserva Despegar. Detalles: MEJORAS-V5.md.
+- **Archivos:** field-data.js, field-expedition.js, expansion.js, world-v2.js, systems.js, app.js, index.html, style.css, sw.js, scripts/build.mjs, tests/field.test.mjs, package.json, README.md, MEJORAS-V5.md y este registro. Solo solar-nave.
+- **Validación:** 61 pruebas satisfactorias y construcción estática. Siete casos nuevos para distancia sin saltos verticales, migración y límites, objetivos científicos por mundo, animación/movimiento reducido, baliza anclada, retorno/orientación/despegue y guardas de superficie. Navegador real en Tierra: aterrizar, salir, caminar 189 m simulados, saltar, examinar, tomar muestra, colocar baliza, completar 4/4, recargar y conservar datos, orientar regreso (102 → 9 m), embarcar, usar rover, bajar y despegar. Sin errores de consola. Escritorio y móvil 390/320 px; controles rápidos de 61 × 48 px a 320. No se afirma prueba manual en los 17 mundos ni en un teléfono físico. Evidencia local: outputs/orbita-explorador-superficie.png y outputs/orbita-explorador-actividades.png. Módulos nuevos en caché v16; las comprobaciones de aislamiento/sin conexión siguen pasando.
+- **Propuesta / commit / despliegue:** pendientes; Verificada hasta confirmar la publicación.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.

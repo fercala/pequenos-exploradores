@@ -1,6 +1,6 @@
 # Órbita 4 · Explorador del sistema solar
 
-Simulador web 3D en español, con mouse o pantalla táctil, instalable y descargable para usar sin conexión. Versión 0.4.9.
+Simulador web 3D en español, con mouse o pantalla táctil, instalable y descargable para usar sin conexión. Versión 0.5.0.
 
 **Publicado:** https://fercala.github.io/pequenos-exploradores/solar-nave/
 
@@ -37,3 +37,7 @@ Fuentes y licencias: `assets/textures/CREDITS.md`, `assets/terrain/CREDITS.md`, 
 Detalles: [MEJORAS-V4.md](MEJORAS-V4.md), [MEJORAS-V3.md](MEJORAS-V3.md), [MEJORAS.md](MEJORAS.md), [VERIFICACION.md](VERIFICACION.md).
 
 Registro para evitar duplicados y seguir la mejora horaria: [MEJORAS-AUTOMATICAS.md](MEJORAS-AUTOMATICAS.md).
+
+## Tripulante y superficie (0.5.0)
+
+Aterriza y pulsa **Salir a explorar**. Camina con el joystick o el control **Caminar**; arrastra para orientar y usa **Saltar**. En **Mochila y actividades** puedes examinar, tomar muestras, colocar una baliza, usar el rover, fotografiar y regresar a la nave. Cada mundo sólido conserva su recorrido y cuatro objetivos. [Detalles y validación](MEJORAS-V5.md).
