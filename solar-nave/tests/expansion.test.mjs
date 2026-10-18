@@ -69,3 +69,8 @@ test('Sampling requires contact with terrain on foot and rejects every airborne 
  assert.equal(missionAllowed('scan',{...ground,altitude:100}),true);
  assert.equal(missionAllowed('probe',{rocky:false,vehicle:'ship',altitude:-30,auto:null}),true);
 });
+
+test('Portable rover counters retain only finite nonnegative known solid-world distances',()=>{
+ const clean=validatePortable({...portable(),roverDistances:{earth:50,moon:2e7,mars:-1,venus:Infinity,pluto:'12',jupiter:12,unknown:3}});
+ assert.deepEqual(clean.roverDistances,{earth:50,moon:1e7});assert.deepEqual(validatePortable(portable()).roverDistances,{});
+});
