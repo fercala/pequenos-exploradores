@@ -5,12 +5,12 @@ import {createMissionControl} from '../mission-control.js';
 import {bodyById,bodyRadius} from '../simulation.js';
 function fixture(){
  let stops=[];
- const hubs=['story','teacher','routes'].map(hub=>({dataset:{hub}}));
+ const hubs=['story','teacher','routes','notebook'].map(hub=>({dataset:{hub}}));
  const elements=new Map(),make=()=>({style:{},hidden:false,textContent:'',prepend(){},append(){},setAttribute(){}});globalThis.document={createElement:make,querySelector:()=>make(),querySelectorAll:selector=>selector==='[data-hub]'?hubs:selector==='[data-remove-stop]'?stops:[],body:{append(){}}};const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
  const s={planet:bodyById('earth'),position:new T.Vector3(0,0,1600),quaternion:new T.Quaternion(),velocity:new T.Vector3(),vehicle:'ship',landed:false,auto:null,settings:{mode:'exploration'},started:true,days:0,elapsed:0,throttle:0,shield:100};
  const w={planet:s.planet,scene:new T.Scene(),ship:new T.Group(),parkedPosition:new T.Vector3(0,0,1600),parkedQuaternion:new T.Quaternion(),planetGroup:new T.Group(),localNormal:n=>n,groundRadius:()=>bodyRadius(s.planet)};
  const calls={travel:[],land:0,saves:0,messages:[]};const api={state:s,world:w,$,toast:m=>calls.messages.push(m),persist:()=>calls.saves++,closePanel(){},resetInputs(){},setThrottle:n=>s.throttle=n,startTravel:id=>{calls.travel.push(id);s.auto={type:'travel'};},startLanding:()=>{calls.land++;s.auto={type:'landing'};}};
- const mc=createMissionControl(api,{photo:false},()=>{stops=mc.campaign.route.map((_,i)=>({dataset:{removeStop:String(i)}}));});return {s,w,c:mc.campaign,mc,$,calls,remove(index){stops[index].onclick();},open(view){mc.hub();hubs.find(b=>b.dataset.hub===view).onclick();}};
+ const mc=createMissionControl(api,{photo:false},()=>{$('field-note').value='';stops=mc.campaign.route.map((_,i)=>({dataset:{removeStop:String(i)}}));});return {s,w,c:mc.campaign,mc,$,calls,remove(index){stops[index].onclick();},open(view){mc.hub();hubs.find(b=>b.dataset.hub===view).onclick();}};
 }
 test('Guided docking reaches the actual station port, replenishes reserves and preserves a docked save',()=>{const {s,w,c,mc,$}=fixture();c.fuel=2;c.energy=3;s.auto={type:'v4dock',time:0,duration:12,from:s.position.clone(),qFrom:s.quaternion.clone()};assert.ok(mc.stepAuto(s.auto,12));assert.equal(s.auto,null);assert.ok(c.docked);assert.ok(s.position.distanceTo(w.dockPosition())<1e-8);assert.equal(c.fuel,100);assert.equal(c.energy,100);assert.ok($('travel-progress').hidden);mc.restore(mc.snapshot());assert.ok(mc.campaign.docked);mc.tick(.3,false);assert.ok(mc.campaign.docked);});
 test('Guided orbit clears the terrain, finishes at rest and releases the controls',()=>{const {s,w,mc}=fixture();s.auto={type:'v4orbit',mode:'orbit',time:0,duration:8,height:500,from:s.position.clone(),normal:s.position.clone().normalize(),axis:new T.Vector3(0,1,0)};for(let i=0;i<8;i++){mc.stepAuto(s.auto,1);assert.ok(s.position.length()>w.groundRadius()+40);}assert.equal(s.auto,null);assert.equal(s.velocity.length(),0);assert.ok(Math.abs(s.position.length()-1100)<1e-8);});
@@ -47,4 +47,9 @@ test('Removing route stops keeps the intended next destination without skipping 
 test('Deleting the last stop yields an empty route and running routes reject deletion',()=>{
  const {c,$,open,remove}=fixture();c.route=[{body:'moon',action:'land'}];c.routeIndex=0;open('routes');remove(0);assert.equal(c.route.length,0);assert.equal(c.routeIndex,0);$('route-resume').onclick();assert.equal(c.routeRunning,false);assert.match($('mc-notice').textContent,/No quedan escalas/);
  c.route=[{body:'moon',action:'land'},{body:'mars',action:'orbit'}];c.routeIndex=1;c.routePhase='arrive';c.routeRunning=true;open('routes');remove(0);assert.equal(c.route.length,2);assert.equal(c.routeIndex,1);assert.equal(c.routePhase,'arrive');assert.match($('mc-notice').textContent,/Detén la ruta/);
+});
+
+test('A notebook draft survives panel changes and restored saves without creating or duplicating records',()=>{
+ const {mc,$,open}=fixture();open('notebook');$('field-note').value='Observo una ladera con hielo.';$('field-note').oninput?.();assert.equal(mc.campaign.noteDraft,'Observo una ladera con hielo.');assert.equal(mc.campaign.notebook.length,0);$('field-note').onchange?.();open('routes');open('notebook');assert.equal($('field-note').value,'Observo una ladera con hielo.');
+ mc.restore(JSON.parse(JSON.stringify(mc.snapshot())));open('notebook');assert.equal($('field-note').value,'Observo una ladera con hielo.');$('save-note').onclick();assert.equal(mc.campaign.notebook.length,1);assert.equal(mc.campaign.notebook[0].text,'Observo una ladera con hielo.');assert.equal(mc.campaign.noteDraft,'');assert.equal($('field-note').value,'');open('notebook');$('save-note').onclick();assert.equal(mc.campaign.notebook.length,1);
 });
