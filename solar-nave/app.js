@@ -159,8 +159,9 @@ function updateHud(now){
   $('land-label').textContent=state.landed?'Aterrizaje completado':state.planet.rocky?'Descender al planeta':'Explorar atmósfera';$('land-btn').disabled=state.landed||!!state.auto;$('orbit-btn').disabled=!!state.auto;
   $('environment').hidden=state.planet.rocky||alt>120;if(!$('environment').hidden)$('environment').textContent=`Presión de juego: ${format(pressureAtDepth(state.planet.id,depth),1)} bar · Límite: 90 m de profundidad simulada`;
   const h=Math.floor(state.elapsed/3600),m=Math.floor(state.elapsed/60)%60,s=Math.floor(state.elapsed)%60;$('mission-clock').textContent=[h,m,s].map(v=>String(v).padStart(2,'0')).join(':');
-  $('status-banner').hidden=!state.paused&&!state.landed&&!state.auto&&!(alt<35&&speed>25);
-  $('status-banner').textContent=state.paused?'EXPEDICIÓN EN PAUSA · Pulsa continuar':state.landed?'ATERRIZAJE COMPLETADO · Explora la vista o vuelve a despegar':state.auto?'PILOTO AUTOMÁTICO · Puedes cancelar la maniobra':'PRECAUCIÓN · Reduce la velocidad cerca del terreno';
+  const unsafeApproach=alt<35&&speed>25;
+  $('status-banner').hidden=!state.paused&&!state.landed&&!state.auto&&!unsafeApproach&&!look;
+  $('status-banner').textContent=state.paused?'EXPEDICIÓN EN PAUSA · Pulsa continuar':state.landed?'ATERRIZAJE COMPLETADO · Explora la vista o vuelve a despegar':state.auto?'PILOTO AUTOMÁTICO · Puedes cancelar la maniobra':unsafeApproach?'PRECAUCIÓN · Reduce la velocidad cerca del terreno':'MODO MIRAR · El arrastre mueve solo la cámara';
 }
 function frame(now){requestAnimationFrame(frame);const dt=Math.max(0,Math.min((now-last)/1000,1));last=now;
   const frozen=freeze()||expansion.photo||expansion.editing;if(!frozen){state.elapsed+=dt;saveClock+=dt;expansion.updateTime(dt);if(!world.overview){if(state.auto)updateAuto(dt);else{let remaining=dt;while(remaining>0){const step=Math.min(remaining,1/60);updatePhysics(step);remaining-=step;}}}if(saveClock>10){saveClock=0;persist();}}
@@ -197,7 +198,7 @@ canvas.addEventListener('contextmenu',e=>e.preventDefault());
 const joystick=$('joystick');joystick.addEventListener('pointerdown',e=>{if(freeze()||state.auto)return;e.preventDefault();joyPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);if(expansion.layoutPointer(e))return;moveJoy(e);});
 function moveJoy(e){if(joyPointer!==e.pointerId)return;if(expansion.layoutPointer(e))return;const r=joystick.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)/(r.width*.32),y=(e.clientY-r.top-r.height/2)/(r.height*.32),length=Math.max(1,Math.hypot(x,y));joy.x=x/length;joy.y=y/length;joystick.firstElementChild.style.transform=`translate(${joy.x*26}px,${joy.y*26}px)`;}
 joystick.addEventListener('pointermove',moveJoy);function resetJoy(){joyPointer=null;joy.x=joy.y=0;joystick.firstElementChild.style.transform='';}joystick.addEventListener('pointerup',resetJoy);joystick.addEventListener('pointercancel',resetJoy);joystick.addEventListener('lostpointercapture',resetJoy);
-$('look-btn').onclick=()=>{look=!look;$('look-btn').setAttribute('aria-pressed',look);if(!look){world.viewYaw=0;world.viewPitch=0;}};
+$('look-btn').onclick=()=>{look=!look;$('look-btn').setAttribute('aria-pressed',look);if(!look){world.viewYaw=0;world.viewPitch=0;}toast(look?'Modo mirar: arrastra para mover solo la cámara, sin girar el vehículo.':'Modo mirar desactivado. Arrastre habitual restablecido.');};
 $('camera-btn').onclick=()=>{const modes=['follow','cockpit','observe'];world.cameraMode=modes[(modes.indexOf(world.cameraMode)+1)%3];world.viewYaw=world.viewPitch=0;$('camera-label').textContent=({follow:'Seguimiento',cockpit:'Cabina',observe:'Observación'})[world.cameraMode];};
 $('zoom-in').onclick=()=>world.zoom=clamp(world.zoom-.2,.4,4);$('zoom-out').onclick=()=>world.zoom=clamp(world.zoom+.2,.4,4);
 $('photo-btn').onclick=()=>expansion.togglePhoto(!expansion.photo);
