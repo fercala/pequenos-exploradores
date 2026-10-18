@@ -327,6 +327,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#41](https://github.com/fercala/pequenos-exploradores/pull/41). Commit de código: 3bb2d81493bbb7f304a36f3270cff9404e138e1f; incorporación a main: 7779b0ecfef906649d12586fba42d64e154c82e0.
 - **Publicación confirmada:** 2026-10-18 21:07 UTC. [GitHub Pages: ejecución 39166396103 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39166396103), sobre el commit de incorporación. world-v2.js público devuelve HTTP 200 e incluye conservación de estado al reconstruir el mismo destino; package.json confirma 0.5.8 y sw.js confirma caché v24, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-018 · Reactivar el audio guardado al comenzar o continuar
+
+- **Inicio / última actualización:** 2026-10-18 22:10 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** sound se carga desde orbita-settings y aparece marcado, pero SpaceAudio empieza desactivado. La única llamada a audio.enable está en el cambio de casilla; start no lo invoca, por lo que tras recargar el sonido configurado permanece inactivo hasta volver a conmutarlo.
+- **Relación / diferencia:** O2-018 (sonido opcional) y O2-020 (recuperación). AUTO-015 guarda el ritmo orbital; aquí se restaura el motor de audio a partir de una preferencia ya guardada, usando la pulsación de inicio compatible con la activación de audio del navegador.
+- **Criterio de aceptación:** pulsar Comenzar o Continuar inicia/reanuda el audio si la preferencia guardada está activada. Si está desactivada no crea un contexto ni emite sonido. Un fallo de activación se comunica sin impedir empezar la expedición ni generar una promesa rechazada sin tratar.
+- **Rama:** codex/orbita-auto-018-audio-recuperado.
+- **Cambio:** versión 0.5.9; Comenzar/Continuar invocan la recuperación del audio según sound dentro de la pulsación del usuario. El selector usa la misma ruta, que trata errores sin bloquear la expedición. Desactivar espera la suspensión del contexto para poder tratar también su rechazo. Se reutiliza el motor existente y su preferencia; caché propia v25.
+- **Archivos:** app.js, expansion.js, audio.js, tests/vehicle-transition.test.mjs, package.json, README.md, sw.js y este registro.
+- **Validación:** 78 pruebas satisfactorias, sintaxis y construcción estática. Dos casos nuevos cubren preferencia activada/desactivada, comunicación de fallo, contexto ausente cuando está silenciado, creación/reanudación con API de audio simulada, reutilización de un único motor y tratamiento de errores de suspensión. Navegador real: continuar, activar sonido, recargar, Continuar y recuperar casilla marcada sin errores/advertencias ni aviso de fallo; escritorio y 390 × 844 revisados. Evidencia: outputs/orbita-auto-018-audio.png. No se realizó medición o escucha auditiva ni prueba de audio en teléfono físico; el ciclo del contexto se comprueba automáticamente. La prueba local termina silenciada.
+- **Propuesta / commit / publicación:** pendientes.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
