@@ -271,6 +271,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#33](https://github.com/fercala/pequenos-exploradores/pull/33). Commit de código: d6a41c0f97d9f35faf6ab6ad596bfb6513d627a0; incorporación a main: 353b90f790859828f08cec3013f5be6885e6fd5a.
 - **Publicación confirmada:** 2026-10-18 17:06 UTC. [GitHub Pages: ejecución 39147961602 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39147961602), sobre el commit de incorporación. expansion.js público devuelve HTTP 200 y contiene la limpieza de altura/impulso antes de activar el nuevo vehículo; package.json confirma 0.5.4 y sw.js confirma caché v20, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-014 · Contar los recorridos del rover por mundo
+
+- **Inicio / última actualización:** 2026-10-18 18:05 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** surfacePhysics usa roverDistance, acumulado de toda la expedición, para completar la misión de 100 m de cada destino. Tras superar 100 m en un mundo, activar el rover en otro puede completar su misión incluso sin desplazamiento.
+- **Relación / diferencia:** O2-008 (contador rover), O2-017 (misiones por destino), O2-020 (partidas), AUTO-010 (estacionamiento) y AUTO-012 (estado visible). Esta mejora separa el recorrido que acredita la misión de cada mundo; no añade vehículos, misiones ni estacionamientos nuevos.
+- **Criterio de aceptación:** el recorrido de un mundo no completa la misión de otro; cada uno requiere 100 m locales. Volver a un mundo, recuperar o importar conserva su parcial. Se mantiene el total histórico y todas las misiones completadas. La interfaz identifica el contador local. Datos portátiles inválidos se descartan con límites y compatibilidad antigua.
+- **Rama:** codex/orbita-auto-014-rover-por-mundo.
+- **Cambio:** versión 0.5.5; contador roverDistances por destino, usado para acreditar los 100 m y visible en navegación/Misiones. Snapshot, restauración e importación conservan parciales independientes y validan mundos sólidos, números finitos y límites. roverDistance histórico y misiones completadas se conservan. Las partidas antiguas no contienen desglose: comienzan parciales locales nuevos en cero, explicado en README. Caché propia v21.
+- **Archivos:** expansion.js, simulation.js, tests/vehicle-transition.test.mjs, tests/expansion.test.mjs, package.json, README.md, sw.js y este registro.
+- **Validación:** 71 pruebas satisfactorias y construcción estática. Regresión del controlador reproducida antes del arreglo: total 1000 m completaba Luna sin moverse. Ahora exige recorrido lunar, completa tras 100 m locales y Marte permanece pendiente. Snapshot → JSON → validación → restauración conserva parciales independientes; migración conserva total/misiones antiguas, descarta datos inválidos y limita distancias. Navegador real: partida local anterior recuperada en Luna, contador local 0; conducir hasta 93/100 deja misión pendiente, recargar/Continuar conserva 93, continuar hasta 135 completa la misión. Escritorio y 390 × 844 revisados; sin errores/advertencias de consola. Evidencia: outputs/orbita-auto-014-recorrido.png. Cambio entre mundos cubierto automáticamente, no recorrido manual entre dos mundos en esta ejecución; teléfono físico pendiente.
+- **Propuesta / commit / publicación:** pendientes.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
