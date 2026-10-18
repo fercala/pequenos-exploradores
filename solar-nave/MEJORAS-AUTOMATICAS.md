@@ -186,6 +186,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#21](https://github.com/fercala/pequenos-exploradores/pull/21). Commit de código: c8e6834b524ef4dd0e46e574fdfe15a1109339ab; incorporación a main: bf5f9e80b7297205674814e921ffcefe27bbc499.
 - **Publicación confirmada:** 2026-10-18 10:56 UTC. [GitHub Pages: ejecución 39121142854 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39121142854). La página y app.js públicos devuelven HTTP 200 e incluyen el nombre accesible y el aviso persistente del modo mirar; sw.js devuelve HTTP 200 y caché v14. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-009 · Volver a la expedición abierta sin recargar un guardado
+
+- **Inicio / última actualización:** 2026-10-18 11:59 / 12:01 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** pulsar la marca abre la bienvenida y ofrece Continuar expedición desde readSave. Durante una maniobra persist no guarda; Continuar carga el último estado estable mediante start(true), pero deja state.auto activo. Puede combinar una posición/campaña antigua con una maniobra que ya estaba en curso. Comenzar expedición ya retorna a la sesión abierta, pero su nombre no describe esa acción.
+- **Relación:** O2-001 (vuelo), O2-020 (partidas) y navegación de la versión inicial. AUTO-003 protege la importación de archivos al recargar; esta corrección trata el regreso desde inicio durante una sesión viva, sin importar archivos ni sustituir guardados.
+- **Criterio de aceptación:** al abrir inicio con una expedición viva aparece Volver a la expedición, sin una segunda acción que cargue un guardado antiguo. Volver conserva el mundo, maniobra, tiempo y progreso actuales. La bienvenida tras recargar sigue ofreciendo Comenzar y Continuar desde el guardado cuando existe. La pantalla de inicio sigue deteniendo temporalmente la simulación.
+- **Rama:** codex/orbita-auto-009-volver-expedicion.
+- **Cambio:** abrir inicio desde la expedición ofrece Volver a la expedición y oculta la recuperación desde disco, evitando cargar un estado anterior sobre la maniobra viva. Reutiliza el regreso existente sin restaurar el guardado. Tras recargar, la bienvenida conserva Comenzar y Continuar como antes. Versión 0.4.9; caché propia v15.
+- **Archivos:** app.js, package.json, README.md y sw.js, además de este registro.
+- **Validación:** 54 pruebas existentes satisfactorias y construcción estática. Navegador real: durante Tierra → Marte, inicio ofrece solo Volver; el progreso DOM permanece en 71,3206 % y reloj 00:00:14 mientras el diálogo está abierto. Volver mantiene el viaje y avanza a 72,9894 %, sin reiniciar el reloj. Tras recargar se ven Comenzar y Continuar; Continuar recupera el guardado de Marte. Vista de inicio revisada a 390 × 844 y escritorio; sin errores de consola. Teléfono físico pendiente. Evidencia local: outputs/orbita-auto-009-volver.png.
+- **Propuesta / commit / publicación:** pendientes; no declarada publicada hasta verificar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
