@@ -142,6 +142,20 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#15](https://github.com/fercala/pequenos-exploradores/pull/15). Commit de código: 097797d8bd6f6a6970b3e3d51a7eaebf024d658f; incorporación a main: f3d658ab881d0e67f4d093476ad37bd99f3d8f71.
 - **Publicación confirmada:** 2026-10-18 08:01 UTC. [GitHub Pages: ejecución 39109781871 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39109781871). mission-control.js público devuelve HTTP 200 e incluye el ajuste de índice y fase al quitar una escala; sw.js devuelve HTTP 200 y caché v11. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-006 · Conservar el borrador de una anotación
+
+- **Inicio / última actualización:** 2026-10-18 08:53 / 08:54 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** notebook crea un textarea vacío en cada apertura y solo lee su contenido al pulsar Guardar nota. Cerrar el panel o abrir otro apartado elimina una anotación todavía en edición.
+- **Relación:** O4-017 (cuaderno) y O2-020 (partida portable). Añade conservación de borrador; las notas ya guardadas y la protección de importación de AUTO-003 mantienen su función.
+- **Diferencia:** guardar una nota ya existe; falta conservar texto en edición sin convertirlo prematuramente en un registro científico.
+- **Criterio de aceptación:** escribir, cerrar/cambiar de panel y volver conserva el texto. El borrador viaja con el guardado y la partida exportada, con límite de 600 caracteres y migración compatible. Guardar nota crea un único registro y limpia el borrador; no crea registros al editar ni duplica la nota al reabrir.
+- **Rama:** codex/orbita-auto-006-borrador-cuaderno.
+- **Cambio:** el texto en edición forma parte de la campaña como noteDraft (hasta 600 caracteres), se restaura asignándolo al valor del campo y se incorpora a los guardados/partidas portátiles. Cambiar de panel conserva el borrador. Guardar nota crea el registro y limpia el borrador antes de persistir, sin duplicación. Se explica su funcionamiento junto al campo, con descripción accesible. Versión 0.4.6; caché propia v12.
+- **Archivos:** systems.js, mission-control.js, tests/systems.test.mjs, tests/mission-control.test.mjs, package.json, README.md y sw.js, además de este registro.
+- **Validación:** 54 pruebas satisfactorias y construcción estática. Regresión falla antes del cambio porque no se conserva el borrador, y pasa después. Pruebas cubren navegación entre paneles, restauración, guardado único, migración de partidas antiguas, tipos inválidos, texto plano y límite importado. Navegador real: escribir sin Guardar nota, cerrar/reabrir, recargar/Continuar y recuperar el texto con cero registros; Guardar nota deja un registro y campo vacío; segundo clic no duplica. Vista 390 × 844 revisada, sin errores de consola; teléfono físico pendiente. Evidencia local: outputs/orbita-auto-006-borrador.png.
+- **Propuesta / commit / publicación:** pendientes; no declarada publicada hasta verificar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
