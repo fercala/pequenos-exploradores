@@ -32,3 +32,30 @@ test('Rejected import files and failed storage do not lock or replace the runnin
  const set=storage.setItem;storage.setItem=()=>{throw Error('Quota');};assert.equal(session.replace(validatePortable({...old,planet:'moon'})),false);assert.deepEqual(readSave(storage),old);
  storage.setItem=set;assert.equal(session.save({...old,elapsed:30}),true);assert.equal(readSave(storage).elapsed,30);assert.equal(session.replace(validatePortable({...old,planet:'moon'})),true);assert.equal(readSave(storage).planet,'moon');
 });
+
+
+test('Parked rover survives export, import and local save with its own orientation',()=>{
+ const roverParking={planet:'earth',position:[80,600,15],quaternion:[0,.6,0,.8]};
+ const raw={...portable(),vehicle:'walk',parkedPosition:[0,600,0],roverParking};
+ const storage=memoryStore();createSaveSession(storage).save(raw);
+ const restored=validatePortable(JSON.parse(JSON.stringify(readSave(storage))));
+ assert.deepEqual(restored.roverParking,roverParking);
+ restored.roverParking.position[0]=99;assert.equal(roverParking.position[0],80);
+ assert.equal(validatePortable(portable()).roverParking,null);
+});
+test('Invalid and foreign-world rover anchors are discarded without losing the expedition',()=>{
+ const good={planet:'earth',position:[80,600,15],quaternion:[0,0,0,1]};
+ for(const changed of [{planet:'mars'},{position:[0,0,0]},{position:[Infinity,600,0]},{position:['80',600,0]},{quaternion:[0,0,0,0]},{quaternion:[0,0,0,3]}]){
+  const clean=validatePortable({...portable(),roverParking:{...good,...changed}});assert.equal(clean.roverParking,null);assert.equal(clean.elapsed,12);
+ }
+ assert.equal(validatePortable({...portable(),planet:'jupiter',roverParking:{...good,planet:'jupiter'}}).roverParking,null);
+});
+
+test('Restored parking transform places the rover on the same footing as the active vehicle',async()=>{
+ const T=await import('../vendor/three.module.js'),{SolarUniverse}=await import('../world-v2.js');
+ const parked=new T.Vector3(80,600,15),orientation=new T.Quaternion(0,.6,0,.8);
+ const world={rover:new T.Group(),roverParked:parked.clone(),roverParkedQuaternion:orientation};
+ SolarUniverse.prototype.placeParkedRover.call(world);
+ assert.ok(Math.abs(world.rover.position.length()-(parked.length()-1))<1e-9);
+ assert.deepEqual(world.rover.quaternion.toArray(),orientation.toArray());assert.deepEqual(world.roverParked.toArray(),parked.toArray());
+});
