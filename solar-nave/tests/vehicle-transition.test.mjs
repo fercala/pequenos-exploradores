@@ -55,3 +55,20 @@ test('Changing the clock selector saves the preference and the next session rest
  const {s,ex,$,settingsWrites}=fixture();ex.renderSettings({append(){}});
  for(const value of ['0','1','3600','60']){$('orbit-time').onchange({target:{value}});assert.equal(s.timeScale,Number(value));assert.equal(settingsWrites.at(-1).orbitTime,Number(value));assert.equal(fixture(settingsWrites.at(-1)).s.timeScale,Number(value));}
 });
+
+test('Starting audio restores the saved preference without creating a muted context and handles failure',async()=>{
+ const muted=fixture({sound:false});let mutedCalls=0;muted.ex.audio.enable=async value=>{assert.equal(value,false);mutedCalls++;};assert.equal(await muted.ex.resumeAudio(),true);assert.equal(mutedCalls,1);
+ const enabled=fixture({sound:true});let value=null;enabled.ex.audio.enable=async next=>{value=next;};assert.equal(await enabled.ex.resumeAudio(),true);assert.equal(value,true);
+ enabled.ex.audio.enable=async()=>{throw Error('Audio unavailable');};assert.equal(await enabled.ex.resumeAudio(),false);assert.match(enabled.messages.at(-1),/audio/);assert.equal(enabled.s.settings.sound,true);
+});
+
+test('Restoring enabled audio resumes one existing audio graph while a muted start creates none',async()=>{
+ let contexts=0;const node=()=>({connect(next){return next;},start(){},frequency:{value:0},gain:{value:0}});
+ class FakeAudioContext{constructor(){contexts++;this.sampleRate=10;this.currentTime=0;this.resumes=0;this.state='suspended';this.oscillators=0;}createOscillator(){this.oscillators++;return node();}createGain(){return node();}createBiquadFilter(){return node();}createBuffer(){return {getChannelData:()=>new Float32Array(20)};}createBufferSource(){return node();}async resume(){this.resumes++;this.state='running';}suspend(){this.state='suspended';}}
+ const before=globalThis.window;globalThis.window={AudioContext:FakeAudioContext};try{
+  const muted=fixture({sound:false});await muted.ex.resumeAudio();assert.equal(contexts,0);assert.equal(muted.ex.audio.context,null);
+  const enabled=fixture({sound:true});assert.equal(await enabled.ex.resumeAudio(),true);assert.equal(contexts,1);assert.equal(enabled.ex.audio.enabled,true);assert.equal(enabled.ex.audio.context.state,'running');
+  await enabled.ex.resumeAudio();assert.equal(contexts,1);assert.equal(enabled.ex.audio.context.resumes,2);assert.equal(enabled.ex.audio.context.oscillators,1);
+  enabled.s.settings.sound=false;await enabled.ex.resumeAudio();assert.equal(enabled.ex.audio.enabled,false);assert.equal(enabled.ex.audio.context.state,'suspended');enabled.ex.audio.context.suspend=async()=>{throw Error('Suspend failed');};assert.equal(await enabled.ex.resumeAudio(),false);
+ }finally{if(before===undefined)delete globalThis.window;else globalThis.window=before;}
+});
