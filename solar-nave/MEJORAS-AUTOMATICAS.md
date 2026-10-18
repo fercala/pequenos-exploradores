@@ -301,8 +301,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-016 · Sincronizar el panel al restablecer controles
 
-- **Inicio / última actualización:** 2026-10-18 20:02 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-18 20:02 / 20:04 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** reset-controls cambia buttonScale, joystickSize y leftHanded en ajustes y estilos, pero no actualiza los inputs ya abiertos. El panel sigue mostrando tamaños anteriores y la casilla de zurdos marcada aunque la distribución ya haya vuelto a la original.
 - **Relación / diferencia:** O2-003 (controles ajustables) y O4-019 (accesibilidad). AUTO-015 conserva el ritmo orbital; esta corrección sincroniza los valores mostrados tras restablecer controles. No añade otro restablecimiento ni modifica preferencias ajenas.
 - **Criterio de aceptación:** al restablecer, los dos deslizadores muestran 1 y 96 y la casilla de zurdos queda desmarcada, coincidiendo con estilos y ajustes guardados, sin cerrar el panel ni perder el foco. Los demás ajustes, incluido ritmo orbital, permanecen como estaban.
@@ -310,7 +310,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Cambio:** versión 0.5.7; restablecer controles actualiza los valores de ambos deslizadores y el estado de la casilla de zurdos a partir de los ajustes restablecidos. Mantiene el panel y sus nodos, el foco y el guardado existentes. Caché propia v23.
 - **Archivos:** expansion.js, package.json, README.md, sw.js y este registro.
 - **Validación:** 73 pruebas existentes satisfactorias, sintaxis y construcción estática. Reproducción real antes del arreglo: inputs 1,5/140/zurdos marcado, frente a CSS 1/96 px/distribución normal después de restablecer. Después: los tres inputs coinciden con CSS 1/96 px/normal sin reabrir el panel, foco en reset-controls y reloj todavía en Pausa. Escritorio y 390 × 844 revisados, sin errores/advertencias de consola. Evidencia: outputs/orbita-auto-016-controles.png. Teléfono físico pendiente.
-- **Propuesta / commit / publicación:** pendientes.
+- **Propuesta:** [#39](https://github.com/fercala/pequenos-exploradores/pull/39). Commit de código: 1addf8aa90ebdd01de13a39b24cfc592d6b22b41; incorporación a main: 88d90237d5a87aaa46a72abf070b4872cc376b20.
+- **Publicación confirmada:** 2026-10-18 20:04 UTC. [GitHub Pages: ejecución 39161544030 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39161544030), sobre el commit de incorporación. expansion.js público devuelve HTTP 200 e incluye las tres asignaciones de valores restablecidos al panel; package.json confirma 0.5.7 y sw.js confirma caché v23, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
