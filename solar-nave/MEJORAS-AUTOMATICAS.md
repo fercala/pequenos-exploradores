@@ -159,8 +159,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-007 · Recuperar la pausa durante el vuelo en móvil
 
-- **Inicio / última actualización:** 2026-10-18 09:57 / 09:58 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-18 09:57 / 09:59 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** el botón de pausa existe en la cabecera y funciona en escritorio, pero la regla .topbar #pause-btn lo oculta por debajo de 701 px. La vista móvil no ofrece ese control de vuelo.
 - **Relación:** O2-003 (controles táctiles) y O4-019 (accesibilidad). Recupera en móvil una acción que ya existía en escritorio; no añade otra función de pausa ni modifica las partidas.
 - **Diferencia:** los paneles detienen temporalmente la simulación, pero no sustituyen un botón visible para pausar y continuar conservando la vista de vuelo.
@@ -169,7 +169,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Cambio:** el botón de pausa deja de ocultarse en móvil y tiene 44 × 44 px; los iconos vecinos y Destinos mantienen altura táctil mínima de 44 px. En pantallas estrechas se compacta la marca para que quepan todas las acciones. Se reutiliza el mismo botón y la lógica existente de pausa/continuación. Versión 0.4.7; caché propia v13.
 - **Archivos:** style.css, package.json, README.md y sw.js, además de este registro.
 - **Validación:** 54 pruebas existentes satisfactorias y construcción estática. No se cambia la lógica de simulación ni el formato de guardado. Navegador real a 390 × 844 y 320 × 844: botón visible, Pausar muestra EN PAUSA y cambia a Continuar; Continuar recupera VUELO ESPACIAL. Medición DOM: pausa de 44 × 44 px, cabecera sin solapamientos, todas sus acciones dentro de los límites en ambos tamaños (a 320, último botón entre x=264 y 308). Escritorio 1280 × 800 conserva la pausa. Sin errores de consola; teléfono físico pendiente. Evidencia local: outputs/orbita-auto-007-pausa.png.
-- **Propuesta / commit / publicación:** pendientes; no declarada publicada hasta verificar Pages.
+- **Propuesta:** [#19](https://github.com/fercala/pequenos-exploradores/pull/19). Commit de código: 64a454a79ac1be31a2c5e1f19af98ad6d5bf17a6; incorporación a main: e2302103e2da9dc8441c37ba99eea6c2d069e272.
+- **Publicación confirmada:** 2026-10-18 09:59 UTC. [GitHub Pages: ejecución 39117443578 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39117443578). style.css público devuelve HTTP 200 e incluye pausa visible y cabecera compacta; sw.js devuelve HTTP 200 y caché v13. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
