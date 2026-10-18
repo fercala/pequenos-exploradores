@@ -4,11 +4,12 @@ import * as T from '../vendor/three.module.js';
 import {createMissionControl} from '../mission-control.js';
 import {bodyById,bodyRadius} from '../simulation.js';
 function fixture(){
- const elements=new Map(),make=()=>({style:{},hidden:false,textContent:'',prepend(){},append(){},setAttribute(){}});globalThis.document={createElement:make,querySelector:()=>make(),body:{append(){}}};const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
+ const hubs=['story','teacher','routes'].map(hub=>({dataset:{hub}}));
+ const elements=new Map(),make=()=>({style:{},hidden:false,textContent:'',prepend(){},append(){},setAttribute(){}});globalThis.document={createElement:make,querySelector:()=>make(),querySelectorAll:selector=>selector==='[data-hub]'?hubs:[],body:{append(){}}};const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
  const s={planet:bodyById('earth'),position:new T.Vector3(0,0,1600),quaternion:new T.Quaternion(),velocity:new T.Vector3(),vehicle:'ship',landed:false,auto:null,settings:{mode:'exploration'},started:true,days:0,elapsed:0,throttle:0,shield:100};
  const w={planet:s.planet,scene:new T.Scene(),ship:new T.Group(),parkedPosition:new T.Vector3(0,0,1600),parkedQuaternion:new T.Quaternion(),planetGroup:new T.Group(),localNormal:n=>n,groundRadius:()=>bodyRadius(s.planet)};
  const calls={travel:[],land:0,saves:0,messages:[]};const api={state:s,world:w,$,toast:m=>calls.messages.push(m),persist:()=>calls.saves++,closePanel(){},resetInputs(){},setThrottle:n=>s.throttle=n,startTravel:id=>{calls.travel.push(id);s.auto={type:'travel'};},startLanding:()=>{calls.land++;s.auto={type:'landing'};}};
- const mc=createMissionControl(api,{photo:false},()=>{});return {s,w,c:mc.campaign,mc,$,calls};
+ const mc=createMissionControl(api,{photo:false},()=>{});return {s,w,c:mc.campaign,mc,$,calls,open(view){mc.hub();hubs.find(b=>b.dataset.hub===view).onclick();}};
 }
 test('Guided docking reaches the actual station port, replenishes reserves and preserves a docked save',()=>{const {s,w,c,mc,$}=fixture();c.fuel=2;c.energy=3;s.auto={type:'v4dock',time:0,duration:12,from:s.position.clone(),qFrom:s.quaternion.clone()};assert.ok(mc.stepAuto(s.auto,12));assert.equal(s.auto,null);assert.ok(c.docked);assert.ok(s.position.distanceTo(w.dockPosition())<1e-8);assert.equal(c.fuel,100);assert.equal(c.energy,100);assert.ok($('travel-progress').hidden);mc.restore(mc.snapshot());assert.ok(mc.campaign.docked);mc.tick(.3,false);assert.ok(mc.campaign.docked);});
 test('Guided orbit clears the terrain, finishes at rest and releases the controls',()=>{const {s,w,mc}=fixture();s.auto={type:'v4orbit',mode:'orbit',time:0,duration:8,height:500,from:s.position.clone(),normal:s.position.clone().normalize(),axis:new T.Vector3(0,1,0)};for(let i=0;i<8;i++){mc.stepAuto(s.auto,1);assert.ok(s.position.length()>w.groundRadius()+40);}assert.equal(s.auto,null);assert.equal(s.velocity.length(),0);assert.ok(Math.abs(s.position.length()-1100)<1e-8);});
@@ -24,4 +25,15 @@ test('67P flight spectra remain in the notebook but only a fresh surface reading
   s.auto=null;c.docked=false;s.vehicle='ship';s.landed=true;s.position.set(0,0,bodyRadius(s.planet)+2);mc.record('spectrum','Lectura en superficie','Espectro');assert.equal(c.storyStep,5);assert.equal(c.notebook.length,2);assert.equal($('mc-notice').textContent,'');
  }
  for(const vehicle of ['walk','rover']){const {s,w,c,mc}=fixture();s.planet=w.planet=bodyById('comet67p');s.vehicle=vehicle;s.position.set(0,0,bodyRadius(s.planet)+2);c.storyActive=true;c.storyStep=4;mc.record('spectrum','Superficie','Espectro');assert.equal(c.storyStep,5,vehicle);}
+});
+
+test('New campaign and classroom routes discard old route progress without resetting learning progress',()=>{
+ for(const view of ['story','teacher'])for(const index of [1,4,12]){
+  const {s,c,mc,$,calls,open}=fixture();c.route=[{body:'mars',action:'land'}];c.routeIndex=index;c.routePhase='finish';c.storyStep=3;c.lesson='gravity';c.answers=[{lesson:'gravity',question:0,choice:0}];c.notebook=[{kind:'note',body:'moon',title:'Observación',text:'Roca',lat:0,lon:0,elapsed:0}];
+  open(view);$(view==='story'?'story-route':'lesson-route').onclick();assert.equal(c.routeIndex,0,view);assert.equal(c.routePhase,'travel',view);assert.equal(c.routeRunning,false);assert.equal(c.route[0].body,'earth');assert.equal(c.route.length,view==='story'?4:3);assert.equal(c.storyStep,3);assert.equal(c.answers.length,1);assert.equal(c.notebook.length,1);
+  s.planet=bodyById('mars');$('route-resume').onclick();assert.equal(c.routeRunning,true);mc.tick(.1,false);assert.deepEqual(calls.travel,['earth']);
+ }
+});
+test('Preparing routes cannot replace an active journey, and opening a paused route preserves its resume point',()=>{
+ for(const view of ['story','teacher']){const {c,$,open}=fixture();c.route=[{body:'moon',action:'land'},{body:'mars',action:'orbit'}];c.routeIndex=1;c.routePhase='arrive';c.routeRunning=true;c.lesson='gravity';const old=JSON.stringify(c.route);open(view);$(view==='story'?'story-route':'lesson-route').onclick();assert.equal(JSON.stringify(c.route),old);assert.equal(c.routeIndex,1);assert.equal(c.routePhase,'arrive');assert.match($('mc-notice').textContent,/Detén la ruta/);c.routeRunning=false;open('routes');assert.equal(c.routeIndex,1);assert.equal(c.routePhase,'arrive');$('route-resume').onclick();assert.equal(c.routeIndex,1);assert.equal(c.routeRunning,true);}
 });

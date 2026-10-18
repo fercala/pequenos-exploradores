@@ -113,6 +113,20 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#11](https://github.com/fercala/pequenos-exploradores/pull/11). Commit de código: 8c830174cf65d1a50ab8d7dae3b63174fcabaebd; incorporación a main: be1c5c5797e8c0ad15f00ffb3f662b616c84dd9a.
 - **Publicación confirmada:** 2026-10-18 06:19 UTC. [GitHub Pages: ejecución 39103571101 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39103571101). core.js, app.js, expansion.js y sw.js públicos devuelven HTTP 200; contienen la protección de la sesión, su uso en persist y en el importador y caché v9. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-004 · Reiniciar el recorrido al preparar una ruta nueva
+
+- **Inicio / última actualización:** 2026-10-18 06:56 / 07:29 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** los botones de preparar ruta de campaña y docente sustituyen las escalas pero conservan routeIndex y routePhase anteriores. Reproducción con el controlador vigente: ruta nueva de cuatro escalas, índice 4 y fase finish; Reanudar responde «No quedan escalas pendientes».
+- **Relación:** O4-005 (rutas), O4-018 (campaña) y O4-020 (docente). Corrige el estado de una ruta recién sustituida; no añade otro planificador ni reinicia los capítulos o respuestas.
+- **Diferencia:** Iniciar ya fuerza la primera escala; preparar una ruta nueva debe descartar también la posición del recorrido anterior para que Reanudar no omita escalas ni rechace el recorrido.
+- **Criterio de aceptación:** preparar campaña o clase deja índice 0 y fase travel, conserva los progresos científicos/docentes y permite Reanudar desde el primer destino. Una ruta activa sigue protegida frente a sustituciones y una ruta pausada sin sustituir conserva su avance.
+- **Rama:** codex/orbita-auto-004-ruta-nueva.
+- **Cambio:** la preparación de recorridos de campaña y docente reinicia índice y fase mediante una función común. Se mantienen las guardas contra sustituir rutas activas y el avance de rutas pausadas que no se sustituyen. Versión 0.4.4; caché propia v10.
+- **Archivos:** mission-control.js, tests/mission-control.test.mjs, package.json, README.md y sw.js, además de este registro.
+- **Validación:** 50 pruebas satisfactorias y construcción estática. Dos regresiones prueban los botones de campaña y clase con índices anteriores 1, 4 y 12, conservación de capítulos/respuestas/cuaderno, viaje hacia el primer destino, protección de rutas activas y reanudación de una ruta pausada sin sustituir. Navegador real: partida en Marte con ruta anterior terminada; preparar campaña y Reanudar inicia RUMBO A TIERRA y marca Tierra como primera escala actual. Sin errores de consola. Vista 390 × 844 revisada; teléfono físico pendiente. Evidencia local: outputs/orbita-auto-004-prueba.png.
+- **Propuesta / commit / publicación:** pendientes; no declarada publicada hasta verificar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
