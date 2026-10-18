@@ -243,6 +243,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#29](https://github.com/fercala/pequenos-exploradores/pull/29). Commit de código: 9ccfc27d16bcc666dfa6745211ba91340dbbef9d; incorporación a main: 513b57b812f961985bf212767cf3ad897fce13c7.
 - **Publicación confirmada:** 2026-10-18 15:06 UTC. [GitHub Pages: ejecución 39138885738 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39138885738), sobre el commit de incorporación. simulation.js y expansion.js públicos devuelven HTTP 200 y contienen la condición de proximidad y transmisión del salto; package.json confirma 0.5.2 y sw.js caché v18, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-012 · Actualizar las misiones completadas sin reabrir el panel
+
+- **Inicio / última actualización:** 2026-10-18 15:57 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** renderMissions calcula los estados solo al abrir. complete modifica el progreso pero no el panel. Durante la comprobación de AUTO-011, una muestra válida mostraba Muestra virtual registrada mientras la lista seguía Pendiente; solo al reabrir aparecía completada.
+- **Relación / diferencia:** O2-017 (misiones) y AUTO-011 (requisitos de recogida). La condición científica ya funciona: esta corrección muestra inmediatamente el progreso real, evitando incertidumbre y repeticiones innecesarias. No añade otra actividad ni cambia sus requisitos.
+- **Criterio de aceptación:** una medición o muestra válida cambia su fila a Completada con el panel abierto; un rechazo mantiene Pendiente. Se conserva el foco del botón y el texto del resultado; la actualización del estado puede anunciarse a tecnologías de asistencia. Reabrir y recuperar partidas conservan los mismos estados.
+- **Rama:** codex/orbita-auto-012-estado-misiones.
+- **Cambio:** versión 0.5.3; cada estado de misión tiene un identificador estable y role status. complete actualiza solo el texto de la fila correspondiente, sin reconstruir el panel ni sus botones. Conserva los resultados y los requisitos publicados. Caché propia v19.
+- **Archivos:** expansion.js, package.json, README.md, sw.js y este registro.
+- **Validación:** 65 pruebas existentes satisfactorias, sintaxis y construcción estática. Navegador real en Tierra: muestra rechazada desde la nave mantiene Pendiente; medición válida cambia su fila inmediatamente; salida a pie y muestra válida cambia su fila en vista 390 × 844. El foco DOM permanece en mission-measure y mission-sample, respectivamente, y el resultado sigue visible. Tras recargar y Continuar, ambas misiones siguen completadas. Escritorio y móvil inspeccionados; sin errores/advertencias de consola. Evidencia: outputs/orbita-auto-012-misiones.png. No se realizó auditoría con lector de pantalla ni prueba en teléfono físico.
+- **Propuesta / commit / publicación:** pendientes.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
