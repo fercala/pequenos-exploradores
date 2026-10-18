@@ -3,20 +3,20 @@ import {SolarUniverse as Universe} from './world-v2.js';
 import {DEFAULT_SETTINGS,format} from './data.js';
 import {BODIES as PLANETS,bodyById as getPlanet,bodyRadius,orbitalPosition,localGravity,atmosphericDensity,safeLanding,validatePortable} from './simulation.js';
 import {createExpansion} from './expansion.js';
-import {clamp,smoothstep,terrainHeight,isOcean,pressureAtDepth,landingResult,readSave,writeSave} from './core.js';
+import {clamp,smoothstep,terrainHeight,isOcean,pressureAtDepth,landingResult,readSave,createSaveSession} from './core.js';
 
 const $=id=>document.getElementById(id),panel=$('panel'),content=$('panel-content');
 const state={planet:getPlanet('earth'),position:new T.Vector3(0,220,1650),quaternion:new T.Quaternion(),velocity:new T.Vector3(),throttle:0,elapsed:0,started:false,paused:false,landed:false,shield:100,visited:new Set(['earth']),landings:new Set(),explored:new Set(),photos:0,settings:{...DEFAULT_SETTINGS},auto:null,camera:'follow'};
-const ids=new Set(PLANETS.map(p=>p.id));
+const ids=new Set(PLANETS.map(p=>p.id)),saveSession=createSaveSession(localStorage);
 let world,save=readSave(localStorage),last=performance.now(),lastHud=0,saveClock=0,toastTimer,installPrompt,drag=null,look=false,holds=new Set(),joy={x:0,y:0},joyPointer=null,contextLost=false;
 try{const s=JSON.parse(localStorage.getItem('orbita-settings')||'null');if(s)state.settings={...DEFAULT_SETTINGS,...s};}catch{}
 if(matchMedia('(prefers-reduced-motion:reduce)').matches)state.settings.reducedMotion=true;
 try{world=new Universe($('scene'),state.settings.quality);world.setPlanet(state.planet);}catch(error){console.error(error);$('fatal').hidden=false;throw error;}
 const canvas=world.renderer.domElement;
 function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,5000);}
-const expansion=createExpansion({state,world,toast,$,persist,resetInputs,brake,closePanel,showPanel,changeReference,settingsSave,setThrottle,startLanding,startTravel,cancelAuto});
+const expansion=createExpansion({state,world,toast,$,persist,replaceSave:clean=>saveSession.replace(clean),resetInputs,brake,closePanel,showPanel,changeReference,settingsSave,setThrottle,startLanding,startTravel,cancelAuto});
 function settingsSave(){try{localStorage.setItem('orbita-settings',JSON.stringify(state.settings));}catch{toast('El navegador no permite guardar los ajustes.');}}
-function persist(){if(!state.started||state.auto)return true;return writeSave(localStorage,expansion.snapshot());}
+function persist(){if(!state.started||state.auto)return true;return saveSession.save(expansion.snapshot());}
 function setThrottle(value){state.throttle=clamp(Number(value)||0,-40,100)/100;$('throttle').value=String(Math.round(state.throttle*100));$('throttle-output').textContent=`${Math.round(state.throttle*100)}%`;}
 function resetInputs(){holds.clear();joy.x=joy.y=0;drag=null;joyPointer=null;document.querySelectorAll('.active[data-hold]').forEach(b=>b.classList.remove('active'));const knob=$('joystick').firstElementChild;knob.style.transform='';}
 function freeze(){return !state.started||state.paused||panel.open||$('welcome').open||document.hidden||contextLost;}

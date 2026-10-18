@@ -98,6 +98,20 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#9](https://github.com/fercala/pequenos-exploradores/pull/9). Commit de código: 8f1707bd531b43086904d644cf4f9d6da7713fa8; incorporación a main: 7845713cb4ddc009802daaaa620db1417505e170.
 - **Publicación confirmada:** 2026-10-18 05:51 UTC. [GitHub Pages: ejecución 39101933336 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39101933336). Los módulos públicos devuelven HTTP 200 e incluyen la exigencia de superficie, su comprobación y el mensaje de lectura guardada; el gestor propio sirve caché v8. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-003 · Conservar la partida importada durante la recarga
+
+- **Inicio / última actualización:** 2026-10-18 05:53 / 06:17 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** al importar se escribe el archivo validado y se recarga, pero pagehide y visibilitychange llaman a persist con la expedición antigua. En AUTO-002, dos importaciones de 67P reanudaron la Tierra. Reproducción del orden de escrituras: importada comet67p; tras persist de la sesión anterior, earth.
+- **Relación:** O2-020 (partidas portátiles); hallazgo pendiente documentado en AUTO-002. Corrige la sustitución del guardado durante la transición, sin añadir otra función de importación.
+- **Diferencia:** los archivos ya se validan; falta impedir que la sesión saliente vuelva a escribir después de una importación válida.
+- **Criterio de aceptación:** importar y continuar recupera destino, progreso y campaña del archivo. Los eventos de salida, pérdida de foco y guardado periódico no lo sobrescriben. Archivo inválido o fallo de almacenamiento conserva la sesión y permite seguir guardando. Tras recargar, los nuevos guardados funcionan normalmente.
+- **Rama:** codex/orbita-auto-003-importacion-segura.
+- **Cambio:** una sesión de guardado protege la sustitución válida hasta recargar. persist y los eventos de salida comparten esa protección. Una escritura fallida libera la protección. La siguiente página crea una sesión nueva que guarda normalmente. Ajustes y Expedición usan el mismo importador. Versión 0.4.3; caché propia v9.
+- **Archivos:** core.js, app.js, expansion.js, tests/expansion.test.mjs, package.json, README.md y sw.js, además de este registro.
+- **Validación:** 48 pruebas satisfactorias y construcción estática. Dos regresiones cubren escrituras tardías de salida/foco/guardado periódico, progreso/campaña/cuaderno importados, rechazo de archivo inválido, fallo de almacenamiento y guardado de la siguiente sesión. Navegador real: importar 67P desde una sesión en Tierra, continuar en 67P con tres destinos visitados, cuatro capítulos completados y la muestra lunar del archivo; añadir una nota nueva, recargar y recuperar ambas entradas. Archivo inválido mantiene la sesión abierta. Sin errores de consola. Progreso revisado a 390 × 844; teléfono físico pendiente. Evidencia local: outputs/orbita-auto-003-prueba.png y outputs/orbita-auto-003-campana.png.
+- **Propuesta / commit / publicación:** pendientes; no declarada publicada hasta verificar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
