@@ -172,6 +172,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#19](https://github.com/fercala/pequenos-exploradores/pull/19). Commit de código: 64a454a79ac1be31a2c5e1f19af98ad6d5bf17a6; incorporación a main: e2302103e2da9dc8441c37ba99eea6c2d069e272.
 - **Publicación confirmada:** 2026-10-18 09:59 UTC. [GitHub Pages: ejecución 39117443578 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39117443578). style.css público devuelve HTTP 200 e incluye pausa visible y cabecera compacta; sw.js devuelve HTTP 200 y caché v13. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-008 · Identificar el modo de mirar sin girar la nave
+
+- **Inicio / última actualización:** 2026-10-18 10:53 / 10:54 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** el botón look-btn tiene solo el símbolo ◎ cuando el CSS móvil oculta Mirar, sin nombre accesible explícito. Activarlo cambia el arrastre de orientación a cámara, pero no muestra explicación ni un aviso persistente fuera del color del botón.
+- **Relación:** O2-003 (controles), O2-016 (navegación) y O4-019 (accesibilidad). Aclara un modo existente; no añade otro modo de cámara ni modifica el pilotaje.
+- **Criterio de aceptación:** el control conserva un nombre descriptivo en móvil y escritorio y comunica su estado pulsado. Activar explica que arrastrar mueve la cámara sin girar la nave y mantiene un aviso visible durante el vuelo libre; desactivar lo retira y restablece la vista como antes. Pausa, aterrizaje, piloto y peligro cercano al suelo conservan prioridad sobre ese aviso. No se modifican partidas ni física.
+- **Rama:** codex/orbita-auto-008-modo-mirar.
+- **Cambio:** nombre accesible y ayuda del botón: Mirar alrededor moviendo solo la cámara. Se anuncia activación/desactivación y se mantiene un aviso de modo durante vuelo libre. La pausa, aterrizaje, piloto y aproximación peligrosa conservan prioridad en el aviso principal. Se reutiliza el estado pulsado y el comportamiento original de cámara, sin alterar física ni partidas. Versión 0.4.8; caché propia v14.
+- **Archivos:** index.html, app.js, package.json, README.md y sw.js, además de este registro.
+- **Validación:** 54 pruebas existentes satisfactorias y construcción estática. Navegador real: control accesible con estado 0/1; activar muestra explicación y aviso, pausar lo sustituye, continuar lo recupera, viajar a Luna muestra PILOTO AUTOMÁTICO, cancelar y desactivar retira el aviso. Vista 390 × 844 inspeccionada; a 320 × 844 el aviso mide 218 px y queda dentro de pantalla. Sin errores de consola. La prioridad de peligro/aterrizaje conserva las condiciones previas y se revisó en código; no se reprodujo un impacto. Teléfono físico pendiente. Evidencia local: outputs/orbita-auto-008-mirar.png.
+- **Propuesta / commit / publicación:** pendientes; no declarada publicada hasta verificar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
