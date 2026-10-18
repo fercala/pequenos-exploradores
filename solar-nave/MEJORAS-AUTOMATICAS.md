@@ -287,8 +287,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-015 · Conservar el ritmo elegido del reloj orbital
 
-- **Inicio / última actualización:** 2026-10-18 19:06 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-18 19:06 / 19:09 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** createExpansion inicializa timeScale siempre a 60. El selector orbit-time solo cambia ese valor en memoria y no llama a settingsSave. Elegir Pausa, Tiempo real o una hora/segundo se pierde al recargar, reanudando otro ritmo sin indicación.
 - **Relación / diferencia:** O2-014 (reloj orbital), O2-003 (ajustes) y O2-020 (recuperación). Las velocidades ya existen; se conserva la preferencia local del reloj de exploración. El ritmo independiente del atlas no cambia.
 - **Criterio de aceptación:** elegir cualquiera de los cuatro ritmos lo guarda como ajuste local y recupera el mismo valor al recargar/continuar. Pausa permanece en cero, sin confundirse con un valor ausente. Ajustes antiguos o inválidos usan el ritmo inicial de 60. La partida y los demás ajustes permanecen compatibles.
@@ -296,7 +296,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Cambio:** versión 0.5.6; el selector guarda orbitTime en los ajustes locales y el controlador inicia el reloj con esa preferencia. Solo admite 0, 1, 60 y 3600; valores ausentes/incorrectos usan 60. La pausa cero se conserva explícitamente. No cambia el reloj independiente del atlas ni el formato de partidas. Caché propia v22.
 - **Archivos:** expansion.js, tests/vehicle-transition.test.mjs, package.json, README.md, sw.js y este registro.
 - **Validación:** 73 pruebas satisfactorias y construcción estática. Dos regresiones del controlador fallaban antes: pausa recuperada como 60 y selector sin escritura de ajuste. Ahora cubren las cuatro velocidades, avance del reloj según velocidad, conservación de cero, valores inválidos y selector → ajuste → controlador nuevo. Navegador real: elegir Pausa en Ajustes, recargar, Continuar y comprobar Pausa seleccionada. Escritorio y 390 × 844 revisados, sin errores/advertencias de consola. Evidencia: outputs/orbita-auto-015-reloj.png. Preferencia local del navegador, no se afirma sincronización entre dispositivos; teléfono físico pendiente.
-- **Propuesta / commit / publicación:** pendientes.
+- **Propuesta:** [#37](https://github.com/fercala/pequenos-exploradores/pull/37). Commit de código: a98ba42bce101d9aaf8925112908323ff33ebbed; incorporación a main: 975a8b25529fd3d7614a900997bec17538384462.
+- **Publicación confirmada:** 2026-10-18 19:09 UTC. [GitHub Pages: ejecución 39157375016 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39157375016), sobre el commit de incorporación. expansion.js público devuelve HTTP 200 y conserva orbitTime mediante ajustes; package.json confirma 0.5.6 y sw.js confirma caché v22, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
