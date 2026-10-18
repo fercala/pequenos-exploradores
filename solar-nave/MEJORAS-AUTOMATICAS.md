@@ -128,6 +128,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#13](https://github.com/fercala/pequenos-exploradores/pull/13). Commit de código: 3ff7cd8cd861fe61bf461a015cfc63c4fa95f4a5; incorporación a main: c3bd419c8c281d939338b214e0cd8bf9b05c911b.
 - **Publicación confirmada:** 2026-10-18 07:30 UTC. [GitHub Pages: ejecución 39107882374 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39107882374). mission-control.js público devuelve HTTP 200 e incluye el reinicio del recorrido y su uso tanto en campaña como en clase; sw.js devuelve HTTP 200 y caché v10. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-005 · Conservar la siguiente escala al quitar destinos
+
+- **Inicio / última actualización:** 2026-10-18 07:55 / 07:59 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** Quitar elimina la escala con splice pero no ajusta routeIndex. En una ruta Tierra → Luna → Marte pausada antes de Marte (índice 2), quitar Tierra deja dos escalas e índice 2: Reanudar dice que no quedan escalas, aunque Marte sigue pendiente. Otros índices pueden saltarse destinos.
+- **Relación:** O4-005 (edición/reanudación de rutas) y AUTO-004. AUTO-004 reinicia recorridos nuevos de campaña/clase; esta corrección conserva la identidad de la próxima escala al eliminar una escala de un recorrido existente.
+- **Criterio de aceptación:** quitar una escala anterior a la pendiente mantiene el mismo destino pendiente; quitar la pendiente continúa por la siguiente; quitar una posterior no altera la próxima. Nunca salta destinos por un índice desplazado. Se conserva la protección de rutas activas, las rutas vacías y el progreso de campaña/cuaderno.
+- **Rama:** codex/orbita-auto-005-quitar-escala.
+- **Cambio:** al quitar una escala anterior se ajusta el índice para conservar el destino pendiente. Se reinicia la fase de aproximación tras editar, para no tratar una escala sustituta como una maniobra ya terminada. No cambia el formato de partidas. Versión 0.4.5; caché propia v11.
+- **Archivos:** mission-control.js, tests/mission-control.test.mjs, package.json, README.md y sw.js, además de este registro.
+- **Validación:** 52 pruebas satisfactorias y construcción estática. La regresión falla antes del arreglo (espera Marte y obtiene Venus) y pasa después. Dos regresiones cubren quitar antes, en y después de la escala pendiente, conservar campaña/cuaderno, ruta vacía y protección de ruta activa. Navegador real: crear Tierra → Marte, completar órbita terrestre, detener en segunda escala, quitar Tierra y Reanudar; comienza la maniobra orbital de Marte con RUTA 1/1. Sin errores de consola. Vista 390 × 844 revisada; teléfono físico pendiente. Evidencia local: outputs/orbita-auto-005-prueba.png.
+- **Propuesta / commit / publicación:** pendientes; no declarada publicada hasta verificar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
