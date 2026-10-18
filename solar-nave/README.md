@@ -1,6 +1,6 @@
 # Órbita 4 · Explorador del sistema solar
 
-Simulador web 3D en español, con mouse o pantalla táctil, instalable y descargable para usar sin conexión. Versión 0.4.8.
+Simulador web 3D en español, con mouse o pantalla táctil, instalable y descargable para usar sin conexión. Versión 0.4.9.
 
 **Publicado:** https://fercala.github.io/pequenos-exploradores/solar-nave/
 
