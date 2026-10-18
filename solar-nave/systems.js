@@ -9,7 +9,7 @@ export const STORY=[
  {body:'moon',event:'historic',title:'Huellas en el vacío',text:'Aterriza cerca del sitio del Apollo 11 y registra la visita desde Lugares históricos.'},
  {body:'moon',event:'sample',title:'Una muestra de otro mundo',text:'Sal a pie y toma una muestra lunar desde Expedición.'},
  {body:'mars',event:'spectrum',title:'Leer la luz',text:'Acércate a menos de 150 u de Marte y utiliza el espectrómetro.'},
- {body:'comet67p',event:'spectrum',title:'El archivo del hielo',text:'Aterriza en 67P y registra un espectro. Después revisa los resultados en el cuaderno.'}
+ {body:'comet67p',event:'spectrum',requiresSurface:true,title:'El archivo del hielo',text:'Aterriza en 67P y registra un espectro. Después revisa los resultados en el cuaderno.'}
 ];
 export const LESSONS=[
  {id:'gravity',title:'Comparar gravedad',route:['earth','moon','mars'],questions:[{q:'¿Dónde es menor la gravedad superficial de referencia?',options:['En la Luna','En la Tierra','En Marte'],answer:0,why:'La Luna tiene aproximadamente 1,62 m/s²; Marte, 3,71; la Tierra, 9,81.'},{q:'¿Qué ocurre al alejarse del centro de un mundo?',options:['La gravedad aumenta','La gravedad disminuye','La gravedad se anula inmediatamente'],answer:1,why:'En el modelo, la gravedad disminuye con el cuadrado de la distancia al centro.'}]},
@@ -39,4 +39,4 @@ export function scienceReading(kind,p,{altitude=0,light=1}={}){
  if(kind==='temperature'){const values=({mercury:[-173,427],moon:[-173,127],earth:[-20,35],mars:[-100,-10],venus:[460,470],titan:[-181,-177]})[p.id]||[-200,-150],temp=values[0]+(values[1]-values[0])*Math.sqrt(light);return {title:'Radiómetro térmico',text:`${temp.toFixed(0)} °C · escenario didáctico interpolado según iluminación. No es meteorología ni una predicción física. Catálogo: ${p.temperature}.`};}
  const ice=['europa','titan','ganymede','enceladus','pluto','ceres','comet67p'].includes(p.id);return {title:'Espectrómetro',text:ice?'Plantilla educativa: bandas de absorción de hielos y materiales oscuros. La composición exacta no se deduce de esta simulación.':'Plantilla educativa: señal de silicatos y roca; en Marte se añaden óxidos de hierro. No es un espectro observado.',bands:ice?[.9,.7,.18,.75,.23,.8]:[.3,.55,.8,.6,.45,.7]};
 }
-export function storyAdvance(c,body,event){const stage=STORY[c.storyStep];if(c.storyActive&&stage?.body===body&&stage.event===event){c.storyStep++;return true;}return false;}
+export function storyAdvance(c,body,event,{onSurface=false}={}){const stage=STORY[c.storyStep];if(c.storyActive&&stage?.body===body&&stage.event===event&&(!stage.requiresSurface||onSurface)){c.storyStep++;return true;}return false;}
