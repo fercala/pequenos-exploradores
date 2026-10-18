@@ -10,7 +10,7 @@ test('Orbit returns after a complete Mercury period; Venus rotates retrograde',(
 test('Surface gravity differs by world and decreases at altitude',()=>{for(const body of BODIES){assert.equal(localGravity(body,bodyRadius(body)),body.gravity);assert.ok(localGravity(body,bodyRadius(body)*2)<body.gravity);}assert.ok(localGravity(BODIES.find(p=>p.id==='moon'),170)<localGravity(BODIES.find(p=>p.id==='earth'),600));});
 test('Atmospheric heating respects vacuum and increases with entry speed',()=>{const moon=BODIES.find(p=>p.id==='moon'),earth=BODIES.find(p=>p.id==='earth');assert.equal(atmosphericDensity(moon,0),0);assert.equal(entryHeating(moon,0,200),0);assert.ok(entryHeating(earth,10,100)>entryHeating(earth,10,40));assert.ok(entryHeating(earth,300,100)<entryHeating(earth,10,100));});
 test('Manual landing requires deployed gear, low speed and a level attitude',()=>{assert.equal(safeLanding(3,-1,true,.1),true);assert.equal(safeLanding(3,-1,false,.1),false);assert.equal(safeLanding(30,-1,true,.1),false);assert.equal(safeLanding(3,-1,true,1),false);});
-test('Missions cannot be completed from an invalid location or vehicle',()=>{assert.equal(missionAllowed('sample',{rocky:true,vehicle:'ship'}),false);assert.equal(missionAllowed('sample',{rocky:true,vehicle:'walk'}),true);assert.equal(missionAllowed('probe',{rocky:false,altitude:20,auto:false}),false);assert.equal(missionAllowed('probe',{rocky:false,altitude:-30,auto:false}),true);assert.equal(missionAllowed('scan',{altitude:30,auto:true}),false);});
+test('Missions cannot be completed from an invalid location or vehicle',()=>{assert.equal(missionAllowed('sample',{rocky:true,vehicle:'ship'}),false);assert.equal(missionAllowed('sample',{rocky:true,vehicle:'walk',altitude:1.7,jumpHeight:0}),true);assert.equal(missionAllowed('probe',{rocky:false,altitude:20,auto:false}),false);assert.equal(missionAllowed('probe',{rocky:false,altitude:-30,auto:false}),true);assert.equal(missionAllowed('scan',{altitude:30,auto:true}),false);});
 test('Portable saves migrate v1 and preserve surface vehicles and missions',()=>{const raw={version:1,planet:'moon',position:[0,0,180],quaternion:[0,0,0,1],visited:['earth','moon'],landed:['moon'],explored:[],elapsed:10};assert.equal(validatePortable(raw).version,2);const saved={...raw,version:2,vehicle:'rover',parkedPosition:[0,0,174],missions:['moon:sample'],days:12,roverDistance:51};const result=validatePortable(JSON.parse(JSON.stringify(saved)));assert.equal(result.vehicle,'rover');assert.equal(result.roverDistance,51);assert.deepEqual(result.missions,['moon:sample']);});
 test('Invalid imports and unusable coordinates are rejected before changing storage',()=>{const raw={version:2,planet:'earth',position:[0,0,700],quaternion:[0,0,0,1],visited:['earth'],landed:[],explored:[],elapsed:10};for(const changed of [{planet:'unknown'},{position:[0,0,0]},{quaternion:[0,0,0,0]},{elapsed:-1},{visited:['missing']},{vehicle:'walk',parkedPosition:null}])assert.throws(()=>validatePortable({...raw,...changed}));});
 test('Tutorial advances in response to the intended action only',()=>{let stage=0;assert.equal(tutorialAdvance(stage,'land'),0);for(const event of ['orient','thrust','brake','destination','land'])stage=tutorialAdvance(stage,event);assert.equal(stage,5);});
@@ -58,4 +58,14 @@ test('Restored parking transform places the rover on the same footing as the act
  SolarUniverse.prototype.placeParkedRover.call(world);
  assert.ok(Math.abs(world.rover.position.length()-(parked.length()-1))<1e-9);
  assert.deepEqual(world.rover.quaternion.toArray(),orientation.toArray());assert.deepEqual(world.roverParked.toArray(),parked.toArray());
+});
+
+
+test('Sampling requires contact with terrain on foot and rejects every airborne entry point',()=>{
+ const ground={rocky:true,vehicle:'walk',altitude:1.7,jumpHeight:0,auto:null};
+ assert.equal(missionAllowed('sample',ground),true);
+ for(const changed of [{altitude:100},{altitude:2.2},{altitude:-1},{altitude:NaN},{altitude:undefined},{jumpHeight:.5},{jumpHeight:.01},{jumpHeight:Infinity},{auto:{type:'landing'}},{vehicle:'rover'},{vehicle:'ship'},{vehicle:'eva'},{rocky:false}])assert.equal(missionAllowed('sample',{...ground,...changed}),false,JSON.stringify(changed));
+ assert.equal(missionAllowed('sample',{...ground,altitude:1.7,jumpHeight:0}),true);
+ assert.equal(missionAllowed('scan',{...ground,altitude:100}),true);
+ assert.equal(missionAllowed('probe',{rocky:false,vehicle:'ship',altitude:-30,auto:null}),true);
 });
