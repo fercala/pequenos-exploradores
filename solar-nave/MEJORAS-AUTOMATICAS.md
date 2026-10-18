@@ -115,8 +115,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-004 · Reiniciar el recorrido al preparar una ruta nueva
 
-- **Inicio / última actualización:** 2026-10-18 06:56 / 07:29 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-18 06:56 / 07:30 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** los botones de preparar ruta de campaña y docente sustituyen las escalas pero conservan routeIndex y routePhase anteriores. Reproducción con el controlador vigente: ruta nueva de cuatro escalas, índice 4 y fase finish; Reanudar responde «No quedan escalas pendientes».
 - **Relación:** O4-005 (rutas), O4-018 (campaña) y O4-020 (docente). Corrige el estado de una ruta recién sustituida; no añade otro planificador ni reinicia los capítulos o respuestas.
 - **Diferencia:** Iniciar ya fuerza la primera escala; preparar una ruta nueva debe descartar también la posición del recorrido anterior para que Reanudar no omita escalas ni rechace el recorrido.
@@ -125,7 +125,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Cambio:** la preparación de recorridos de campaña y docente reinicia índice y fase mediante una función común. Se mantienen las guardas contra sustituir rutas activas y el avance de rutas pausadas que no se sustituyen. Versión 0.4.4; caché propia v10.
 - **Archivos:** mission-control.js, tests/mission-control.test.mjs, package.json, README.md y sw.js, además de este registro.
 - **Validación:** 50 pruebas satisfactorias y construcción estática. Dos regresiones prueban los botones de campaña y clase con índices anteriores 1, 4 y 12, conservación de capítulos/respuestas/cuaderno, viaje hacia el primer destino, protección de rutas activas y reanudación de una ruta pausada sin sustituir. Navegador real: partida en Marte con ruta anterior terminada; preparar campaña y Reanudar inicia RUMBO A TIERRA y marca Tierra como primera escala actual. Sin errores de consola. Vista 390 × 844 revisada; teléfono físico pendiente. Evidencia local: outputs/orbita-auto-004-prueba.png.
-- **Propuesta / commit / publicación:** pendientes; no declarada publicada hasta verificar Pages.
+- **Propuesta:** [#13](https://github.com/fercala/pequenos-exploradores/pull/13). Commit de código: 3ff7cd8cd861fe61bf461a015cfc63c4fa95f4a5; incorporación a main: c3bd419c8c281d939338b214e0cd8bf9b05c911b.
+- **Publicación confirmada:** 2026-10-18 07:30 UTC. [GitHub Pages: ejecución 39107882374 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39107882374). mission-control.js público devuelve HTTP 200 e incluye el reinicio del recorrido y su uso tanto en campaña como en clase; sw.js devuelve HTTP 200 y caché v10. [Abrir el juego](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
