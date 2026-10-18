@@ -43,7 +43,7 @@
 
     <section class="flight-controls" aria-label="Controles de vuelo">
       <div class="control-panel steering"><div class="control-title">MANIOBRA <span>6 EJES</span></div><div class="direction-grid"><button data-hold="up" aria-label="Ascender">↑</button><button data-hold="left" aria-label="Desplazarse a la izquierda">←</button><button id="brake-btn" aria-label="Frenar">■</button><button data-hold="right" aria-label="Desplazarse a la derecha">→</button><button data-hold="down" aria-label="Descender">↓</button></div><div class="roll-controls"><button data-hold="rollLeft" aria-label="Girar a la izquierda">↶</button><span>GIRO</span><button data-hold="rollRight" aria-label="Girar a la derecha">↷</button></div></div>
-      <div class="control-panel throttle"><div class="control-title">PROPULSIÓN <output id="throttle-output">0%</output></div><input type="range" id="throttle" min="-40" max="100" value="0" step="1" aria-label="Potencia de propulsión"><div class="range-labels"><span>REVERSA</span><button id="zero-throttle">DETENER</button><span>AVANCE</span></div></div>
+      <div class="control-panel throttle"><div class="control-title"><span id="throttle-title">PROPULSIÓN</span> <output id="throttle-output">0%</output></div><input type="range" id="throttle" min="-40" max="100" value="0" step="1" aria-label="Potencia de propulsión"><div class="range-labels"><span>REVERSA</span><button id="zero-throttle">DETENER</button><span>AVANCE</span></div></div>
       <div class="primary-actions"><button id="land-btn" class="primary-button"><span>↧</span> <span id="land-label">Descender al planeta</span></button><button id="orbit-btn" class="secondary-button">↗ Regresar al espacio</button></div>
     </section>
 
