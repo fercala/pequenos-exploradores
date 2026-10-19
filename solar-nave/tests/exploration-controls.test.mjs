@@ -34,3 +34,13 @@ test('A suspended terrain scanner performs no hidden sampling or drawing and res
  controls.tick(.3,true);assert.equal(samples,previous);assert.equal(draws,25);
  controls.tick(.3,false);assert.ok(samples>previous);assert.equal(draws,50);
 });
+
+
+test('The surface map draws the current beacon and can select its coordinates without moving the player',()=>{
+ let beacon={lat:12,lon:-34};const labels=[],elements=new Map(),ctx={fillRect(){},drawImage(){},strokeRect(){},beginPath(){},moveTo(){},lineTo(){},stroke(){},arc(){},fill(){},fillText:text=>labels.push(text)};
+ const make=()=>({style:{},classList:{toggle(){}},append(){},insertAdjacentHTML(){},setAttribute(){},querySelectorAll:()=>[],getContext:()=>ctx,width:900,height:450});globalThis.document={createElement:make,querySelector:make,querySelectorAll:()=>[],body:make()};const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
+ const s={planet:bodyById('moon'),settings:{weather:true},position:new T.Vector3(0,180,0)},w={planetGroup:new T.Group(),terrainRegions:[],texture:()=>({image:null}),localNormal:n=>n,landingNormal:new T.Vector3(),landingPosition:new T.Vector3(),groundRadius:()=>170,isWater:()=>false};
+ createExploration({state:s,world:w,$,getBeacon:body=>body==='moon'?beacon:null,toast(){},settingsSave(){}},()=>{});const before=s.position.clone();$('surface-map-btn').onclick();assert.ok(labels.includes('Tu baliza'));assert.equal($('surface-beacon').disabled,false);$('surface-beacon').onclick();assert.equal($('surface-lat').value,'12.00');assert.equal($('surface-lon').value,'-34.00');assert.match($('surface-target').textContent,/Baliza de exploración/);assert.ok(labels.includes('Tu baliza · destino'));assert.ok(s.position.equals(before));assert.deepEqual(beacon,{lat:12,lon:-34});
+ s.planet=bodyById('mars');labels.length=0;$('surface-map-btn').onclick();assert.equal($('surface-beacon').disabled,true);assert.equal(labels.includes('Tu baliza'),false);s.planet=bodyById('moon');
+ beacon=null;labels.length=0;$('surface-map-btn').onclick();assert.equal($('surface-beacon').disabled,true);assert.equal(labels.includes('Tu baliza'),false);
+});
