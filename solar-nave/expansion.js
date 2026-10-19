@@ -40,6 +40,7 @@ export function createExpansion(api){
    if(!s.planet.rocky||(!s.landed&&s.vehicle==='ship')){toast('Primero aterriza en un mundo rocoso.');return;}
    if(s.vehicle==='ship'){w.parkedPosition.copy(s.position);w.parkedQuaternion.copy(s.quaternion);s.position.add(new T.Vector3(12,0,0).applyQuaternion(s.quaternion));}
    if(vehicle==='rover'&&s.position.distanceTo(w.parkedPosition)>40&&(!w.roverParked||s.position.distanceTo(w.roverParked)>20)){toast('Acércate a la nave o al rover estacionado.');return;}
+   if(s.vehicle==='walk'&&vehicle==='rover'&&w.roverParked&&s.position.distanceTo(w.roverParked)<=20){s.position.copy(w.roverParked);if(w.roverParkedQuaternion)s.quaternion.copy(w.roverParkedQuaternion);}
    if(s.vehicle==='rover'&&vehicle==='walk'){w.roverParked=s.position.clone();w.roverParkedQuaternion=s.quaternion.clone();}s.vehicle=vehicle;s.landed=false;const n=s.position.clone().normalize();s.position.copy(n).multiplyScalar(w.groundRadius(n)+(vehicle==='walk'?1.7:1));
   }
   ex.jumpHeight=0;ex.jumpSpeed=0;w.vehicle=s.vehicle;resetInputs();brake();toast(({ship:'De vuelta a bordo.',walk:'Exploración a pie. Usa el joystick o Caminar; abre Mochila para las actividades.',rover:'Rover desplegado. Usa los mismos controles para conducir.'})[vehicle]);persist();

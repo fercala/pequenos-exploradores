@@ -96,3 +96,13 @@ test('Photo exposure follows the retained slider on every entry and normal fligh
  ex.togglePhoto(false);assert.equal(w.renderer.toneMappingExposure,1.12);assert.equal(w.cameraMode,'cockpit');assert.equal($('photo-exposure').value,'2.3');
  ex.togglePhoto(true);assert.equal(w.renderer.toneMappingExposure,2.3);ex.togglePhoto(false);assert.equal(w.renderer.toneMappingExposure,1.12);
 });
+
+
+test('Boarding a nearby parked rover uses its own position and orientation instead of moving it to the walker',()=>{
+ const {s,w,ex,r}=fixture();w.parkedPosition.set(1000,0,0);w.roverParked=new T.Vector3(9,r+1,0).setLength(r+1);w.roverParkedQuaternion=new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),.7);const parked=w.roverParked.clone(),orientation=w.roverParkedQuaternion.clone();
+ assert.ok(s.position.distanceTo(parked)<20);ex.changeVehicle('rover');assert.equal(s.vehicle,'rover');assert.ok(s.position.distanceTo(parked)<1e-8);assert.ok(s.quaternion.angleTo(orientation)<1e-8);assert.ok(w.roverParked.distanceTo(parked)<1e-8);
+});
+
+test('Deploying near the ship still works when an older rover is parked far away',()=>{
+ const {s,w,ex,r}=fixture();w.roverParked=new T.Vector3(r+1,0,0);const before=s.position.clone().setLength(r+1);ex.changeVehicle('rover');assert.equal(s.vehicle,'rover');assert.ok(s.position.distanceTo(before)<1e-8);
+});
