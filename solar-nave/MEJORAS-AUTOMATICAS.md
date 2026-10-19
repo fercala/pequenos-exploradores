@@ -398,16 +398,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-023 · Mantener el nombre de cámara al cambiar de controles
 
-- **Inicio / última actualización:** 2026-10-19 10:47 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 10:47 / 10:49 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** Cambiar cámara en Orientación sin gestos modifica world.cameraMode, pero solo el botón de cámara estándar actualiza camera-label. Navegador: activar botones sin gestos, cambiar a Cabina y desactivarlos deja «Seguimiento» en el botón estándar aunque aparecen los instrumentos de cabina.
 - **Relación / diferencia:** O4-019 (orientación accesible), O2-010 (cabina) y O2-019 (cámara fotográfica). AUTO-008 identifica el botón Mirar; AUTO-020 asocia campos de Ajustes. Aquí se evita informar un modo de cámara distinto al activo al alternar controles.
 - **Criterio de aceptación:** el nombre visible del botón estándar sigue el modo real Seguimiento/Cabina/Observación incluso tras cambiarlo con controles sin gestos; el ciclo normal y el regreso del modo fotografía siguen funcionando. No cambia preferencias ni partidas.
 - **Rama:** codex/orbita-auto-023-nombre-camara.
 - **Cambio y archivos:** app.js sincroniza camera-label con world.cameraMode en la actualización común del HUD; escribe solo si cambia el texto, independientemente del control que modificó la cámara. Versión 0.5.14 en package.json/README y caché propia v30 en sw.js.
 - **Validación:** 83 pruebas existentes correctas y construcción estática. Navegador antes: cambiar a Cabina con botones accesibles y desactivarlos muestra Seguimiento junto a los instrumentos de Cabina. Después: alternar controles conserva Cabina y Observación en el nombre; ciclo estándar operativo. Entrar en fotografía desde Cabina y Volver al vuelo recupera Cabina y sus instrumentos. Revisado en escritorio y 390 × 844; sin errores/avisos de consola. Evidencia: outputs/orbita-auto-023-camara.png. No se probó teléfono físico ni lector de pantalla; la preferencia de botones sin gestos vuelve a su valor inicial desactivado.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#53](https://github.com/fercala/pequenos-exploradores/pull/53). Commit de código: 4d672e3d97f73443899a61602a0300360a561ab2; incorporación a main: 5f6c96598fe1cbcc375ba4564e85475bcff1b663.
+- **Publicación confirmada:** 2026-10-19 10:49 UTC. [GitHub Pages: ejecución 39240001902 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39240001902), sobre el commit de incorporación. app.js público devuelve HTTP 200 e incluye la sincronización cameraLabel; package.json confirma 0.5.14 y sw.js caché v30, ambos HTTP 200. La primera consulta durante el despliegue aún devolvía la versión anterior; se repitió tras completarse y confirmó los tres cambios. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
