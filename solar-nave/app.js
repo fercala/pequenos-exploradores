@@ -14,7 +14,7 @@ if(matchMedia('(prefers-reduced-motion:reduce)').matches)state.settings.reducedM
 try{world=new Universe($('scene'),state.settings.quality);world.setPlanet(state.planet);}catch(error){console.error(error);$('fatal').hidden=false;throw error;}
 const canvas=world.renderer.domElement;
 function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,5000);}
-const expansion=createExpansion({state,world,toast,$,persist,replaceSave:clean=>saveSession.replace(clean),resetInputs,brake,closePanel,showPanel,changeReference,settingsSave,setThrottle,startAscent,startLanding,startTravel,cancelAuto});
+const expansion=createExpansion({state,world,toast,$,persist,isLooking:()=>look,replaceSave:clean=>saveSession.replace(clean),resetInputs,brake,closePanel,showPanel,changeReference,settingsSave,setThrottle,startAscent,startLanding,startTravel,cancelAuto});
 function settingsSave(){try{localStorage.setItem('orbita-settings',JSON.stringify(state.settings));}catch{toast('El navegador no permite guardar los ajustes.');}}
 function persist(){if(!state.started||state.auto)return true;return saveSession.save(expansion.snapshot());}
 function setThrottle(value){state.throttle=clamp(Number(value)||0,-40,100)/100;$('throttle').value=String(Math.round(state.throttle*100));$('throttle-output').textContent=`${Math.round(state.throttle*100)}%`;}
