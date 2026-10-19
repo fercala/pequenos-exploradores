@@ -358,8 +358,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-020 · Asociar los nombres de los ajustes a sus controles
 
-- **Inicio / última actualización:** 2026-10-19 07:37 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 07:37 / 07:40 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** renderSettings muestra Calidad gráfica, Movimiento reducido, Modo de exploración y Controles táctiles ampliados en div, sin label for ni nombre accesible en sus campos. Las observaciones de navegador anteriores muestran los selectores solo por su valor y casillas sin nombre; pulsar el texto no activa su campo.
 - **Relación / diferencia:** O2-003 (ajustes) y O4-019 (accesibilidad). AUTO-008 identifica el modo Mirar de vuelo; aquí se corrigen cuatro campos del panel básico de Ajustes. No se añaden preferencias ni se cambia su significado o guardado.
 - **Criterio de aceptación:** los cuatro controles reciben su nombre del texto visible mediante etiquetas asociadas; pulsar el texto de las dos casillas cambia su estado. Se conserva la distribución, funcionamiento de selectores y preferencias existentes, con revisión de escritorio y móvil.
@@ -367,7 +367,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Cambio:** versión 0.5.11; etiquetas HTML asociadas mediante for a los cuatro campos, manteniendo textos, valores y controladores existentes. El nombre accesible se deriva del texto visible y este activa su campo. Caché propia v27.
 - **Archivos:** app.js, package.json, README.md, sw.js y este registro.
 - **Validación:** 80 pruebas existentes satisfactorias, sintaxis y construcción estática. Navegador real: los cuatro campos muestran su nombre en el árbol accesible y una asociación labels al texto correspondiente; pulsar etiquetas activa/desactiva Movimiento reducido y Controles táctiles ampliados, con foco en sus casillas. Los selectores se operan por nombre de etiqueta; Calidad cambia Baja → Media → Baja. Escritorio y 390 × 844 revisados, sin errores/advertencias de consola. La prueba restituye sus valores iniciales. Evidencia: outputs/orbita-auto-020-etiquetas.png. No se afirma auditoría completa con lector de pantalla ni teléfono físico.
-- **Propuesta / commit / publicación:** pendientes.
+- **Propuesta:** [#47](https://github.com/fercala/pequenos-exploradores/pull/47). Commit de código: 71df4011515d30e8d669655e5870f738f7056bd3; incorporación a main: 7fb78a2d313baba7083b7ff14399e2a0dd6337aa.
+- **Publicación confirmada:** 2026-10-19 07:40 UTC. [GitHub Pages: ejecución 39217376954 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39217376954), sobre el commit de incorporación. app.js público devuelve HTTP 200 e incluye las cuatro etiquetas asociadas. package.json confirma 0.5.11 y sw.js confirma caché v27, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
