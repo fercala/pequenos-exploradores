@@ -422,6 +422,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#55](https://github.com/fercala/pequenos-exploradores/pull/55). Commit de código: 6f54dc91ef8c3c0bd159f9ee8958f70f01695212; incorporación a main: d3414a250c4324a4be045f10dd5d3228996c69ee.
 - **Publicación confirmada:** 2026-10-19 11:51 UTC. [GitHub Pages: ejecución 39247567877 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39247567877), sobre el commit de incorporación. expansion.js público devuelve HTTP 200 y aplica el valor de photo-exposure al entrar; package.json confirma 0.5.15 y sw.js caché v31, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-025 · Embarcar en el rover en su posición estacionada
+
+- **Inicio / última actualización:** 2026-10-19 12:53 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** changeVehicle permite conducir a menos de 20 m del rover, pero cambia de vehículo usando posición y orientación del caminante. El rover salta hacia el tripulante en lugar de ocupar su ubicación estacionada; su orientación guardada tampoco se usa para embarcar.
+- **Relación / diferencia:** O2-008 (rover), SOL-001 (exploración), AUTO-010 (guardar anclaje) y AUTO-017 (conservarlo al reconstruir). Esas mejoras conservan el rover estacionado; aquí se usa su transformación al embarcar cerca, evitando desplazarlo hasta 20 m sin conducir.
+- **Criterio de aceptación:** embarcar junto al rover usa su posición y orientación, con apoyo normal en terreno. Lejos del rover/nave se rechaza sin mover al tripulante. Desplegar cerca de la nave sin un rover próximo conserva su funcionamiento, y no cambian formato ni progreso.
+- **Rama:** codex/orbita-auto-025-embarcar-rover.
+- **Cambio y archivos:** expansion.js copia posición y orientación del rover cercano al pasar de caminante a conductor, antes del ajuste normal al terreno. Mantiene los límites de embarque y el despliegue cerca de la nave. Dos casos en tests/vehicle-transition.test.mjs; versión 0.5.16 en package.json/README y caché propia v32 en sw.js.
+- **Validación:** 86 pruebas y construcción correctas. Regresión falla antes al conservar la posición del caminante en vez del anclaje; ahora verifica posición/orientación del rover, anclaje sin mutar y despliegue normal con rover antiguo lejano. La prueba existente de rechazo lejano sigue pasando. Navegador real: rover lunar a 134 m de la nave, bajar y caminar 13 m (nave a 146 m); Conducir rover devuelve al vehículo estacionado a 134 m y altura 1 m, con contador de rover 135 m conservado. Escritorio y 390 × 844 revisados, sin errores/avisos de consola. Evidencia: outputs/orbita-auto-025-rover.png. Transformación exacta comprobada en prueba de controlador; teléfono físico pendiente.
+- **Propuesta / commit:** pendientes de creación.
+- **Publicación:** pendiente.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
