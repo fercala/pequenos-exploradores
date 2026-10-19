@@ -539,6 +539,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#74](https://github.com/fercala/pequenos-exploradores/pull/74). Commit de código: bc2284b059298d2089b01dd17a65d4eb335f7c2c; incorporación a main: 3468902b14f55547295e10465cbf4fb12767974f.
 - **Publicación confirmada:** 2026-10-19 22:00 UTC. [GitHub Pages: ejecución 39331673066 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39331673066), sobre el commit de incorporación. expansion.js y exploration.js públicos devuelven HTTP 200 con consulta de baliza y marcador/selección del mapa; package.json confirma 0.5.24 y sw.js caché v40, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-034 · Mantener la caída del salto junto al agua
+
+- **Inicio / última actualización:** 2026-10-19 23:02 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** surfacePhysics rechaza un movimiento hacia agua con return antes de integrar jumpSpeed/jumpHeight. Mantener la marcha hacia una costa durante un salto congela la caída mientras dure el intento de cruzar el agua.
+- **Relación / diferencia:** O2-007 (saltos), SOL-001 (caminata) y AUTO-013 (limpiar salto al cambiar vehículo). Aquí se mantiene la gravedad del salto cuando una colisión horizontal bloquea el paso, sin cambiar límites de agua ni permitir atravesarla.
+- **Criterio de aceptación:** un salto junto al agua sigue subiendo/cayendo hasta apoyar en suelo aunque se mantenga la marcha. La posición horizontal permanece bloqueada y no acumula distancia ficticia; el rover sigue sin cruzar agua. No cambia la gravedad ni los guardados.
+- **Rama:** codex/orbita-auto-034-salto-costa.
+- **Cambio y archivos:** expansion.js bloquea la componente horizontal al detectar agua, pero continúa integrando gravedad/altura del salto con la normal anterior. Dos regresiones en tests/vehicle-transition.test.mjs; versión 0.5.25 en package.json/README y caché propia v41 en sw.js.
+- **Validación:** 96 pruebas y construcción correctas. Antes, el salto con marcha hacia costa no cambiaba altura/velocidad. Ahora el caso mantiene la marcha 5.6 s y comprueba ascenso, caída y apoyo final, sin desplazamiento horizontal ni distancia a pie ficticia. Rover mantiene posición, velocidad cero y contador intacto al chocar con agua. Navegador real en suelo lunar seco: Saltar sube de 2 a 4 m, vuelve a 2 m y velocidad vertical 0; vista 390 × 844 sin errores/avisos. Evidencia final en suelo: outputs/orbita-auto-034-salto.png. La costa se verifica con el controlador real y terreno de prueba; no se ensayó una costa manual ni teléfono físico.
+- **Propuesta / commit:** pendientes de creación.
+- **Publicación:** pendiente.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.

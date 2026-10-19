@@ -112,3 +112,14 @@ test('Entering the atlas stops propulsion as well as velocity while a rejected e
  const {s,w,ex,$}=fixture();s.vehicle='ship';s.throttle=.8;s.velocity.set(3,4,5);s.auto={type:'travel'};ex.enterAtlas();assert.equal(s.throttle,.8);assert.equal(s.velocity.lengthSq(),50);assert.equal(w.overview,undefined);
  s.auto=null;ex.enterAtlas();assert.equal(w.overview,true);assert.equal(s.throttle,0);assert.equal(s.velocity.lengthSq(),0);$('atlas-back').onclick();assert.equal(w.overview,false);assert.equal(s.throttle,0);
 });
+
+
+test('A blocked shoreline step does not freeze jumping or award walking distance',()=>{
+ const {s,w,ex,r}=fixture();w.isWater=n=>Math.abs(n.x)>1e-9||Math.abs(n.z)>1e-9;s.throttle=1;ex.jump();ex.surfacePhysics(.1,{x:0,y:0},new Set());assert.ok(ex.jumpHeight>0);assert.ok(ex.jumpSpeed<3.5);
+ for(let i=0;i<110;i++)ex.surfacePhysics(.05,{x:0,y:0},new Set());
+ assert.equal(ex.jumpHeight,0);assert.equal(ex.jumpSpeed,0);assert.ok(Math.abs(s.position.length()-(r+1.7))<1e-8);assert.equal(s.position.x,0);assert.equal(s.position.z,0);assert.equal(ex.v4.campaign.fieldLog.moon?.distance||0,0);
+});
+
+test('Rover shoreline collisions still block movement and cannot accumulate driven distance',()=>{
+ const {s,w,ex}=fixture();ex.changeVehicle('rover');const before=s.position.clone();w.isWater=n=>Math.abs(n.x)>1e-9||Math.abs(n.z)>1e-9;s.throttle=1;ex.surfacePhysics(.1,{x:0,y:0},new Set());assert.ok(s.position.equals(before));assert.equal(s.velocity.length(),0);assert.equal(s.roverDistance,0);assert.equal(s.roverDistances.moon||0,0);
+});
