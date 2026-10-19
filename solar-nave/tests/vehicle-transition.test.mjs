@@ -9,7 +9,7 @@ function fixture(settings={}){
  globalThis.document={createElement:make,body:make(),documentElement:make(),querySelector:()=>make()};
  const planet=bodyById('moon'),r=bodyRadius(planet),s={planet,settings,position:new T.Vector3(0,r+1.7,0),velocity:new T.Vector3(),quaternion:new T.Quaternion(),landed:false,auto:null};
  const w={planet,scene:new T.Scene(),ship:new T.Group(),planetGroup:new T.Group(),parkedPosition:new T.Vector3(0,r+4.2,0),parkedQuaternion:new T.Quaternion(),groundRadius:()=>r,isWater:()=>false,setOrientation(){}};
- const messages=[],settingsWrites=[],ex=createExpansion({state:s,world:w,$,toast:t=>messages.push(t),persist(){},resetInputs(){},brake(){s.velocity.set(0,0,0);s.throttle=0;},closePanel(){},settingsSave(){settingsWrites.push(structuredClone(s.settings));}});
+ const messages=[],settingsWrites=[],ex=createExpansion({state:s,world:w,$,toast:t=>messages.push(t),persist(){},setThrottle:n=>s.throttle=n,resetInputs(){},brake(){s.velocity.set(0,0,0);s.throttle=0;},closePanel(){},settingsSave(){settingsWrites.push(structuredClone(s.settings));}});
  Object.assign(s,{visited:new Set(['moon']),landings:new Set(['moon']),explored:new Set(),elapsed:10,photos:0,shield:100});s.vehicle='walk';s.throttle=0;return {s,w,ex,r,messages,$,settingsWrites};
 }
 test('Boarding the rover during a jump discards airborne momentum and keeps normal rover footing',()=>{
@@ -105,4 +105,10 @@ test('Boarding a nearby parked rover uses its own position and orientation inste
 
 test('Deploying near the ship still works when an older rover is parked far away',()=>{
  const {s,w,ex,r}=fixture();w.roverParked=new T.Vector3(r+1,0,0);const before=s.position.clone().setLength(r+1);ex.changeVehicle('rover');assert.equal(s.vehicle,'rover');assert.ok(s.position.distanceTo(before)<1e-8);
+});
+
+
+test('Entering the atlas stops propulsion as well as velocity while a rejected entry leaves flight untouched',()=>{
+ const {s,w,ex,$}=fixture();s.vehicle='ship';s.throttle=.8;s.velocity.set(3,4,5);s.auto={type:'travel'};ex.enterAtlas();assert.equal(s.throttle,.8);assert.equal(s.velocity.lengthSq(),50);assert.equal(w.overview,undefined);
+ s.auto=null;ex.enterAtlas();assert.equal(w.overview,true);assert.equal(s.throttle,0);assert.equal(s.velocity.lengthSq(),0);$('atlas-back').onclick();assert.equal(w.overview,false);assert.equal(s.throttle,0);
 });

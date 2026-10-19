@@ -448,6 +448,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#59](https://github.com/fercala/pequenos-exploradores/pull/59). Commit de código: 8b9f41bcca5c9c7d50441dd2f43c19738bcefb41; incorporación a main: 6b12afeebbf2beea18a1b5f7daac0c9719647346.
 - **Publicación confirmada:** 2026-10-19 13:56 UTC. [GitHub Pages: ejecución 39264248886 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39264248886), sobre el commit de incorporación. world-v2.js público devuelve HTTP 200 e incluye el desplazamiento esférico con inclinación; package.json confirma 0.5.17 y sw.js caché v33, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-027 · Detener la propulsión al entrar en el atlas
+
+- **Inicio / última actualización:** 2026-10-19 14:52 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** enterAtlas pone la velocidad a cero y pausa la física de vuelo, pero conserva throttle y el deslizador. Si se abre con motores activos, volver del mapa vuelve a acelerar la nave o mover al tripulante sin otra acción sobre la marcha.
+- **Relación / diferencia:** O2-015 (atlas), O2-001 (vuelo) y SOL-001 (marcha de superficie). AUTO-026 habilita inclinación del mapa; aquí se elimina la propulsión pendiente al cambiar a la navegación del atlas, con el mismo control de potencia existente.
+- **Criterio de aceptación:** entrar al atlas detiene potencia y velocidad y sincroniza el deslizador; al volver no se reinicia movimiento por el valor anterior. Una apertura rechazada por maniobra no modifica el control de vuelo. No cambian posiciones, partidas ni preferencias.
+- **Rama:** codex/orbita-auto-027-atlas-sin-propulsion.
+- **Cambio y archivos:** expansion.js llama a setThrottle(0) en la entrada válida al atlas, junto al frenado de velocidad existente. Usa la función común para actualizar estado, deslizador y porcentaje. Regresión en tests/vehicle-transition.test.mjs; versión 0.5.18 en package.json/README y caché propia v34 en sw.js.
+- **Validación:** 88 pruebas y construcción correctas. La regresión falló antes con potencia 0.8 tras entrar; ahora comprueba potencia/velocidad cero y salida sin reactivar potencia, además de rechazo durante viaje sin alterar velocidad/potencia. Navegador real: 80 % y 38 m/s antes de abrir; al volver, deslizador y texto 0 %, velocidad 0 m/s con estabilización activa. Escritorio y 390 × 844 revisados, sin errores/avisos. Evidencia: outputs/orbita-auto-027-potencia.png. No se afirma inmovilidad permanente sin estabilización ni teléfono físico.
+- **Propuesta / commit:** pendientes de creación.
+- **Publicación:** pendiente.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
