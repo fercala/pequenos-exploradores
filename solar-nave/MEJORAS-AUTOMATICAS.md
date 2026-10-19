@@ -411,16 +411,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-024 · Recuperar la exposición al volver al modo fotografía
 
-- **Inicio / última actualización:** 2026-10-19 11:50 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 11:50 / 11:51 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** photo-exposure cambia el renderizador, pero cerrar fotografía lo devuelve a 1.12 y volver a abrir no lo aplica. El deslizador conserva el valor elegido mientras la imagen usa otro, perdiendo el ajuste de composición entre capturas.
 - **Relación / diferencia:** O2-019 (fotografía). AUTO-023 corrige el nombre del modo de cámara; aquí se conserva y aplica la exposición seleccionada al reentrar en fotografía durante la misma sesión, sin alterar la exposición normal de vuelo ni las partidas.
 - **Criterio de aceptación:** elegir una exposición, salir y volver a fotografía aplica el valor mostrado por el deslizador. Al salir se conserva el valor normal de vuelo 1.12; la primera apertura y el ciclo de cámara siguen funcionando. No se promete conservar este ajuste entre recargas.
 - **Rama:** codex/orbita-auto-024-exposicion-foto.
 - **Cambio y archivos:** expansion.js aplica al entrar la exposición numérica del deslizador existente; la salida mantiene el restablecimiento a 1.12. Regresión en tests/vehicle-transition.test.mjs. Versión 0.5.15 en package.json/README y caché propia v31 en sw.js.
 - **Validación:** 84 pruebas y construcción estática correctas. La nueva prueba falló antes: primera apertura usaba 1.12 frente al 1.1 mostrado. Ahora verifica primera apertura, ajuste 2.3, regreso a vuelo 1.12/Cabina y reapertura con 2.3. Navegador real: seleccionar 2.3, salir y reabrir conserva el deslizador, con imagen renderizada revisada en escritorio y 390 × 844; sin errores/avisos de consola. Evidencia: outputs/orbita-auto-024-exposicion.png. La propiedad del renderizador se comprueba en la prueba del controlador, sin afirmar medición de luminancia ni teléfono físico.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#55](https://github.com/fercala/pequenos-exploradores/pull/55). Commit de código: 6f54dc91ef8c3c0bd159f9ee8958f70f01695212; incorporación a main: d3414a250c4324a4be045f10dd5d3228996c69ee.
+- **Publicación confirmada:** 2026-10-19 11:51 UTC. [GitHub Pages: ejecución 39247567877 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39247567877), sobre el commit de incorporación. expansion.js público devuelve HTTP 200 y aplica el valor de photo-exposure al entrar; package.json confirma 0.5.15 y sw.js caché v31, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
