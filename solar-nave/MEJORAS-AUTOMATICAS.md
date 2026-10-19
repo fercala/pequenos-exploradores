@@ -461,6 +461,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#61](https://github.com/fercala/pequenos-exploradores/pull/61). Commit de código: f327af87c71513089586761a9b77a96d2c222d62; incorporación a main: 5fb8b92b8a7e11cc652dae18390bca5131878574.
 - **Publicación confirmada:** 2026-10-19 14:54 UTC. [GitHub Pages: ejecución 39272988661 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39272988661), sobre el commit de incorporación. expansion.js público devuelve HTTP 200 e incluye setThrottle(0) al entrar al atlas; package.json confirma 0.5.18 y sw.js caché v34, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-028 · Permitir arrastre táctil en todo el atlas y la fotografía
+
+- **Inicio / última actualización:** 2026-10-19 15:56 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** pointerdown del canvas descarta todo toque iniciado en el 35 % izquierdo para reservar la zona del joystick. También lo hace en atlas y fotografía, aunque esos modos ocultan el joystick: una parte amplia de la escena no permite comenzar un arrastre con un dedo.
+- **Relación / diferencia:** O2-003 (controles táctiles), O2-015 (atlas), O2-019 (fotografía). AUTO-026 hace funcionar la inclinación y AUTO-027 detiene propulsión al entrar; aquí se elimina una zona táctil inactiva exclusivamente en los dos modos sin joystick, conservando la reserva lateral durante vuelo y caminata.
+- **Criterio de aceptación:** los toques del lado izquierdo pueden iniciar orientación de cámara en atlas/fotografía; la zona lateral sigue reservada al joystick en vuelo/superficie. Se mantienen captura de puntero, pellizco, mouse y cancelación de toques, sin cambiar partidas.
+- **Rama:** codex/orbita-auto-028-arrastre-tactil.
+- **Cambio y archivos:** app.js limita la reserva lateral de toques a los modos que no son atlas ni fotografía; no cambia seguimiento de punteros, captura, pellizco ni liberación. Versión 0.5.19 en package.json/README y caché propia v35 en sw.js.
+- **Validación:** 88 pruebas existentes y construcción correctas. Revisión de la condición: el rechazo de touch a la izquierda solo permanece si overview y photo son falsos; mouse conserva su ruta anterior. Navegador real a 390 × 844: joystick oculto en atlas/fotografía y visible en vuelo; arrastres de mouse iniciados en el lado izquierdo giran ambas escenas, con imagen final revisada. Sin errores/avisos. Evidencia: outputs/orbita-auto-028-arrastre.png. La herramienta de navegador ejecuta arrastres de mouse: no se afirma prueba táctil física ni del pellizco; la corrección táctil se verifica por revisión del controlador.
+- **Propuesta / commit:** pendientes de creación.
+- **Publicación:** pendiente.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
