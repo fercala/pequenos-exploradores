@@ -513,6 +513,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#70](https://github.com/fercala/pequenos-exploradores/pull/70). Commit de código: 08526bc71071be820d78f2d3b81c18d57dfc76c2; incorporación a main: 64a2bd5e08154e9fd0caebb47d3baab6da9b2a82.
 - **Publicación confirmada:** 2026-10-19 20:00 UTC. [GitHub Pages: ejecución 39315571101 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39315571101), sobre el commit de incorporación. style.css público devuelve HTTP 200 con la distribución estrecha en dos filas; package.json confirma 0.5.22 y sw.js caché v38, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-032 · Orientar al tripulante hacia su baliza
+
+- **Inicio / última actualización:** 2026-10-19 20:57 UTC.
+- **Estado:** Verificada.
+- **Problema / oportunidad:** la baliza se conserva por mundo, pero Mochila solo permite colocarla o moverla. Lejos del lugar no existe una acción para orientar al tripulante hacia esa señal; el regreso orientado existente solo apunta a la nave.
+- **Relación / diferencia:** SOL-001 (baliza y regreso a la nave), O2-007/008 (exploración). Se reutiliza la baliza guardada como un destino de orientación distinto de la nave; no se añade otra baliza, teletransporte ni objetivo duplicado.
+- **Criterio de aceptación:** con baliza en el mundo actual, Mochila permite orientarse hacia ella a pie o en rover, deteniendo la marcha y sin cambiar posición. Sin baliza no ofrece la acción activa. Rechaza saltos/manobras y avisa si ya está cerca; conserva baliza/progreso y partidas anteriores.
+- **Rama:** codex/orbita-auto-032-orientar-baliza.
+- **Cambio y archivos:** field-expedition.js añade Orientar hacia baliza a Mochila, desactivado sin marca guardada en el mundo. Convierte coordenadas locales al terreno actual, orienta sobre el plano tangente y detiene la marcha sin mover al jugador ni la señal. Incluye avisos de proximidad/suelo y caso antipodal. Dos pruebas en tests/field.test.mjs; versión 0.5.23 en package.json/README y caché propia v39 en sw.js.
+- **Validación:** 93 pruebas y construcción correctas. Casos nuevos comprueban rumbo a la marca en mundo rotado para caminante/rover, posición intacta, marcha cero, cámara de seguimiento, registro sin mutar y rechazo sin marca/en salto/proximidad. Navegador real: acción desactivada sin baliza; colocar marca lunar, caminar de 13 a 27 m de progreso y orientar a la baliza a 15 m, con marcha 0 % y señal delante. Mochila revisada en escritorio y 390 × 844, sin errores/avisos. Evidencia: outputs/orbita-auto-032-mochila.png. No se afirma recorrido automático ni teléfono físico.
+- **Propuesta / commit:** pendientes de creación.
+- **Publicación:** pendiente.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.

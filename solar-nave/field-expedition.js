@@ -18,9 +18,9 @@ export function createFieldExpedition(api,ex,panel){
  function open(){
   if(!surface()&&!(s.vehicle==='ship'&&s.landed)){toast('Aterriza en terreno firme para iniciar una expedición de superficie.');return;}
   const progress=goals(),b=entry().beacon;
-  panel(`Exploración · ${s.planet.name}`,`<p>Tu tripulante puede recorrer el terreno, examinarlo y dejar una señal para reconocer el lugar.</p><ol class="field-goals">${progress.map(g=>`<li>${g.done?'✓':'○'} ${g.text}</li>`).join('')}</ol><p id="field-detail"></p><div class="expedition-grid"><button id="field-scan">Examinar entorno</button><button id="field-sample">Tomar muestra</button><button id="field-beacon">${b?'Mover baliza aquí':'Colocar baliza'}</button><button id="field-ship">${shipDistance()<=35?'Volver a bordo':'Orientar hacia la nave'}</button><button id="field-rover">${s.vehicle==='rover'?'Bajar del rover':'Conducir rover'}</button><button id="field-photo">Fotografiar</button></div><p id="science-result" class="info-note" role="status">Camina con el joystick o la marcha. Arrastra para orientar al tripulante.</p><p class="compact-note">Excursión virtual: distancias comprimidas, traje protector y baliza ficticios. Las mediciones usan el catálogo educativo.</p>`);
+  panel(`Exploración · ${s.planet.name}`,`<p>Tu tripulante puede recorrer el terreno, examinarlo y dejar una señal para reconocer el lugar.</p><ol class="field-goals">${progress.map(g=>`<li>${g.done?'✓':'○'} ${g.text}</li>`).join('')}</ol><p id="field-detail"></p><div class="expedition-grid"><button id="field-scan">Examinar entorno</button><button id="field-sample">Tomar muestra</button><button id="field-beacon">${b?'Mover baliza aquí':'Colocar baliza'}</button><button id="field-find-beacon">Orientar hacia baliza</button><button id="field-ship">${shipDistance()<=35?'Volver a bordo':'Orientar hacia la nave'}</button><button id="field-rover">${s.vehicle==='rover'?'Bajar del rover':'Conducir rover'}</button><button id="field-photo">Fotografiar</button></div><p id="science-result" class="info-note" role="status">Camina con el joystick o la marcha. Arrastra para orientar al tripulante.</p><p class="compact-note">Excursión virtual: distancias comprimidas, traje protector y baliza ficticios. Las mediciones usan el catálogo educativo.</p>`);
   $('field-detail').textContent=`A pie: ${Math.floor(entry().distance)} m simulados · Nave a ${Math.round(shipDistance())} m.${b?` Baliza: ${b.lat.toFixed(2)}°, ${b.lon.toFixed(2)}°.`:''}`;
-  $('field-scan').onclick=()=>activity('scan');$('field-sample').onclick=()=>activity('sample');$('field-beacon').onclick=placeBeacon;$('field-ship').onclick=returnToShip;
+  $('field-scan').onclick=()=>activity('scan');$('field-sample').onclick=()=>activity('sample');$('field-beacon').onclick=placeBeacon;$('field-ship').onclick=returnToShip;$('field-find-beacon').onclick=findBeacon;$('field-find-beacon').disabled=!b;
   $('field-rover').onclick=()=>{closePanel();ex.changeVehicle(s.vehicle==='rover'?'walk':'rover');};
   $('field-photo').onclick=()=>{closePanel();ex.togglePhoto(true);};
  }
@@ -32,6 +32,15 @@ export function createFieldExpedition(api,ex,panel){
   if(!surface()||s.vehicle!=='walk'){toast('Baja a pie y apóyate en el suelo para colocar la baliza.');return;}
   entry().beacon=toCoordinates(w.localNormal(s.position.clone().normalize()));
   const b=entry().beacon;ex.v4.record('note','Baliza de exploración',`Señal virtual colocada en ${b.lat.toFixed(2)}°, ${b.lon.toFixed(2)}°. Marca de orientación del juego, no una instalación real.`);persist();open();$('science-result').textContent='Baliza colocada. Cierra el panel para verla junto al tripulante.';
+ }
+ function findBeacon(){
+  if(!surface()||w.overview){toast('Apóyate en el suelo y termina cualquier maniobra para buscar la baliza.');return;}
+  const b=ex.v4.campaign.fieldLog[s.planet.id]?.beacon;if(!b){toast('Coloca primero una baliza en este mundo.');return;}
+  const normal=new T.Vector3(...toNormal(b.lat,b.lon)).applyQuaternion(w.planetGroup.quaternion),target=normal.clone().multiplyScalar(w.groundRadius(normal)),distance=s.position.distanceTo(target);
+  if(distance<5){resetInputs();setThrottle(0);toast('Ya estás junto a la baliza.');return;}
+  const n=s.position.clone().normalize(),direction=target.sub(s.position);direction.addScaledVector(n,-direction.dot(n));
+  if(direction.lengthSq()<1e-8){toast('La baliza queda al otro lado del mundo. Consulta sus coordenadas en la mochila.');return;}
+  s.quaternion.setFromRotationMatrix(new T.Matrix4().lookAt(s.position,s.position.clone().add(direction.normalize()),n));w.viewYaw=w.viewPitch=0;w.cameraMode='follow';resetInputs();setThrottle(0);closePanel();toast('Orientado hacia la baliza, a '+Math.round(distance)+' m simulados. Avanza para acercarte.');
  }
  function returnToShip(){
   if(!surface()){toast('Vuelve a la superficie antes de buscar la nave.');return;}
