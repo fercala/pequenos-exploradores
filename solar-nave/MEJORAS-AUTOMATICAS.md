@@ -343,8 +343,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-019 · Conservar las 64 misiones al recuperar una partida
 
-- **Inicio / última actualización:** 2026-10-18 23:15 / 2026-10-19 07:28 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-18 23:15 / 2026-10-19 07:33 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** el catálogo ofrece 64 misiones válidas (missionList de 17 mundos), pero validatePortable recorta missions a 60. Con progreso completo, se pierden comet67p:scan/sample/rover/photo; start también valida el guardado local al continuar. Los duplicados pueden consumir el límite antes del recorte.
 - **Relación / diferencia:** O2-017 (misiones), O2-020 (guardados), O4-014/015 (catálogo ampliado) y AUTO-003 (importación). AUTO-003 evita sobrescribir el archivo importado al salir; esta corrección evita perder misiones dentro de su propia validación, al recuperar o importar.
 - **Criterio de aceptación:** todas las misiones del catálogo sobreviven guardar → validar → recuperar, incluida 67P. Duplicados no desplazan otras misiones; identificadores desconocidos o actividades inexistentes en un mundo no se conservan. Guardados antiguos válidos y otros campos permanecen compatibles, sin introducir un límite arbitrario menor que el catálogo.
@@ -353,7 +353,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Archivos:** simulation.js, tests/expansion.test.mjs, package.json, README.md, sw.js y este registro.
 - **Validación:** 80 pruebas satisfactorias y construcción estática. Dos regresiones fallaban antes: guardar/serializar/validar recortaba las cuatro misiones de 67P; cien duplicados desplazaban otras. Ahora conservan todas, también en una segunda validación, y descartan actividades imposibles/desconocidas con migración v1. Navegador real: importar archivo sintético local con 64 misiones, Continuar y comprobar las cuatro de 67P completadas; otra recarga/Continuar conserva las cuatro. Escritorio y 390 × 844 revisados, sin errores/advertencias de consola. Evidencia: outputs/orbita-auto-019-misiones.png. No se afirma haber jugado manualmente las 64 actividades; teléfono físico pendiente.
 - **Continuidad:** la selección del archivo de prueba quedó retenida por la herramienta de navegador durante varias horas. Se retomó la misma mejora, con main sin cambios ni propuestas abiertas; no se inició otra mejora ni se publicó durante la espera.
-- **Propuesta / commit / publicación:** pendientes.
+- **Propuesta:** [#45](https://github.com/fercala/pequenos-exploradores/pull/45). Commit de código: 5aa0346c2dedeb2dc755abfc5ceeb9ca688665f3; incorporación a main: 03289989ac5bcd15399f6984649b1c4c3bfdb66c.
+- **Publicación confirmada:** 2026-10-19 07:33 UTC. [GitHub Pages: ejecución 39216472389 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39216472389), sobre el commit de incorporación. simulation.js público devuelve HTTP 200 e incluye validación completa según catálogo sin recorte a 60. package.json confirma 0.5.10 y sw.js confirma caché v26, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
