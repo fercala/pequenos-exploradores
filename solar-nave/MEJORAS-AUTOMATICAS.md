@@ -396,6 +396,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#51](https://github.com/fercala/pequenos-exploradores/pull/51). Commit de código: 462ea398a2acd77956494a618a5aadc8edb8bb8c; incorporación a main: e472d1968a02976d50ba93dff70515791abbbc09.
 - **Publicación confirmada:** 2026-10-19 09:47 UTC. [GitHub Pages: ejecución 39232496511 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39232496511), sobre el commit de incorporación. expansion.js público devuelve HTTP 200 e incluye syncAtlasScale; package.json confirma 0.5.13 y sw.js caché v29, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-023 · Mantener el nombre de cámara al cambiar de controles
+
+- **Inicio / última actualización:** 2026-10-19 10:47 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** Cambiar cámara en Orientación sin gestos modifica world.cameraMode, pero solo el botón de cámara estándar actualiza camera-label. Navegador: activar botones sin gestos, cambiar a Cabina y desactivarlos deja «Seguimiento» en el botón estándar aunque aparecen los instrumentos de cabina.
+- **Relación / diferencia:** O4-019 (orientación accesible), O2-010 (cabina) y O2-019 (cámara fotográfica). AUTO-008 identifica el botón Mirar; AUTO-020 asocia campos de Ajustes. Aquí se evita informar un modo de cámara distinto al activo al alternar controles.
+- **Criterio de aceptación:** el nombre visible del botón estándar sigue el modo real Seguimiento/Cabina/Observación incluso tras cambiarlo con controles sin gestos; el ciclo normal y el regreso del modo fotografía siguen funcionando. No cambia preferencias ni partidas.
+- **Rama:** codex/orbita-auto-023-nombre-camara.
+- **Cambio y archivos:** app.js sincroniza camera-label con world.cameraMode en la actualización común del HUD; escribe solo si cambia el texto, independientemente del control que modificó la cámara. Versión 0.5.14 en package.json/README y caché propia v30 en sw.js.
+- **Validación:** 83 pruebas existentes correctas y construcción estática. Navegador antes: cambiar a Cabina con botones accesibles y desactivarlos muestra Seguimiento junto a los instrumentos de Cabina. Después: alternar controles conserva Cabina y Observación en el nombre; ciclo estándar operativo. Entrar en fotografía desde Cabina y Volver al vuelo recupera Cabina y sus instrumentos. Revisado en escritorio y 390 × 844; sin errores/avisos de consola. Evidencia: outputs/orbita-auto-023-camara.png. No se probó teléfono físico ni lector de pantalla; la preferencia de botones sin gestos vuelve a su valor inicial desactivado.
+- **Propuesta / commit:** pendientes de creación.
+- **Publicación:** pendiente.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.

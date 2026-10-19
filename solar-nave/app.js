@@ -152,6 +152,7 @@ function updatePhysics(dt){
 }
 function updateHud(now){
   if(now-lastHud<120)return;lastHud=now;const n=state.position.clone().normalize(),alt=state.position.length()-world.groundRadius(n),depth=Math.max(0,world.radius-state.position.length()),speed=state.velocity.length();
+  const cameraLabel=({follow:'Seguimiento',cockpit:'Cabina',observe:'Observación'})[world.cameraMode]||'Seguimiento';if($('camera-label').textContent!==cameraLabel)$('camera-label').textContent=cameraLabel;
   $('speed-value').innerHTML=`${format(speed)} <small>m/s</small>`;$('speed-meter').style.width=`${clamp(speed/150*100,0,100)}%`;
   $('altitude-label').textContent=state.planet.rocky?'ALTITUD SIMULADA':depth>0?'PROFUNDIDAD SIMULADA':'SOBRE NIVEL DE NUBES';$('altitude-value').innerHTML=`${format(Math.abs(alt))} <small>m</small>`;
   $('vertical-value').textContent=`${format(state.velocity.dot(n),1)} m/s`;$('shield-value').textContent=`${format(state.shield)}%`;
