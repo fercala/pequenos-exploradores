@@ -471,8 +471,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Rama:** codex/orbita-auto-028-arrastre-tactil.
 - **Cambio y archivos:** app.js limita la reserva lateral de toques a los modos que no son atlas ni fotografía; no cambia seguimiento de punteros, captura, pellizco ni liberación. Versión 0.5.19 en package.json/README y caché propia v35 en sw.js.
 - **Validación:** 88 pruebas existentes y construcción correctas. Revisión de la condición: el rechazo de touch a la izquierda solo permanece si overview y photo son falsos; mouse conserva su ruta anterior. Navegador real a 390 × 844: joystick oculto en atlas/fotografía y visible en vuelo; arrastres de mouse iniciados en el lado izquierdo giran ambas escenas, con imagen final revisada. Sin errores/avisos. Evidencia: outputs/orbita-auto-028-arrastre.png. La herramienta de navegador ejecuta arrastres de mouse: no se afirma prueba táctil física ni del pellizco; la corrección táctil se verifica por revisión del controlador.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#63](https://github.com/fercala/pequenos-exploradores/pull/63). Commit de código: d943de913940c882502b1bccf3a1893fa945ccb4; incorporación a main: c5012a4ad4e1b2df9bc6f5b9b4c43c0dbe05f066.
+- **Publicación:** pendiente de confirmar. [Pages 39281692251](https://github.com/fercala/pequenos-exploradores/actions/runs/39281692251) permanece en cola el 2026-10-19 a las 16:02 UTC; build/deploy sin runner asignado ni pasos iniciados. Los archivos públicos todavía devuelven la versión anterior (HTTP 200, sin los cambios esperados). No es una mejora Publicada. En la siguiente ejecución se debe terminar esta comprobación, incluyendo cualquier ejecución posterior que publique el mismo código, antes de reservar otro ID. No requiere intervención del usuario por ahora.
 
 ### Plantilla de entrada
 
