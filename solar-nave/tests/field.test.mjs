@@ -1,3 +1,4 @@
+import {toNormal,toCoordinates} from '../surface.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as T from '../vendor/three.module.js';
@@ -49,4 +50,19 @@ test('Field walking progress excludes teleports and rover movement; ship return 
 test('The expedition kit rejects airborne, jumping and giant-planet interactions',()=>{
  const {s,c,ex,calls,$,field}=fixture();field.open();ex.jumpHeight=1;$('field-beacon').onclick();assert.deepEqual(c.fieldLog.moon.beacon,null);assert.equal(calls.records.length,0);
  s.vehicle='ship';s.landed=false;field.open();assert.match(calls.messages.at(-1),/Aterriza/);s.planet=bodyById('jupiter');s.vehicle='walk';field.open();assert.match(calls.messages.at(-1),/Aterriza/);
+});
+
+
+test('The beacon guide turns walker and rover toward the saved surface marker without moving it or the player',()=>{
+ for(const vehicle of ['walk','rover']){const {s,w,c,calls,$,field}=fixture();s.vehicle=vehicle;s.throttle=1;c.fieldLog.moon={distance:17,beacon:{lat:0,lon:45}};w.planetGroup.rotation.y=.2;const before=s.position.clone(),saved=JSON.stringify(c.fieldLog);
+ field.open();assert.equal(typeof $('field-find-beacon').onclick,'function');$('field-find-beacon').onclick();
+ const target=new T.Vector3(...toNormal(0,45)).applyQuaternion(w.planetGroup.quaternion),n=before.clone().normalize(),direction=target.addScaledVector(n,-target.dot(n)).normalize(),forward=new T.Vector3(0,0,-1).applyQuaternion(s.quaternion);
+ assert.ok(forward.dot(direction)>.999);assert.ok(s.position.equals(before));assert.equal(s.throttle,0);assert.equal(w.viewYaw,0);assert.equal(w.viewPitch,0);assert.equal(w.cameraMode,'follow');assert.equal(JSON.stringify(c.fieldLog),saved);assert.equal(calls.records.length,0);assert.match(calls.messages.at(-1),/baliza/);
+ }
+});
+
+test('Beacon guidance handles missing, nearby and airborne cases without changing the marker or position',()=>{
+ const {s,c,ex,calls,$,field}=fixture();field.open();assert.equal(typeof $('field-find-beacon').onclick,'function');$('field-find-beacon').onclick();assert.match(calls.messages.at(-1),/Coloca/);
+ c.fieldLog.moon.beacon=toCoordinates(s.position.clone().normalize());field.open();const before=s.position.clone();$('field-find-beacon').onclick();assert.match(calls.messages.at(-1),/junto a la baliza/);assert.ok(s.position.equals(before));
+ ex.jumpHeight=1;$('field-find-beacon').onclick();assert.match(calls.messages.at(-1),/suelo/);assert.ok(s.position.equals(before));assert.equal(calls.records.length,0);
 });
