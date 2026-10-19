@@ -450,16 +450,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-027 · Detener la propulsión al entrar en el atlas
 
-- **Inicio / última actualización:** 2026-10-19 14:52 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 14:52 / 14:54 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** enterAtlas pone la velocidad a cero y pausa la física de vuelo, pero conserva throttle y el deslizador. Si se abre con motores activos, volver del mapa vuelve a acelerar la nave o mover al tripulante sin otra acción sobre la marcha.
 - **Relación / diferencia:** O2-015 (atlas), O2-001 (vuelo) y SOL-001 (marcha de superficie). AUTO-026 habilita inclinación del mapa; aquí se elimina la propulsión pendiente al cambiar a la navegación del atlas, con el mismo control de potencia existente.
 - **Criterio de aceptación:** entrar al atlas detiene potencia y velocidad y sincroniza el deslizador; al volver no se reinicia movimiento por el valor anterior. Una apertura rechazada por maniobra no modifica el control de vuelo. No cambian posiciones, partidas ni preferencias.
 - **Rama:** codex/orbita-auto-027-atlas-sin-propulsion.
 - **Cambio y archivos:** expansion.js llama a setThrottle(0) en la entrada válida al atlas, junto al frenado de velocidad existente. Usa la función común para actualizar estado, deslizador y porcentaje. Regresión en tests/vehicle-transition.test.mjs; versión 0.5.18 en package.json/README y caché propia v34 en sw.js.
 - **Validación:** 88 pruebas y construcción correctas. La regresión falló antes con potencia 0.8 tras entrar; ahora comprueba potencia/velocidad cero y salida sin reactivar potencia, además de rechazo durante viaje sin alterar velocidad/potencia. Navegador real: 80 % y 38 m/s antes de abrir; al volver, deslizador y texto 0 %, velocidad 0 m/s con estabilización activa. Escritorio y 390 × 844 revisados, sin errores/avisos. Evidencia: outputs/orbita-auto-027-potencia.png. No se afirma inmovilidad permanente sin estabilización ni teléfono físico.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#61](https://github.com/fercala/pequenos-exploradores/pull/61). Commit de código: f327af87c71513089586761a9b77a96d2c222d62; incorporación a main: 5fb8b92b8a7e11cc652dae18390bca5131878574.
+- **Publicación confirmada:** 2026-10-19 14:54 UTC. [GitHub Pages: ejecución 39272988661 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39272988661), sobre el commit de incorporación. expansion.js público devuelve HTTP 200 e incluye setThrottle(0) al entrar al atlas; package.json confirma 0.5.18 y sw.js caché v34, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
