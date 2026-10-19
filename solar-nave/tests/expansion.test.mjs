@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {BODIES,MOONS,bodyRadius,orbitalPosition,scientificRadius,rotationAngle,localGravity,entryHeating,atmosphericDensity,safeLanding,missionAllowed,validatePortable,tutorialAdvance} from '../simulation.js';
+import {BODIES,MOONS,bodyRadius,orbitalPosition,scientificRadius,rotationAngle,localGravity,entryHeating,atmosphericDensity,safeLanding,missionList,missionAllowed,validatePortable,tutorialAdvance} from '../simulation.js';
 import {createSaveSession,readSave} from '../core.js';
 const norm=v=>Math.hypot(...v),sub=(a,b)=>a.map((x,i)=>x-b[i]);
 test('Seventeen destinations include the Moon, Europa and Titan, each outside its parent',()=>{assert.equal(BODIES.length,17);for(const moon of MOONS){const separation=norm(sub(orbitalPosition(moon.id),orbitalPosition(moon.parent)));assert.ok(separation>bodyRadius(moon)+bodyRadius(moon.parent));assert.ok(moon.source.startsWith('https://science.nasa.gov/'));}});
@@ -73,4 +73,17 @@ test('Sampling requires contact with terrain on foot and rejects every airborne 
 test('Portable rover counters retain only finite nonnegative known solid-world distances',()=>{
  const clean=validatePortable({...portable(),roverDistances:{earth:50,moon:2e7,mars:-1,venus:Infinity,pluto:'12',jupiter:12,unknown:3}});
  assert.deepEqual(clean.roverDistances,{earth:50,moon:1e7});assert.deepEqual(validatePortable(portable()).roverDistances,{});
+});
+
+test('Every catalog mission survives local storage and portable validation without truncation',()=>{
+ const missions=BODIES.flatMap(p=>missionList(p).map(m=>p.id+':'+m.key));assert.equal(missions.length,64);
+ const storage=memoryStore();createSaveSession(storage).save({...portable(),missions});
+ const restored=validatePortable(JSON.parse(JSON.stringify(readSave(storage))));assert.deepEqual(restored.missions,missions);
+ assert.deepEqual(restored.missions.slice(-4),['comet67p:scan','comet67p:sample','comet67p:rover','comet67p:photo']);
+ createSaveSession(storage).save(restored);assert.deepEqual(validatePortable(readSave(storage)).missions,missions);
+});
+test('Duplicate and impossible mission identifiers never displace legitimate progress',()=>{
+ const missions=BODIES.flatMap(p=>missionList(p).map(m=>p.id+':'+m.key));
+ const clean=validatePortable({...portable(),missions:[...Array(100).fill('earth:scan'),'earth:probe','jupiter:sample','jupiter:rover','unknown:scan',null,{},...missions]});
+ assert.deepEqual(clean.missions,missions);assert.deepEqual(validatePortable({...portable(),version:1,missions:['moon:sample']}).missions,['moon:sample']);
 });
