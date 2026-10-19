@@ -552,6 +552,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#76](https://github.com/fercala/pequenos-exploradores/pull/76). Commit de código: 48a06179e0a10ec0d9bc80e5192964170242b1c4; incorporación a main: 729ba111c92b42b14b2b93320680be67b9ca1533.
 - **Publicación confirmada:** 2026-10-19 23:04 UTC. [GitHub Pages: ejecución 39339055899 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39339055899), sobre el commit de incorporación. expansion.js público devuelve HTTP 200 y mantiene integración tras bloquear el movimiento hacia agua; package.json confirma 0.5.25 y sw.js caché v41, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-035 · Nombrar avance y retroceso según el vehículo
+
+- **Inicio / última actualización:** 2026-10-19 23:58 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** los botones data-hold up/down siempre anuncian Ascender/Descender, pero surfacePhysics los usa para avanzar/retroceder a pie o en rover. Sus nombres accesibles describen una acción vertical que no realizan en superficie.
+- **Relación / diferencia:** O2-003 (controles), O4-019 (accesibilidad) y SOL-001 (tripulante/rover). AUTO-008 y AUTO-029 tratan Mirar; aquí los nombres de dos controles de movimiento siguen al vehículo activo, sin modificar su función.
+- **Criterio de aceptación:** a pie anuncian Avanzar a pie/Retroceder a pie; en rover Avanzar en rover/Retroceder en rover; en nave o EVA Ascender/Descender. Se actualizan al cambiar de vehículo y conservan botones, tamaño y controles existentes.
+- **Rama:** codex/orbita-auto-035-nombres-movimiento.
+- **Cambio y archivos:** field-expedition.js actualiza aria-label de avance/retroceso solo cuando cambia el vehículo, con nombres de caminata/rover y nombres espaciales para nave/EVA. Mantiene los mismos nodos y manejadores. Versión 0.5.26 en package.json/README y caché propia v42 en sw.js.
+- **Validación:** 96 pruebas existentes y construcción correctas. Navegador real: nombres iniciales Ascender/Descender; recuperar caminante muestra Avanzar a pie/Retroceder a pie; embarcar rover muestra Avanzar en rover/Retroceder en rover en el árbol accesible; bajar vuelve a los nombres a pie. Vista de 390 × 844 revisada sin errores/avisos, controles existentes conservados y ajuste ampliado restituido. Evidencia visual de la escena a pie: outputs/orbita-auto-035-controles.png. Los nombres se verificaron en DOM/árbol accesible; no se afirma lector de pantalla, prueba manual EVA ni teléfono físico.
+- **Propuesta / commit:** pendientes de creación.
+- **Publicación:** pendiente.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.

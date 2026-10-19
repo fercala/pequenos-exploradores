@@ -13,7 +13,7 @@ export function createFieldExpedition(api,ex,panel){
  const entry=()=>ex.v4.campaign.fieldLog[s.planet.id]??={distance:0,beacon:null};
  const surface=()=>s.planet.rocky&&!s.auto&&['walk','rover'].includes(s.vehicle)&&s.position.length()-w.groundRadius(s.position.clone().normalize())<8&&ex.jumpHeight<.1;
  const shipDistance=()=>s.position.distanceTo(w.parkedPosition);
- let statusClock=0,previousBody=s.planet.id;
+ let statusClock=0,previousBody=s.planet.id,movementVehicle=null;
  function goals(){return fieldGoals(ex.v4.campaign.fieldLog[s.planet.id],s.missions,s.planet.id);}
  function open(){
   if(!surface()&&!(s.vehicle==='ship'&&s.landed)){toast('Aterriza en terreno firme para iniciar una expedición de superficie.');return;}
@@ -54,6 +54,8 @@ export function createFieldExpedition(api,ex,panel){
  return {open,beacon,
   walkStep(before,after){if(s.vehicle==='walk'&&s.planet.rocky){const distance=walkingDistance(before.toArray(),after.toArray());if(distance<1)entry().distance=Math.min(1e7,entry().distance+distance);}},
   tick(dt){
+   if(movementVehicle!==s.vehicle){movementVehicle=s.vehicle;const suffix=s.vehicle==='walk'?'a pie':s.vehicle==='rover'?'en rover':null;document.querySelector('[data-hold="up"]')?.setAttribute('aria-label',suffix?'Avanzar '+suffix:'Ascender');document.querySelector('[data-hold="down"]')?.setAttribute('aria-label',suffix?'Retroceder '+suffix:'Descender');}
+
    const visible=s.started&&!w.overview&&!ex.photo&&s.planet.rocky&&((s.vehicle==='ship'&&s.landed)||['walk','rover'].includes(s.vehicle));kit.hidden=!visible;
    document.body.classList.toggle('field-active',visible);document.body.classList.toggle('on-foot',s.vehicle==='walk');
    if(previousBody!==s.planet.id){previousBody=s.planet.id;beacon.visible=false;}
