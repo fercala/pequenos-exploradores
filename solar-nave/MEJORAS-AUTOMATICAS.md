@@ -554,16 +554,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-035 · Nombrar avance y retroceso según el vehículo
 
-- **Inicio / última actualización:** 2026-10-19 23:58 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 23:55 / 23:58 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** los botones data-hold up/down siempre anuncian Ascender/Descender, pero surfacePhysics los usa para avanzar/retroceder a pie o en rover. Sus nombres accesibles describen una acción vertical que no realizan en superficie.
 - **Relación / diferencia:** O2-003 (controles), O4-019 (accesibilidad) y SOL-001 (tripulante/rover). AUTO-008 y AUTO-029 tratan Mirar; aquí los nombres de dos controles de movimiento siguen al vehículo activo, sin modificar su función.
 - **Criterio de aceptación:** a pie anuncian Avanzar a pie/Retroceder a pie; en rover Avanzar en rover/Retroceder en rover; en nave o EVA Ascender/Descender. Se actualizan al cambiar de vehículo y conservan botones, tamaño y controles existentes.
 - **Rama:** codex/orbita-auto-035-nombres-movimiento.
 - **Cambio y archivos:** field-expedition.js actualiza aria-label de avance/retroceso solo cuando cambia el vehículo, con nombres de caminata/rover y nombres espaciales para nave/EVA. Mantiene los mismos nodos y manejadores. Versión 0.5.26 en package.json/README y caché propia v42 en sw.js.
 - **Validación:** 96 pruebas existentes y construcción correctas. Navegador real: nombres iniciales Ascender/Descender; recuperar caminante muestra Avanzar a pie/Retroceder a pie; embarcar rover muestra Avanzar en rover/Retroceder en rover en el árbol accesible; bajar vuelve a los nombres a pie. Vista de 390 × 844 revisada sin errores/avisos, controles existentes conservados y ajuste ampliado restituido. Evidencia visual de la escena a pie: outputs/orbita-auto-035-controles.png. Los nombres se verificaron en DOM/árbol accesible; no se afirma lector de pantalla, prueba manual EVA ni teléfono físico.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#78](https://github.com/fercala/pequenos-exploradores/pull/78). Commit de código: 8dc74f3ca02edfc769c34b5735e722a1347f8718; incorporación a main: f23b0ed5781c1309f93f0717cc60ec87464100fd.
+- **Publicación confirmada:** 2026-10-19 23:58 UTC. [GitHub Pages: ejecución 39344713526 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39344713526), sobre el commit de incorporación. field-expedition.js público devuelve HTTP 200 con los nombres por vehículo; package.json confirma 0.5.26 y sw.js caché v42, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
