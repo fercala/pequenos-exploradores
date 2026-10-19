@@ -4,7 +4,7 @@ import * as T from '../vendor/three.module.js';
 import {createExpansion} from '../expansion.js';
 import {bodyById,bodyRadius,validatePortable} from '../simulation.js';
 function fixture(settings={}){
- const elements=new Map(),make=()=>({style:{setProperty(){}},classList:{toggle(){}},dataset:{},append(){},prepend(){},insertAdjacentHTML(){},setAttribute(){},querySelectorAll:()=>[]});
+ const elements=new Map(),make=()=>({style:{setProperty(){}},classList:{toggle(){},add(){},remove(){}},dataset:{},append(){},remove(){},prepend(){},insertAdjacentHTML(){},setAttribute(){},querySelectorAll:()=>[]});
  const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
  globalThis.document={createElement:make,body:make(),documentElement:make(),querySelector:()=>make()};
  const planet=bodyById('moon'),r=bodyRadius(planet),s={planet,settings,position:new T.Vector3(0,r+1.7,0),velocity:new T.Vector3(),quaternion:new T.Quaternion(),landed:false,auto:null};
@@ -78,4 +78,12 @@ test('Landing gear toggles survive snapshot, portable validation and world resto
  const saved=validatePortable(JSON.parse(JSON.stringify(original.ex.snapshot())));assert.equal(saved.gear,false);
  const restored=fixture();restored.ex.restore(saved);assert.equal(restored.s.gear,false);assert.equal(restored.w.gear,false);
  restored.$('gear-btn').onclick();const extended=validatePortable(restored.ex.snapshot());assert.equal(extended.gear,true);original.ex.restore(extended);assert.equal(original.s.gear,true);assert.equal(original.w.gear,true);
+});
+
+
+test('Reopening the atlas keeps its scale selector and explanation aligned with the rendered scale',()=>{
+ const {ex,w,$}=fixture();w.realScale=false;ex.enterAtlas();
+ $('atlas-scale').onchange({target:{value:'real'}});assert.equal(w.realScale,true);assert.match($('atlas-note').textContent,/radios y distancias/);
+ $('atlas-back').onclick();$('atlas-scale').value='play';$('atlas-note').textContent='Arrastra para girar.';ex.enterAtlas();assert.equal($('atlas-scale').value,'real');assert.match($('atlas-note').textContent,/radios y distancias/);
+ $('atlas-scale').onchange({target:{value:'play'}});assert.equal(w.realScale,false);$('atlas-back').onclick();ex.enterAtlas();assert.equal($('atlas-scale').value,'play');assert.match($('atlas-note').textContent,/comprimida/);
 });

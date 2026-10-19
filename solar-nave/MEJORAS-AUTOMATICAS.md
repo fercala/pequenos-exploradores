@@ -383,6 +383,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#49](https://github.com/fercala/pequenos-exploradores/pull/49). Commit de código: 0c5bd41b84addaf33c9f30d16601b32d09e4c5fb; incorporación a main: 0a704b335c0f4c9c55baef3a7f38aaf8af33da3f.
 - **Publicación confirmada:** 2026-10-19 08:46 UTC. [GitHub Pages: ejecución 39224942204 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39224942204), sobre el commit de incorporación. expansion.js y simulation.js públicos devuelven HTTP 200 e incluyen la conservación de gear; package.json confirma 0.5.12 y sw.js confirma caché v28, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-022 · Mostrar la escala real al volver a abrir el atlas
+
+- **Inicio / última actualización:** 2026-10-19 09:43 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** enterAtlas crea siempre el selector con Jugable seleccionada, pero conserva w.realScale de la visita anterior. Tras elegir Científica, salir y volver a abrir, el mapa continúa proporcional mientras el control indica Jugable y el texto describe la escala comprimida.
+- **Relación / diferencia:** O2-015 (atlas de dos escalas) y O2-014 (órbitas). AUTO-016 sincroniza los controles restablecidos de Ajustes; aquí se sincronizan selector y explicación del atlas al reabrirlo, sin añadir otra escala ni cambiar datos astronómicos.
+- **Criterio de aceptación:** abrir/reabrir muestra la escala actualmente usada y su explicación correspondiente. Científica y Jugable siguen cambiando el mapa; las aproximaciones siguen identificadas. No cambia el guardado ni el reloj del atlas.
+- **Rama:** codex/orbita-auto-022-escala-atlas.
+- **Cambio y archivos:** expansion.js sincroniza selector y nota desde w.realScale al abrir y al cambiar escala; conserva las instrucciones de giro/zoom y los límites científicos. Regresión del controlador en tests/vehicle-transition.test.mjs. Versión 0.5.13 en package.json/README y caché propia v29 en sw.js.
+- **Validación:** 83 pruebas correctas y construcción estática. La regresión falló antes al reabrir con selector Jugable frente a mapa Científica; usa DOM reducido con el valor inicial del selector recreado. Navegador real: seleccionar Científica → salir → reabrir mantiene Científica y explicación proporcional; Jugable también coincide al reabrir. Escritorio y 390 × 844 revisados, instrucciones visibles y sin errores/advertencias de consola. Evidencia: outputs/orbita-auto-022-atlas.png. No se afirma persistencia entre recargas ni prueba en teléfono físico.
+- **Propuesta / commit:** pendientes de creación.
+- **Publicación:** pendiente.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
