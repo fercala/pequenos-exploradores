@@ -92,7 +92,7 @@ export function createExpansion(api){
   if(ex.cruise&&alt<400){ex.cruise=false;$('cruise-btn').setAttribute('aria-pressed',false);s.velocity.clampLength(0,80);toast('Aproximación: crucero desactivado automáticamente.');}
   audio.update(s.throttle,atmosphericDensity(s.planet,alt),w.cameraMode==='cockpit',frozen);
  };
- ex.exploration=createExploration(api,panel);
+ ex.exploration=createExploration({...api,getBeacon:body=>ex.v4?.campaign.fieldLog[body]?.beacon},panel);
  ex.v4=createMissionControl(api,ex,panel);
  ex.field=createFieldExpedition(api,ex,panel);
  return ex;
