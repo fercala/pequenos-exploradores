@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as T from '../vendor/three.module.js';
+import {bodyById} from '../simulation.js';
 import {createExploration} from '../exploration.js';
 function fixture(vehicle='ship',looking=false){
  const buttons=['left','up','down','right','in','out','camera'].map(view=>({dataset:{view}})),elements=new Map();
@@ -18,4 +19,18 @@ test('Accessible direction buttons in Look mode move only the view for ship, rov
 test('Without Look mode accessible controls still turn the active vehicle, while observation keeps camera control',()=>{
  for(const vehicle of ['ship','rover','walk']){const {s,w,press}=fixture(vehicle,false),q=s.quaternion.clone();press('left');assert.ok(s.quaternion.angleTo(q)>.1);assert.equal(w.viewYaw,0);}
  const {s,w,press}=fixture();w.cameraMode='observe';press('left');assert.equal(w.viewYaw,.12);assert.equal(s.quaternion.angleTo(new T.Quaternion()),0);
+});
+
+
+test('A suspended terrain scanner performs no hidden sampling or drawing and resumes its selected state',()=>{
+ let samples=0,draws=0;const elements=new Map(),ctx={fillRect(){draws++;},fillText(){}};
+ const make=()=>({style:{},classList:{toggle(){}},append(){},insertAdjacentHTML(){},setAttribute(){},dataset:{},querySelectorAll:()=>[],querySelector:()=>({getContext:()=>ctx})});
+ globalThis.document={createElement:make,querySelector:make,body:make()};const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
+ const s={started:true,planet:bodyById('moon'),settings:{weather:true},position:new T.Vector3(0,180,0),velocity:new T.Vector3(),quaternion:new T.Quaternion(),gear:true};
+ const w={groundRadius:()=>{samples++;return 170;},isWater:()=>false,localGroup:new T.Group()};
+ const controls=createExploration({state:s,world:w,$,toast(){},settingsSave(){}},()=>{});$('scanner-btn').onclick();
+ controls.tick(.3,true);assert.equal(samples,0);assert.equal(draws,0);
+ controls.tick(.3,false);assert.ok(samples>0);assert.equal(draws,25);const previous=samples;
+ controls.tick(.3,true);assert.equal(samples,previous);assert.equal(draws,25);
+ controls.tick(.3,false);assert.ok(samples>previous);assert.equal(draws,50);
 });
