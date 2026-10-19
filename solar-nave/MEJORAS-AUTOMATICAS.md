@@ -372,16 +372,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-021 · Conservar la posición del tren de aterrizaje en la partida
 
-- **Inicio / última actualización:** 2026-10-19 08:40 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 08:40 UTC / 2026-10-19 08:46 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** gear se inicializa siempre como true y no aparece en snapshot, validatePortable ni restore. Recuperar/importar una partida con tren retraído lo cambia silenciosamente a desplegado, aunque el tren forma parte de las condiciones del aterrizaje manual.
 - **Relación / diferencia:** O2-006 (tren y aterrizaje), O2-020 (partidas) y AUTO-010/019 (otras correcciones de progreso guardado). Se conserva un estado físico de la nave omitido; no se añade otro tren ni se cambian las reglas de contacto o el descenso asistido.
 - **Criterio de aceptación:** retraer/desplegar se guarda y recupera de forma coherente en estado y mundo, tanto local como portátil. Partidas anteriores sin el campo y valores inválidos usan desplegado. El descenso asistido conserva su despliegue automático existente.
 - **Rama:** codex/orbita-auto-021-tren-guardado.
 - **Cambio y archivos:** `expansion.js` guarda el tren al accionarlo y lo incluye en snapshot/restauración del estado y mundo; `simulation.js` conserva únicamente el booleano false explícito y usa desplegado como valor compatible. Pruebas en `tests/vehicle-transition.test.mjs` y `tests/expansion.test.mjs`; versión 0.5.12 en package/README y caché propia v28 en sw.js.
 - **Validación:** 82 pruebas y compilación correctas. Las nuevas pruebas fallaron antes del arreglo y comprueban ambos estados, serialización/validación portátil/restauración y valores antiguos o inválidos. Navegador a 390 × 844: partida lunar con rover activo, retraer tren de la nave, recargar y Continuar conserva «Tren retraído»; consola sin errores/avisos. Evidencia local: `outputs/orbita-auto-021-tren.png`. No se realizó aterrizaje manual ni importación por selector de archivos en esta comprobación; descenso asistido sin cambios.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#49](https://github.com/fercala/pequenos-exploradores/pull/49). Commit de código: 0c5bd41b84addaf33c9f30d16601b32d09e4c5fb; incorporación a main: 0a704b335c0f4c9c55baef3a7f38aaf8af33da3f.
+- **Publicación confirmada:** 2026-10-19 08:46 UTC. [GitHub Pages: ejecución 39224942204 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39224942204), sobre el commit de incorporación. expansion.js y simulation.js públicos devuelven HTTP 200 e incluyen la conservación de gear; package.json confirma 0.5.12 y sw.js confirma caché v28, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
