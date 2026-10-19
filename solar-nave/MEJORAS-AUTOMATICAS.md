@@ -463,8 +463,8 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-028 · Permitir arrastre táctil en todo el atlas y la fotografía
 
-- **Inicio / última actualización:** 2026-10-19 15:56 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 15:56 / 16:56 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** pointerdown del canvas descarta todo toque iniciado en el 35 % izquierdo para reservar la zona del joystick. También lo hace en atlas y fotografía, aunque esos modos ocultan el joystick: una parte amplia de la escena no permite comenzar un arrastre con un dedo.
 - **Relación / diferencia:** O2-003 (controles táctiles), O2-015 (atlas), O2-019 (fotografía). AUTO-026 hace funcionar la inclinación y AUTO-027 detiene propulsión al entrar; aquí se elimina una zona táctil inactiva exclusivamente en los dos modos sin joystick, conservando la reserva lateral durante vuelo y caminata.
 - **Criterio de aceptación:** los toques del lado izquierdo pueden iniciar orientación de cámara en atlas/fotografía; la zona lateral sigue reservada al joystick en vuelo/superficie. Se mantienen captura de puntero, pellizco, mouse y cancelación de toques, sin cambiar partidas.
@@ -472,7 +472,7 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Cambio y archivos:** app.js limita la reserva lateral de toques a los modos que no son atlas ni fotografía; no cambia seguimiento de punteros, captura, pellizco ni liberación. Versión 0.5.19 en package.json/README y caché propia v35 en sw.js.
 - **Validación:** 88 pruebas existentes y construcción correctas. Revisión de la condición: el rechazo de touch a la izquierda solo permanece si overview y photo son falsos; mouse conserva su ruta anterior. Navegador real a 390 × 844: joystick oculto en atlas/fotografía y visible en vuelo; arrastres de mouse iniciados en el lado izquierdo giran ambas escenas, con imagen final revisada. Sin errores/avisos. Evidencia: outputs/orbita-auto-028-arrastre.png. La herramienta de navegador ejecuta arrastres de mouse: no se afirma prueba táctil física ni del pellizco; la corrección táctil se verifica por revisión del controlador.
 - **Propuesta:** [#63](https://github.com/fercala/pequenos-exploradores/pull/63). Commit de código: d943de913940c882502b1bccf3a1893fa945ccb4; incorporación a main: c5012a4ad4e1b2df9bc6f5b9b4c43c0dbe05f066.
-- **Publicación:** pendiente de confirmar. [Pages 39281692251](https://github.com/fercala/pequenos-exploradores/actions/runs/39281692251) permanece en cola el 2026-10-19 a las 16:02 UTC; build/deploy sin runner asignado ni pasos iniciados. Los archivos públicos todavía devuelven la versión anterior (HTTP 200, sin los cambios esperados). No es una mejora Publicada. En la siguiente ejecución se debe terminar esta comprobación, incluyendo cualquier ejecución posterior que publique el mismo código, antes de reservar otro ID. No requiere intervención del usuario por ahora.
+- **Publicación confirmada:** 2026-10-19 16:56 UTC. [GitHub Pages: ejecución 39282392765 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39282392765), sobre a3af62d62cce5b8f05ad968d3b31a291fe9a2f8d (#64), que incluye el código de #63. La ejecución inicial 39281692251 quedó cancelada; la siguiente publicó correctamente el mismo cambio. app.js público devuelve HTTP 200 con la excepción de arrastre en atlas/fotografía; package.json confirma 0.5.19 y sw.js caché v35, ambos HTTP 200. Se reanudó la comprobación pendiente sin iniciar otra mejora. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
