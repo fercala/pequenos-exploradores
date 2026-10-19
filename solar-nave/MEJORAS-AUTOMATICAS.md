@@ -528,16 +528,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-033 · Localizar la baliza en el mapa de superficie
 
-- **Inicio / última actualización:** 2026-10-19 21:58 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 21:58 / 22:00 UTC.
+- **Estado:** Publicada.
 - **Problema / oportunidad:** drawMap muestra lugares, posición actual y destino, pero omite la baliza guardada. Tras alejarse no puede localizarse en el mapa ni marcar sus coordenadas sin copiarlas manualmente de Mochila.
 - **Relación / diferencia:** O4-001 (mapa), SOL-001 (baliza) y AUTO-032 (orientación a la marca). AUTO-032 orienta al tripulante; esta ampliación sitúa la misma marca en la cartografía y permite seleccionarla como destino del mapa mediante botón, sin crear otra señal ni teletransportar.
 - **Criterio de aceptación:** el mapa del mundo actual muestra Tu baliza cuando existe y un botón con coordenadas permite marcarla como destino; sin marca queda desactivado. Las balizas de otros mundos no aparecen. Conserva coordenadas, partidas y reglas del descenso.
 - **Rama:** codex/orbita-auto-033-baliza-mapa.
 - **Cambio y archivos:** expansion.js proporciona la baliza del mundo solicitado; exploration.js dibuja Tu baliza y añade Marcar mi baliza con coordenadas, desactivado sin marca. Seleccionarla reutiliza el destino del mapa, con etiqueta combinada para no superponer baliza/destino. Regresión en tests/exploration-controls.test.mjs; versión 0.5.24 en package.json/README y caché propia v40 en sw.js.
 - **Validación:** 94 pruebas y construcción correctas. La regresión falló antes por marcador ausente; ahora verifica dibujo, selección exacta de coordenadas, etiqueta combinada, posición y baliza intactas, ausencia en otro mundo y estado desactivado sin marca. Navegador real: recuperar baliza lunar −31.36°, −85.16°, verla en cartografía y seleccionarla con el botón, actualizando coordenadas y destino. Escritorio y 390 × 844 revisados sin errores/avisos. Evidencia: outputs/orbita-auto-033-mapa.png. No se ejecutó un descenso ni se probó teléfono físico.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#74](https://github.com/fercala/pequenos-exploradores/pull/74). Commit de código: bc2284b059298d2089b01dd17a65d4eb335f7c2c; incorporación a main: 3468902b14f55547295e10465cbf4fb12767974f.
+- **Publicación confirmada:** 2026-10-19 22:00 UTC. [GitHub Pages: ejecución 39331673066 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39331673066), sobre el commit de incorporación. expansion.js y exploration.js públicos devuelven HTTP 200 con consulta de baliza y marcador/selección del mapa; package.json confirma 0.5.24 y sw.js caché v40, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
