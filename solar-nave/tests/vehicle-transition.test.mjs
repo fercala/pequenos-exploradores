@@ -72,3 +72,10 @@ test('Restoring enabled audio resumes one existing audio graph while a muted sta
   enabled.s.settings.sound=false;await enabled.ex.resumeAudio();assert.equal(enabled.ex.audio.enabled,false);assert.equal(enabled.ex.audio.context.state,'suspended');enabled.ex.audio.context.suspend=async()=>{throw Error('Suspend failed');};assert.equal(await enabled.ex.resumeAudio(),false);
  }finally{if(before===undefined)delete globalThis.window;else globalThis.window=before;}
 });
+
+test('Landing gear toggles survive snapshot, portable validation and world restoration',()=>{
+ const original=fixture();original.$('gear-btn').onclick();assert.equal(original.s.gear,false);assert.equal(original.w.gear,false);
+ const saved=validatePortable(JSON.parse(JSON.stringify(original.ex.snapshot())));assert.equal(saved.gear,false);
+ const restored=fixture();restored.ex.restore(saved);assert.equal(restored.s.gear,false);assert.equal(restored.w.gear,false);
+ restored.$('gear-btn').onclick();const extended=validatePortable(restored.ex.snapshot());assert.equal(extended.gear,true);original.ex.restore(extended);assert.equal(original.s.gear,true);assert.equal(original.w.gear,true);
+});
