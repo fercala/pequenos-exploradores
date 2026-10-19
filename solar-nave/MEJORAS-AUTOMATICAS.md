@@ -487,6 +487,19 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#66](https://github.com/fercala/pequenos-exploradores/pull/66). Commit de código: 3778300dc24e7c1836825e9519e65f86db91a94e; incorporación a main: 089d74bf1bee5832d465b434bd122354943c4e76.
 - **Publicación confirmada:** 2026-10-19 17:58 UTC. [GitHub Pages: ejecución 39298427030 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39298427030), sobre el commit de incorporación. app.js y exploration.js públicos devuelven HTTP 200 con la consulta y uso de isLooking; package.json confirma 0.5.20 y sw.js caché v36, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-030 · Suspender el escáner oculto en atlas y fotografía
+
+- **Inicio / última actualización:** 2026-10-19 18:54 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** CSS oculta el escáner en atlas/fotografía, pero exploration.tick continúa muestreando terreno, recorriendo rocas y dibujando su canvas cada 0.25 s si estaba activado. Se ejecuta trabajo invisible durante los dos modos, también en móvil.
+- **Relación / diferencia:** O4-004 (escáner), O2-004 (rendimiento), O2-015/019 (atlas/fotografía). AUTO-028 corrige el área táctil de esos modos; aquí se suspende solo el cálculo invisible del escáner y se conserva su estado para regresar.
+- **Criterio de aceptación:** en atlas/fotografía no se muestrea ni redibuja el escáner activo; al volver reanuda sin obligar a encenderlo otra vez. El botón y la lectura visible conservan funcionamiento. No cambia el terreno ni los guardados.
+- **Rama:** codex/orbita-auto-030-escaner-oculto.
+- **Cambio y archivos:** expansion.js comunica suspensión durante atlas/fotografía; exploration.js omite scanTerrain mientras está suspendido, sin borrar su selección ni el tiempo acumulado para reanudar. Regresión en tests/exploration-controls.test.mjs. Versión 0.5.21 en package.json/README y caché propia v37 en sw.js.
+- **Validación:** 91 pruebas y construcción correctas. La regresión falló antes con 26 consultas de terreno durante suspensión; ahora no consulta ni dibuja, reanuda 25 celdas y vuelve a suspender/reanudar sin apagar el control. Navegador real: escáner seleccionado y visible, oculto en atlas/fotografía, visible con lectura al volver de ambos sin encender otra vez; revisión de escritorio y 390 × 844 sin errores/avisos. Evidencia: outputs/orbita-auto-030-escaner.png. No se midió ahorro de batería/FPS ni teléfono físico; la eliminación de trabajo se verifica contando llamadas en el controlador.
+- **Propuesta / commit:** pendientes de creación.
+- **Publicación:** pendiente.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.

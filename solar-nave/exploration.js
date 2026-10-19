@@ -45,5 +45,5 @@ export function createExploration(api,panel){
   $('scan-status').textContent=result.safe?'✓ ZONA APTA · aproximación controlada':'⚠ '+result.reasons.join(' · ');scan.dataset.safe=String(result.safe);$('scan-detail').textContent=`Pendiente ${slope.toFixed(1)}° · desnivel ${roughness.toFixed(1)} u · altura ${alt.toFixed(0)} u. Muestreo de 12 × 12 u; no garantiza un aterrizaje seguro.`;
   const ctx=scan.querySelector('canvas').getContext('2d');for(let i=0;i<25;i++){ctx.fillStyle=water[i]?'#337cca':Math.abs(heights[i]-heights[12])>1.8?'#e9924e':'#8fca6a';ctx.fillRect(i%5*30+2,Math.floor(i/5)*30+2,26,26);ctx.fillStyle='#07111c';ctx.font='14px sans-serif';ctx.fillText(water[i]?'≈':Math.abs(heights[i]-heights[12])>1.8?'!':'·',i%5*30+11,Math.floor(i/5)*30+20);}
  }
- return {tick(dt){clock+=dt;scan.hidden=scan.hidden||!s.started;simple.hidden=!s.started||!s.settings.simpleGestures;if(!scan.hidden&&clock>.25){clock=0;scanTerrain();}},apply};
+ return {tick(dt,suspended=false){clock+=dt;scan.hidden=scan.hidden||!s.started;simple.hidden=!s.started||!s.settings.simpleGestures;if(!scan.hidden&&!suspended&&clock>.25){clock=0;scanTerrain();}},apply};
 }

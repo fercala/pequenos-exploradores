@@ -77,7 +77,7 @@ export function createExpansion(api){
  ex.checkReference=()=>{const alt=s.position.length()-bodyRadius(s.planet),absolute=v(orbitalPosition(s.planet.id,s.days)).add(s.position);for(const p of BODIES){if(p.id===s.planet.id)continue;const distance=absolute.distanceTo(v(orbitalPosition(p.id,s.days)))-bodyRadius(p);if(distance<1500&&distance<alt-200){changeReference(p.id,absolute);return;}}};
  ex.updateTime=dt=>{s.days+=dt*(w.overview?ex.atlasTime:s.timeScale)/86400;w.clockDays=s.days;w.timeScale=s.timeScale;};
  ex.tick=(dt,frozen,joy,holds)=>{
-  ex.exploration.tick(dt);ex.v4.tick(dt,frozen);ex.field.tick(dt);
+  ex.exploration.tick(dt,ex.photo||w.overview);ex.v4.tick(dt,frozen);ex.field.tick(dt);
   w.vehicle=s.vehicle;w.gear=s.gear;const n=s.position.clone().normalize(),alt=s.position.length()-w.groundRadius(n),speed=s.velocity.length(),heatValue=entryHeating(s.planet,alt,speed);s.heat=heatValue;
   if(!frozen&&heatValue>70&&s.settings.mode==='challenge'&&s.vehicle==='ship')s.shield=Math.max(1,s.shield-dt*(heatValue-60)*.025);
   $('entry-glow').style.opacity=String(heatValue/100*.65);$('entry-readout').textContent=`CALOR DE ENTRADA ${Math.round(heatValue)}%`;
