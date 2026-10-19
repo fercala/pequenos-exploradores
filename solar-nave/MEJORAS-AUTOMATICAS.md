@@ -515,16 +515,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-032 · Orientar al tripulante hacia su baliza
 
-- **Inicio / última actualización:** 2026-10-19 20:57 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 20:57 / 20:58 UTC.
+- **Estado:** Publicada.
 - **Problema / oportunidad:** la baliza se conserva por mundo, pero Mochila solo permite colocarla o moverla. Lejos del lugar no existe una acción para orientar al tripulante hacia esa señal; el regreso orientado existente solo apunta a la nave.
 - **Relación / diferencia:** SOL-001 (baliza y regreso a la nave), O2-007/008 (exploración). Se reutiliza la baliza guardada como un destino de orientación distinto de la nave; no se añade otra baliza, teletransporte ni objetivo duplicado.
 - **Criterio de aceptación:** con baliza en el mundo actual, Mochila permite orientarse hacia ella a pie o en rover, deteniendo la marcha y sin cambiar posición. Sin baliza no ofrece la acción activa. Rechaza saltos/manobras y avisa si ya está cerca; conserva baliza/progreso y partidas anteriores.
 - **Rama:** codex/orbita-auto-032-orientar-baliza.
 - **Cambio y archivos:** field-expedition.js añade Orientar hacia baliza a Mochila, desactivado sin marca guardada en el mundo. Convierte coordenadas locales al terreno actual, orienta sobre el plano tangente y detiene la marcha sin mover al jugador ni la señal. Incluye avisos de proximidad/suelo y caso antipodal. Dos pruebas en tests/field.test.mjs; versión 0.5.23 en package.json/README y caché propia v39 en sw.js.
 - **Validación:** 93 pruebas y construcción correctas. Casos nuevos comprueban rumbo a la marca en mundo rotado para caminante/rover, posición intacta, marcha cero, cámara de seguimiento, registro sin mutar y rechazo sin marca/en salto/proximidad. Navegador real: acción desactivada sin baliza; colocar marca lunar, caminar de 13 a 27 m de progreso y orientar a la baliza a 15 m, con marcha 0 % y señal delante. Mochila revisada en escritorio y 390 × 844, sin errores/avisos. Evidencia: outputs/orbita-auto-032-mochila.png. No se afirma recorrido automático ni teléfono físico.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#72](https://github.com/fercala/pequenos-exploradores/pull/72). Commit de código: 70cca9d501c91450863d25eff7630b67495e61a7; incorporación a main: 911282f0d7cdea433dc763e9e9952221620058a3.
+- **Publicación confirmada:** 2026-10-19 20:58 UTC. [GitHub Pages: ejecución 39323653038 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39323653038), sobre el commit de incorporación. field-expedition.js público devuelve HTTP 200 e incluye findBeacon y la acción de mochila; package.json confirma 0.5.23 y sw.js caché v39, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
