@@ -476,16 +476,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-029 · Respetar el modo Mirar en los botones accesibles
 
-- **Inicio / última actualización:** 2026-10-19 17:56 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 17:56 / 17:58 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** el arrastre comprueba look para mover solo cámara; Orientación sin gestos no recibe ese estado. Activar Mirar y después botones accesibles hace que Girar/Mirar arriba cambien la orientación del vehículo en Seguimiento/Cabina, contradiciendo el modo que sigue activo.
 - **Relación / diferencia:** O4-019 (botones accesibles), O2-003 (orientación) y AUTO-008 (nombre/estado de Mirar). AUTO-023 sincroniza el nombre de cámara; aquí los botones respetan la separación entre orientar cámara y vehículo, igual que el arrastre.
 - **Criterio de aceptación:** con Mirar activo, botones direccionales actualizan vista sin girar nave o tripulante. Desactivado, conservan su control normal; atlas, superficie, cámara Observación y zoom mantienen comportamiento. Sin cambios de partida ni preferencias.
 - **Rama:** codex/orbita-auto-029-mirar-accesible.
 - **Cambio y archivos:** app.js expone una consulta del estado Mirar al controlador; exploration.js la comprueba en la misma rama de orientación de cámara que atlas/Observación. Dos casos en tests/exploration-controls.test.mjs; versión 0.5.20 en package.json/README y caché propia v36 en sw.js.
 - **Validación:** 90 pruebas y construcción correctas. El caso nuevo fallaba antes porque no se modificaba viewYaw en Mirar; ahora nave, caminante y rover conservan quaternion al orientar la vista, y el zoom sigue operativo. Sin Mirar giran el vehículo; Observación sigue orientando cámara. Navegador real: activar Mirar, habilitar botones sin gestos, pulsar izquierda/arriba y revisar vista e indicador; escritorio y 390 × 844 sin errores/avisos. La separación exacta de transformaciones se verifica en el controlador real con DOM reducido. Evidencia: outputs/orbita-auto-029-mirar.png. Preferencia y modo Mirar restablecidos; teléfono físico pendiente.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#66](https://github.com/fercala/pequenos-exploradores/pull/66). Commit de código: 3778300dc24e7c1836825e9519e65f86db91a94e; incorporación a main: 089d74bf1bee5832d465b434bd122354943c4e76.
+- **Publicación confirmada:** 2026-10-19 17:58 UTC. [GitHub Pages: ejecución 39298427030 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39298427030), sobre el commit de incorporación. app.js y exploration.js públicos devuelven HTTP 200 con la consulta y uso de isLooking; package.json confirma 0.5.20 y sw.js caché v36, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
