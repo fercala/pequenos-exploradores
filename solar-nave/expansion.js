@@ -50,7 +50,7 @@ export function createExpansion(api){
   const before=s.position.clone(),n=s.position.clone().normalize(),turn=((holds.has('rollLeft')?1:0)-(holds.has('rollRight')?1:0))*dt;s.quaternion.premultiply(new T.Quaternion().setFromAxisAngle(n,turn));
   const side=clamp(joy.x+(holds.has('right')?1:0)-(holds.has('left')?1:0),-1,1),forward=clamp(-joy.y+s.throttle+(holds.has('up')?1:0)-(holds.has('down')?1:0),-1,1),speed=s.vehicle==='rover'?Math.min(13,5+s.planet.gravity*2):3;
   const move=new T.Vector3(side,0,-forward).applyQuaternion(s.quaternion);move.addScaledVector(n,-move.dot(n));if(move.length()>1)move.normalize();s.position.addScaledVector(move,speed*dt);const nn=s.position.clone().normalize();
-  if(w.isWater(nn)){s.position.copy(before);s.velocity.set(0,0,0);return;}
+  if(w.isWater(nn)){s.position.copy(before);nn.copy(n);}
   if(ex.jumpSpeed!==0||ex.jumpHeight>0){ex.jumpSpeed-=s.planet.gravity*dt;ex.jumpHeight+=ex.jumpSpeed*dt;if(ex.jumpHeight<0){ex.jumpHeight=0;ex.jumpSpeed=0;}}
   s.position.copy(nn).multiplyScalar(w.groundRadius(nn)+(s.vehicle==='walk'?1.7:1)+ex.jumpHeight);s.quaternion.premultiply(new T.Quaternion().setFromUnitVectors(n,nn));s.velocity.copy(s.position).sub(before).divideScalar(dt);
   if(s.vehicle==='walk')ex.field?.walkStep(before,s.position);
