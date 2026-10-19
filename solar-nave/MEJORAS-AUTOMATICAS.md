@@ -502,16 +502,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-031 · Mantener accesibles todos los botones en pantallas de 320 px
 
-- **Inicio / última actualización:** 2026-10-19 19:59 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 19:59 / 20:00 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** a 320 px, Orientación sin gestos mantiene siete botones en una fila. Medición de navegador: Cambiar cámara ocupa x=291.6…333.6, fuera del ancho visible; parte del botón queda recortada. Los otros controles no pueden compensar esa acción al estar oculta la barra normal.
 - **Relación / diferencia:** O4-019 (accesibilidad), O2-003 (controles móviles), AUTO-023 (nombre de cámara) y AUTO-029 (Mirar). Aquí se corrige el recorte de un control en pantalla estrecha, sin añadir otro botón ni cambiar sus acciones.
 - **Criterio de aceptación:** a 320 px los siete botones caben completos, con área mínima 44 × 44 px y sin desplazamiento horizontal; Cambiar cámara sigue pulsable. A 390 px y escritorio se conserva la disposición existente. No cambia partidas ni preferencias.
 - **Rama:** codex/orbita-auto-031-botones-320.
 - **Cambio y archivos:** style.css distribuye Orientación sin gestos en dos filas centradas por debajo de 361 px y asegura ancho mínimo de 44 px. Las cuatro direcciones quedan en la primera fila y zoom/cámara en la segunda. Versión 0.5.22 en package.json/README y caché propia v38 en sw.js.
 - **Validación:** 91 pruebas existentes y construcción correctas. Navegador a 320 × 760: antes Cambiar cámara terminaba en x=333.6; después los siete botones están dentro de x=66…254, todos 44 × 44 px, en dos filas. Pulsar Cambiar cámara activa Cabina. A 390 px todos caben en una fila; escritorio conserva una fila. Sin errores/avisos; preferencia sin gestos restituida. Evidencia: outputs/orbita-auto-031-botones.png. No se afirma prueba en teléfono físico.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#70](https://github.com/fercala/pequenos-exploradores/pull/70). Commit de código: 08526bc71071be820d78f2d3b81c18d57dfc76c2; incorporación a main: 64a2bd5e08154e9fd0caebb47d3baab6da9b2a82.
+- **Publicación confirmada:** 2026-10-19 20:00 UTC. [GitHub Pages: ejecución 39315571101 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39315571101), sobre el commit de incorporación. style.css público devuelve HTTP 200 con la distribución estrecha en dos filas; package.json confirma 0.5.22 y sw.js caché v38, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
