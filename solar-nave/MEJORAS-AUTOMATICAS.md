@@ -437,16 +437,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-026 · Permitir inclinar la vista del atlas
 
-- **Inicio / última actualización:** 2026-10-19 13:53 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-19 13:53 / 13:56 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** arrastrar verticalmente o pulsar Mirar arriba/abajo actualiza viewPitch, pero la cámara del atlas calcula siempre su altura como distance × 0.55 e ignora ese ángulo. Solo funciona el giro horizontal; no se puede observar el plano orbital desde arriba o abajo.
 - **Relación / diferencia:** O2-015 (atlas) y O4-019 (orientación sin gestos). AUTO-022 sincroniza el selector de escala; aquí se corrige una dirección de navegación inoperante, sin añadir otra escala ni datos científicos.
 - **Criterio de aceptación:** el movimiento vertical y los botones accesibles inclinan la vista del atlas; giro horizontal, enfoque y zoom se conservan. Ángulo limitado antes de los polos para evitar inversión; la vista inicial mantiene su composición y distancia.
 - **Rama:** codex/orbita-auto-026-inclinar-atlas.
 - **Cambio y archivos:** world-v2.js usa coordenadas esféricas para aplicar viewPitch y viewYaw al desplazamiento de cámara, manteniendo el radio y la elevación inicial anteriores. Limita el ángulo polar a 0.1…π−0.1 para evitar inversión. Regresión del renderizador en tests/world-rebuild.test.mjs; versión 0.5.17 en package.json/README y caché propia v33 en sw.js.
 - **Validación:** 87 pruebas y construcción correctas. La regresión ejecuta SolarUniverse.update con ensamblado base reducido y cámara Three.js real; fallaba antes al no cambiar la altura. Cubre composición inicial exacta, inclinación arriba/abajo, giro horizontal, radio constante y valores extremos sin polos. Navegador real: arrastre vertical de 210 px cambia visiblemente el plano orbital; a 390 × 844 seis pulsaciones Mirar arriba elevan la vista. Reloj del atlas pausado durante ambas comparaciones. Sin errores/avisos; preferencia sin gestos restituida. Evidencia: outputs/orbita-auto-026-atlas.png. No se probó teléfono físico ni gesto táctil físico.
-- **Propuesta / commit:** pendientes de creación.
-- **Publicación:** pendiente.
+- **Propuesta:** [#59](https://github.com/fercala/pequenos-exploradores/pull/59). Commit de código: 8b9f41bcca5c9c7d50441dd2f43c19738bcefb41; incorporación a main: 6b12afeebbf2beea18a1b5f7daac0c9719647346.
+- **Publicación confirmada:** 2026-10-19 13:56 UTC. [GitHub Pages: ejecución 39264248886 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39264248886), sobre el commit de incorporación. world-v2.js público devuelve HTTP 200 e incluye el desplazamiento esférico con inclinación; package.json confirma 0.5.17 y sw.js caché v33, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
