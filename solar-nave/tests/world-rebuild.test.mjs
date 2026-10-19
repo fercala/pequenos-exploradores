@@ -17,3 +17,16 @@ test('Travelling to another world clears old rover anchors and uses the new phas
 test('Initial loading and a missing phase use the normal rotation fallback',()=>withRebuild(()=>{
  for(const id of [null,'moon']){const w=fixture(id);w.spinAngle=undefined;w.setPlanet(bodyById('moon'));assert.equal(w.spinAngle,rotationAngle('moon',2));}
 }));
+
+
+test('Atlas camera responds to pitch and yaw at constant radius without reaching the poles',()=>{
+ const original=Universe.prototype.update;Universe.prototype.update=function(){};
+ try{
+  const group=()=>new T.Group(),w=Object.create(SolarUniverse.prototype);Object.assign(w,{planet:bodyById('moon'),days:0,clockDays:0,overview:true,vehicle:'ship',spinAngle:0,timeScale:0,viewPitch:0,viewYaw:0,zoom:1,realScale:false,atlasFocus:'all',scene:Object.assign(new T.Scene(),{background:new T.Color()}),planetGroup:group(),localGroup:group(),remoteGroup:group(),overviewGroup:group(),overviewSun:group(),sun:group(),ship:group(),rover:group(),avatar:group(),stars:group(),probes:group(),remote:[],landingNormal:new T.Vector3(0,1,0),rawLandingNormal:new T.Vector3(0,1,0),landingPosition:new T.Vector3(),sunlight:{position:new T.Vector3(),target:group()},weather:Object.assign(group(),{material:{color:new T.Color()}}),camera:new T.PerspectiveCamera(),renderer:{render(){}},setOrientation(){},groundRadius:()=>170,updateExplorationLights(){}});
+  const update=()=>w.update(0,new T.Vector3(0,0,1000),new T.Quaternion(),new T.Vector3(),0,800);
+  update();const initial=w.camera.position.clone(),radius=initial.length();assert.ok(initial.distanceTo(new T.Vector3(0,99000,180000))<1e-7);
+  w.viewPitch=.5;update();assert.ok(w.camera.position.y>initial.y);assert.ok(Math.abs(w.camera.position.length()-radius)<1e-7);
+  w.viewPitch=-.8;update();assert.ok(w.camera.position.y<0);w.viewYaw=.6;update();assert.ok(w.camera.position.x>0);
+  for(const pitch of [-100,100]){w.viewPitch=pitch;update();assert.ok(w.camera.position.toArray().every(Number.isFinite));assert.ok(Math.abs(w.camera.position.y)<radius);assert.ok(Math.abs(w.camera.position.length()-radius)<1e-7);}
+ }finally{Universe.prototype.update=original;}
+});
