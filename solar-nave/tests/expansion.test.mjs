@@ -87,3 +87,8 @@ test('Duplicate and impossible mission identifiers never displace legitimate pro
  const clean=validatePortable({...portable(),missions:[...Array(100).fill('earth:scan'),'earth:probe','jupiter:sample','jupiter:rover','unknown:scan',null,{},...missions]});
  assert.deepEqual(clean.missions,missions);assert.deepEqual(validatePortable({...portable(),version:1,missions:['moon:sample']}).missions,['moon:sample']);
 });
+
+test('Old and malformed gear fields default to deployed while an explicit false is preserved',()=>{
+ for(const gear of [undefined,null,0,'false',{},true])assert.equal(validatePortable({...portable(),gear}).gear,true);
+ assert.equal(validatePortable({...portable(),gear:false}).gear,false);
+});
