@@ -87,3 +87,12 @@ test('Reopening the atlas keeps its scale selector and explanation aligned with 
  $('atlas-back').onclick();$('atlas-scale').value='play';$('atlas-note').textContent='Arrastra para girar.';ex.enterAtlas();assert.equal($('atlas-scale').value,'real');assert.match($('atlas-note').textContent,/radios y distancias/);
  $('atlas-scale').onchange({target:{value:'play'}});assert.equal(w.realScale,false);$('atlas-back').onclick();ex.enterAtlas();assert.equal($('atlas-scale').value,'play');assert.match($('atlas-note').textContent,/comprimida/);
 });
+
+
+test('Photo exposure follows the retained slider on every entry and normal flight keeps its own exposure',()=>{
+ const {ex,w,$}=fixture();w.cameraMode='cockpit';w.renderer={toneMappingExposure:1.12};$('photo-exposure').value='1.1';
+ ex.togglePhoto(true);assert.equal(w.renderer.toneMappingExposure,1.1);assert.equal(w.cameraMode,'observe');
+ $('photo-exposure').value='2.3';$('photo-exposure').oninput({target:$('photo-exposure')});assert.equal(w.renderer.toneMappingExposure,2.3);
+ ex.togglePhoto(false);assert.equal(w.renderer.toneMappingExposure,1.12);assert.equal(w.cameraMode,'cockpit');assert.equal($('photo-exposure').value,'2.3');
+ ex.togglePhoto(true);assert.equal(w.renderer.toneMappingExposure,2.3);ex.togglePhoto(false);assert.equal(w.renderer.toneMappingExposure,1.12);
+});
