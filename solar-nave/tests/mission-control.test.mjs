@@ -5,7 +5,7 @@ import {createMissionControl} from '../mission-control.js';
 import {bodyById,bodyRadius} from '../simulation.js';
 function fixture(){
  let stops=[];
- const hubs=['story','teacher','routes','notebook'].map(hub=>({dataset:{hub}}));
+ const hubs=['story','teacher','routes','notebook','eva'].map(hub=>({dataset:{hub}}));
  const elements=new Map(),make=()=>({style:{},hidden:false,textContent:'',prepend(){},append(){},setAttribute(){}});globalThis.document={createElement:make,querySelector:()=>make(),querySelectorAll:selector=>selector==='[data-hub]'?hubs:selector==='[data-remove-stop]'?stops:[],body:{append(){}}};const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
  const s={planet:bodyById('earth'),position:new T.Vector3(0,0,1600),quaternion:new T.Quaternion(),velocity:new T.Vector3(),vehicle:'ship',landed:false,auto:null,settings:{mode:'exploration'},started:true,days:0,elapsed:0,throttle:0,shield:100};
  const w={planet:s.planet,scene:new T.Scene(),ship:new T.Group(),parkedPosition:new T.Vector3(0,0,1600),parkedQuaternion:new T.Quaternion(),planetGroup:new T.Group(),localNormal:n=>n,groundRadius:()=>bodyRadius(s.planet)};
@@ -52,4 +52,9 @@ test('Deleting the last stop yields an empty route and running routes reject del
 test('A notebook draft survives panel changes and restored saves without creating or duplicating records',()=>{
  const {mc,$,open}=fixture();open('notebook');$('field-note').value='Observo una ladera con hielo.';$('field-note').oninput?.();assert.equal(mc.campaign.noteDraft,'Observo una ladera con hielo.');assert.equal(mc.campaign.notebook.length,0);$('field-note').onchange?.();open('routes');open('notebook');assert.equal($('field-note').value,'Observo una ladera con hielo.');
  mc.restore(JSON.parse(JSON.stringify(mc.snapshot())));open('notebook');assert.equal($('field-note').value,'Observo una ladera con hielo.');$('save-note').onclick();assert.equal(mc.campaign.notebook.length,1);assert.equal(mc.campaign.notebook[0].text,'Observo una ladera con hielo.');assert.equal(mc.campaign.noteDraft,'');assert.equal($('field-note').value,'');open('notebook');$('save-note').onclick();assert.equal(mc.campaign.notebook.length,1);
+});
+
+test('An empty EVA pack prevents departure without moving the ship and explains station replenishment',()=>{
+ const {s,w,c,$,calls,open}=fixture();s.planet=w.planet=bodyById('moon');c.evaFuel=0;s.throttle=.3;s.velocity.set(1,2,3);const before=s.position.clone(),parked=w.parkedPosition.clone(),saved=calls.saves;open('eva');$('eva-exit').onclick();assert.equal(s.vehicle,'ship');assert.ok(s.position.equals(before));assert.ok(w.parkedPosition.equals(parked));assert.equal(s.throttle,.3);assert.deepEqual(s.velocity.toArray(),[1,2,3]);assert.equal(calls.saves,saved);assert.match($('mc-notice').textContent,/mochila.*agotada.*acopla.*estación/i);
+ c.evaFuel=.1;$('eva-exit').onclick();assert.equal(s.vehicle,'eva');assert.equal(c.evaFuel,.1);assert.equal(s.throttle,0);assert.equal(s.velocity.length(),0);assert.equal(s.position.distanceTo(w.parkedPosition),12);
 });
