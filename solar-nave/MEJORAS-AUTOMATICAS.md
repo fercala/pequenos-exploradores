@@ -580,15 +580,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-037 · Una captura por pulsación mientras se genera la foto
 
-- **Inicio / última actualización:** 2026-10-20 01:58 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-20 01:58 / 02:00 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** capture es asíncrona y espera toBlob sin bloquear nuevas llamadas. Dos pulsaciones rápidas crean dos fotografías, registros y contadores para la misma captura pendiente, además de dos conversiones PNG.
 - **Relación / diferencia:** O2-019 (fotografía), O4-017 (cuaderno) y AUTO-024 (exposición). Aquí se evita la concurrencia de capturas y se libera el botón tras éxito o error; no cambia la exposición ni el formato de imagen.
 - **Criterio de aceptación:** mientras una captura espera su PNG, el botón indica progreso y no acepta otra; una llamada repetida tampoco duplica el trabajo. Tras éxito o fallo se permite reintentar. Una captura correcta sigue generando un registro, una foto y su enlace.
 - **Rama:** codex/orbita-auto-037-captura-unica.
 - **Cambio y archivos:** expansion.js bloquea capturas simultáneas, desactiva Capturar imagen y muestra Capturando… mientras espera el PNG; finally libera el botón tanto al terminar como al fallar. tests/vehicle-transition.test.mjs simula la conversión pendiente, repetición, fallo y reintento. README/package.json 0.5.28 y caché propia v44 en sw.js.
 - **Validación:** regresión reproducida antes del cambio: dos conversiones en lugar de una; después, 98 pruebas y construcción satisfactorias. El test verifica un registro y un contador ante llamadas simultáneas, enlace final y botón recuperado tras fallo/reintento. Navegador real: botón Capturando… desactivado durante la conversión, vista previa y enlace de descarga correctos, botón habilitado al terminar. Revisión a 390 × 844, sin avisos/errores; captura outputs/orbita-auto-037-foto.png. No se forzó fallo de conversión en el navegador ni se probó un teléfono físico; esos caminos se cubren con el controlador real en la prueba automatizada.
-- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#82](https://github.com/fercala/pequenos-exploradores/pull/82). Commit de código: 8ecbae74c1a01db27c1242cef976dae70b26a63c; incorporación a main: 14cf0f821c99e3cdf1e3b9fd5089f7b192f0bb78.
+- **Publicación confirmada:** 2026-10-20 02:00 UTC. [GitHub Pages: ejecución 39356467965 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39356467965), sobre el commit de incorporación. expansion.js público HTTP 200 incluye el bloqueo de captura concurrente; package.json confirma 0.5.28 y sw.js caché v44, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
