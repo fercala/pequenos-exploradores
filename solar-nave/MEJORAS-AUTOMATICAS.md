@@ -606,15 +606,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-039 · Los avisos no interceptan los controles de vuelo
 
-- **Inicio / última actualización:** 2026-10-20 04:00 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-20 04:00 / 04:02 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** al iniciar una expedición de escritorio, el aviso de bienvenida se superpone al botón Fotografiar. elementFromPoint sobre su centro devuelve toast y pulsar el botón no abre la cámara. La regla pointer-events:none solo existe para avisos durante exploración de superficie, no en vuelo.
 - **Relación / diferencia:** O2-003 (mouse/tacto), O4-019 (avisos/accesibilidad) y AUTO-008 (nombre de Mirar). Se conserva el texto/lectura de avisos; esta corrección hace que todos dejen pasar los punteros, sin cambiar controles ni duración.
 - **Criterio de aceptación:** con un aviso visible en vuelo, el botón superpuesto recibe la pulsación inmediatamente; los avisos siguen siendo visibles y conservan role=status/aria-live. Revisar escritorio y 390 px sin alterar partidas ni superficie.
 - **Rama:** codex/orbita-auto-039-avisos-controles.
 - **Cambio y archivos:** style.css aplica pointer-events:none a la regla general de avisos, ampliando el comportamiento ya existente en superficie. El aviso mantiene texto, estilo, duración, role=status y aria-live=polite. README/package.json 0.5.30 y caché propia v46 en sw.js.
 - **Validación:** 98 pruebas existentes y construcción satisfactorias. Antes, navegador de escritorio: aviso visible, hit-test del centro de Fotografiar devuelve toast y una pulsación deja la cámara cerrada. Después: mismo aviso visible, hit-test devuelve photo-btn y una pulsación abre fotografía. DOM confirma pointer-events:none y atributos accesibles conservados. A 390 × 844, aviso de tren visible con la misma regla, DETENER recibe el hit-test y Fotografiar responde; sin avisos/errores de consola. Evidencia outputs/orbita-auto-039-avisos.png. Prueba de mouse y viewport móvil; no se afirma pantalla táctil física ni lector de pantalla.
-- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#86](https://github.com/fercala/pequenos-exploradores/pull/86). Commit de código: ec616eca9a50a29a1406810d02fa9db6948971b1; incorporación a main: fb799d2d3ff78612efd895dfe5ae363bb5b94459.
+- **Publicación confirmada:** 2026-10-20 04:02 UTC. [GitHub Pages: ejecución 39367368293 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39367368293), sobre el commit de incorporación. style.css público HTTP 200 incluye pointer-events:none en los avisos generales; package.json confirma 0.5.30 y sw.js caché v46, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
