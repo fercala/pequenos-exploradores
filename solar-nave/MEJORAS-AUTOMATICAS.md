@@ -567,15 +567,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-036 · Evitar salir al espacio con la mochila agotada
 
-- **Inicio / última actualización:** 2026-10-20 01:04 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-20 01:04 / 01:05 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** eva-exit permite salir con evaFuel igual a cero; el siguiente paso de física devuelve inmediatamente al tripulante mediante la línea de seguridad, sin explicar que debe reponer la mochila.
 - **Relación / diferencia:** O4-008 (EVA), O4-009 (recursos) y AUTO-001 (consumo por vehículo). Se conserva el retorno automático existente; esta corrección impide iniciar una salida inviable y explica cómo recuperar la reserva, sin alterar combustible ni partidas.
 - **Criterio de aceptación:** reserva agotada mantiene al jugador a bordo, conserva posición/controles/progreso y anuncia que se repone al acoplar en la estación; con reserva positiva sigue permitida una salida válida. Se mantiene la protección de atmósfera, maniobra, altura y acoplamiento.
 - **Rama:** codex/orbita-auto-036-mochila-agotada.
 - **Cambio y archivos:** mission-control.js rechaza la salida cuando evaFuel <= 0 mediante el aviso accesible existente y explica la reposición en estación también en las instrucciones. tests/mission-control.test.mjs cubre reserva nula y positiva; package.json/README 0.5.27 y sw.js caché propia v43.
 - **Validación:** prueba de regresión falló antes del cambio (salía en EVA) y pasó después. 97 pruebas satisfactorias y construcción correcta. El caso agotado conserva posición, nave estacionada, velocidad, potencia y número de guardados; 0,1 % permite salir. Navegador: salida válida desde Tierra, retorno con línea de seguridad e instrucciones legibles a 390 × 844, sin avisos/errores. Captura outputs/orbita-auto-036-mochila.png. El agotamiento se verifica con el controlador real en prueba automatizada; no se agotó manualmente la mochila ni se probó un teléfono físico.
-- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#80](https://github.com/fercala/pequenos-exploradores/pull/80). Commit de código: e02d417430635449c8539f92ce56ab4b4ba27739; incorporación a main: 70bf723eb5734d237f4487d900818401bbab5a26.
+- **Publicación confirmada:** 2026-10-20 01:05 UTC. [GitHub Pages: ejecución 39351404855 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39351404855), sobre el commit de incorporación. mission-control.js público HTTP 200 incluye el bloqueo de mochila agotada; package.json confirma 0.5.27 y sw.js caché v43, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
