@@ -565,6 +565,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#78](https://github.com/fercala/pequenos-exploradores/pull/78). Commit de código: 8dc74f3ca02edfc769c34b5735e722a1347f8718; incorporación a main: f23b0ed5781c1309f93f0717cc60ec87464100fd.
 - **Publicación confirmada:** 2026-10-19 23:58 UTC. [GitHub Pages: ejecución 39344713526 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39344713526), sobre el commit de incorporación. field-expedition.js público devuelve HTTP 200 con los nombres por vehículo; package.json confirma 0.5.26 y sw.js caché v42, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-036 · Evitar salir al espacio con la mochila agotada
+
+- **Inicio / última actualización:** 2026-10-20 01:04 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** eva-exit permite salir con evaFuel igual a cero; el siguiente paso de física devuelve inmediatamente al tripulante mediante la línea de seguridad, sin explicar que debe reponer la mochila.
+- **Relación / diferencia:** O4-008 (EVA), O4-009 (recursos) y AUTO-001 (consumo por vehículo). Se conserva el retorno automático existente; esta corrección impide iniciar una salida inviable y explica cómo recuperar la reserva, sin alterar combustible ni partidas.
+- **Criterio de aceptación:** reserva agotada mantiene al jugador a bordo, conserva posición/controles/progreso y anuncia que se repone al acoplar en la estación; con reserva positiva sigue permitida una salida válida. Se mantiene la protección de atmósfera, maniobra, altura y acoplamiento.
+- **Rama:** codex/orbita-auto-036-mochila-agotada.
+- **Cambio y archivos:** mission-control.js rechaza la salida cuando evaFuel <= 0 mediante el aviso accesible existente y explica la reposición en estación también en las instrucciones. tests/mission-control.test.mjs cubre reserva nula y positiva; package.json/README 0.5.27 y sw.js caché propia v43.
+- **Validación:** prueba de regresión falló antes del cambio (salía en EVA) y pasó después. 97 pruebas satisfactorias y construcción correcta. El caso agotado conserva posición, nave estacionada, velocidad, potencia y número de guardados; 0,1 % permite salir. Navegador: salida válida desde Tierra, retorno con línea de seguridad e instrucciones legibles a 390 × 844, sin avisos/errores. Captura outputs/orbita-auto-036-mochila.png. El agotamiento se verifica con el controlador real en prueba automatizada; no se agotó manualmente la mochila ni se probó un teléfono físico.
+- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
