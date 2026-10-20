@@ -591,6 +591,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#82](https://github.com/fercala/pequenos-exploradores/pull/82). Commit de código: 8ecbae74c1a01db27c1242cef976dae70b26a63c; incorporación a main: 14cf0f821c99e3cdf1e3b9fd5089f7b192f0bb78.
 - **Publicación confirmada:** 2026-10-20 02:00 UTC. [GitHub Pages: ejecución 39356467965 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39356467965), sobre el commit de incorporación. expansion.js público HTTP 200 incluye el bloqueo de captura concurrente; package.json confirma 0.5.28 y sw.js caché v44, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-038 · No registrar fotografías cuya generación falla
+
+- **Inicio / última actualización:** 2026-10-20 02:59 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** capture añade la miniatura al cuaderno antes de resolver toBlob. Si la conversión PNG devuelve null, anuncia un error y no suma fotografía, pero el registro ya persiste y puede desplazar registros/miniaturas anteriores por sus límites.
+- **Relación / diferencia:** O2-019 (fotografía), O4-017 (cuaderno) y AUTO-037 (bloqueo de concurrencia). AUTO-037 evita llamadas simultáneas; este cambio condiciona el registro a que exista un PNG válido, evitando efectos de una captura fallida.
+- **Criterio de aceptación:** mientras se convierte o si la conversión falla, no se añade registro fotográfico; una captura exitosa añade exactamente uno y conserva contador/enlace. Un reintento tras fallo funciona y el bloqueo de AUTO-037 sigue activo.
+- **Rama:** codex/orbita-auto-038-foto-valida.
+- **Cambio y archivos:** expansion.js añade la fotografía al cuaderno después de comprobar que toBlob produjo un PNG. tests/vehicle-transition.test.mjs amplía la regresión de captura con el registro real de mission-control y comprueba que el cuaderno permanece idéntico durante una conversión fallida. README/package.json 0.5.29 y sw.js caché propia v45.
+- **Validación:** regresión falló antes del cambio (un registro antes de resolver el PNG) y pasó después. 98 pruebas y construcción satisfactorias. Se verifican espera sin registro, éxito con uno, fallo sin modificar el cuaderno, reintento y bloqueo de concurrencia. Navegador: PNG y enlace generados; cuaderno muestra exactamente una fotografía con miniatura. Revisión a 390 × 844, sin avisos/errores; evidencia outputs/orbita-auto-038-cuaderno.png. El fallo de conversión se verifica en la prueba automatizada con el controlador real, no se forzó en el navegador ni se probó un teléfono físico.
+- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
