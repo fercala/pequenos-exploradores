@@ -123,3 +123,12 @@ test('A blocked shoreline step does not freeze jumping or award walking distance
 test('Rover shoreline collisions still block movement and cannot accumulate driven distance',()=>{
  const {s,w,ex}=fixture();ex.changeVehicle('rover');const before=s.position.clone();w.isWater=n=>Math.abs(n.x)>1e-9||Math.abs(n.z)>1e-9;s.throttle=1;ex.surfacePhysics(.1,{x:0,y:0},new Set());assert.ok(s.position.equals(before));assert.equal(s.velocity.length(),0);assert.equal(s.roverDistance,0);assert.equal(s.roverDistances.moon||0,0);
 });
+
+test('Pending PNG capture ignores repeated requests and releases the capture button after success or failure',async()=>{
+ const {s,w,ex,$,messages}=fixture();const jobs=[];let records=0;
+ w.renderer={domElement:{width:800,height:600},toneMappingExposure:1.12};$('photo-exposure').value='1.1';$('panel').showModal=()=>{$('panel').open=true;};
+ const create=document.createElement,ctx={drawImage(){},fillRect(){},fillText(){}};document.createElement=tag=>tag==='canvas'?{getContext:()=>ctx,toBlob:done=>jobs.push(done)}:create(tag);ex.v4.photo=()=>records++;
+ ex.togglePhoto(true);const first=ex.capture();const repeated=ex.capture();assert.equal(jobs.length,1);assert.equal(records,1);assert.equal($('capture-photo').disabled,true);assert.match($('capture-photo').textContent,/Capturando/);jobs.shift()(new Blob(['photo'],{type:'image/png'}));await Promise.all([first,repeated]);assert.equal(s.photos,1);assert.equal($('capture-photo').disabled,false);assert.equal($('capture-photo').textContent,'Capturar imagen');assert.match($('panel-content').innerHTML,/Descargar fotografía/);URL.revokeObjectURL(ex.photoUrl);
+ ex.togglePhoto(true);const failed=ex.capture();jobs.shift()(null);await failed;assert.equal(s.photos,1);assert.equal($('capture-photo').disabled,false);assert.match(messages.at(-1),/No se ha podido generar/);
+ const retry=ex.capture();assert.equal(jobs.length,1);jobs.shift()(new Blob(['retry'],{type:'image/png'}));await retry;assert.equal(s.photos,2);assert.equal($('capture-photo').disabled,false);URL.revokeObjectURL(ex.photoUrl);
+});

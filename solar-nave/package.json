@@ -1,6 +1,6 @@
 {
   "name": "orbita-solar",
-  "version": "0.5.27",
+  "version": "0.5.28",
   "private": true,
   "type": "module",
   "scripts": {
