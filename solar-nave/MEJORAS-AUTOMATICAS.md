@@ -669,6 +669,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#94](https://github.com/fercala/pequenos-exploradores/pull/94). Commit de código: aa0a59611f7fcac33c926c53be7c4683338f31f8; incorporación a main: 57fba90e9531751dcba2766043cace15242799a8.
 - **Publicación confirmada:** 2026-10-21 13:31 UTC. [GitHub Pages: ejecución 39608626332 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39608626332), sobre el commit de incorporación. exploration.js público HTTP 200 centra viewYaw/viewPitch tras cambiar modo; package.json confirma 0.5.34 y sw.js caché v50, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-044 · Distancia a la baliza durante la marcha
+
+- **Inicio / última actualización:** 2026-10-21 14:25 UTC.
+- **Estado:** Verificada.
+- **Problema / oportunidad comprobada:** Buscar mi baliza orienta y anuncia la distancia una vez, pero al avanzar el panel de superficie solo indica distancia a la nave y objetivos. Falta comprobar sin abrir menús si el tripulante/rover se acerca a su baliza.
+- **Relación / diferencia:** SOL-001 (baliza), AUTO-032 (orientarse hacia ella) y AUTO-033 (marcarla en mapa). Se añade una distancia actualizada durante la marcha, reutilizando el anclaje renderizado del mundo actual; no otra baliza ni un nuevo sistema de orientación.
+- **Criterio de aceptación:** a pie/en rover y con baliza local, el estado de superficie muestra Nave, Baliza y objetivos; la distancia disminuye al acercarse y aumenta al alejarse. Sin baliza local no muestra distancia ajena. Conserva posición, progreso y controles.
+- **Rama:** codex/orbita-auto-044-distancia-baliza.
+- **Cambio y archivos:** field-expedition.js añade Baliza N m al estado de superficie a pie/en rover cuando existe una baliza local, usando la posición del marcador que ya se actualiza con el mundo. tests/field.test.mjs cubre acercarse, alejarse, cambio de mundo y conservación de anclajes/progreso. README/package.json 0.5.35 y sw.js caché propia v51.
+- **Validación:** prueba nueva falló antes por ausencia de distancia; después, 103 pruebas y construcción satisfactorias. Navegador lunar a pie 390 × 844: indicador pasa de 2 m a 17 m al alejarse y baja a 5 m al orientarse/volver; nave y objetivos siguen visibles, controles operativos. Sin avisos/errores; evidencia outputs/orbita-auto-044-distancia-baliza.png. Rover y ausencia de baliza local cubiertos por controlador real en prueba; no se afirma teléfono físico. Distancias del mundo comprimido, sin añadir datos astronómicos.
+- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.

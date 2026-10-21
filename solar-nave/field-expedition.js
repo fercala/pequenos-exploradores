@@ -64,7 +64,7 @@ export function createFieldExpedition(api,ex,panel){
    statusClock+=dt;if(statusClock<.2)return;statusClock=0;
    if(!visible){if(s.vehicle==='ship'){$('throttle-title').textContent='PROPULSIÓN';$('throttle').setAttribute('aria-label','Potencia de propulsión');}return;}
    const foot=s.vehicle==='walk',ship=s.vehicle==='ship';$('field-heading').textContent=ship?'TU TRIPULANTE ESTÁ LISTO':foot?'EXPLORACIÓN A PIE':'EXPLORACIÓN EN ROVER';
-   const count=goals().filter(g=>g.done).length;$('field-status').textContent=ship?'Baja a caminar y hacer actividades.':`Nave ${Math.round(shipDistance())} m · ${count}/4 objetivos`;
+   const count=goals().filter(g=>g.done).length;$('field-status').textContent=ship?'Baja a caminar y hacer actividades.':`Nave ${Math.round(shipDistance())} m${b?' · Baliza '+Math.round(s.position.distanceTo(beacon.position))+' m':''} · ${count}/4 objetivos`;
    $('field-primary').textContent=ship?'Salir a explorar':foot?'Saltar':'Bajar del rover';
    $('field-secondary').textContent='Mochila y actividades';$('field-launch').hidden=!ship;
    $('throttle-title').textContent=ship?'PROPULSIÓN':foot?'CAMINAR':'CONDUCIR';$('throttle').setAttribute('aria-label',ship?'Potencia de propulsión':foot?'Marcha del tripulante':'Marcha del rover');

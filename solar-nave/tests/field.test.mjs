@@ -66,3 +66,11 @@ test('Beacon guidance handles missing, nearby and airborne cases without changin
  c.fieldLog.moon.beacon=toCoordinates(s.position.clone().normalize());field.open();const before=s.position.clone();$('field-find-beacon').onclick();assert.match(calls.messages.at(-1),/junto a la baliza/);assert.ok(s.position.equals(before));
  ex.jumpHeight=1;$('field-find-beacon').onclick();assert.match(calls.messages.at(-1),/suelo/);assert.ok(s.position.equals(before));assert.equal(calls.records.length,0);
 });
+
+test('Surface status tracks distance to the current beacon for walking and rover travel without changing progress',()=>{
+ for(const vehicle of ['walk','rover']){
+  const {s,c,$,field}=fixture();s.vehicle=vehicle;c.fieldLog.moon={distance:12,beacon:{lat:0,lon:0}};const log=JSON.stringify(c.fieldLog),origin=s.position.clone();field.tick(.3);const far=Number($('field-status').textContent.match(/Baliza (\d+) m/)?.[1]);assert.ok(far>100);assert.match($('field-status').textContent,/Nave.*objetivos/);
+  s.position.copy(field.beacon.position).multiplyScalar(1.01);const position=s.position.clone();field.tick(.3);const near=Number($('field-status').textContent.match(/Baliza (\d+) m/)?.[1]);assert.ok(near<far);assert.ok(s.position.equals(position));s.position.copy(origin);field.tick(.3);assert.match($('field-status').textContent,new RegExp('Baliza '+far+' m'));assert.equal(JSON.stringify(c.fieldLog),log);
+  s.planet=bodyById('mars');field.tick(.3);assert.doesNotMatch($('field-status').textContent,/Baliza/);
+ }
+});
