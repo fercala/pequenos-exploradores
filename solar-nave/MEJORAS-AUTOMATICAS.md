@@ -710,15 +710,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-047 · Mostrar cuándo una ruta puede iniciarse o reanudarse
 
-- **Inicio / última actualización:** 2026-10-21 17:35 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 17:35 / 17:37 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** con una ruta vacía, Iniciar ruta permanece habilitado y su manejador vuelve sin respuesta. Reanudar también está habilitado aunque no quedan escalas. El jugador debe probar botones que no pueden actuar para conocer el estado de la ruta.
 - **Relación / diferencia:** O4-005 (rutas), AUTO-004 (preparar rutas) y AUTO-005 (quitar escalas). Se refleja la disponibilidad de inicio/reanudación al mostrar o editar las escalas; no se cambia el itinerario ni su índice.
 - **Criterio de aceptación:** ruta vacía muestra inicio/reanudación deshabilitados; añadir una escala los habilita. Tras completar todas las escalas puede iniciarse de nuevo, pero no reanudarse. Quitar la última escala vuelve a deshabilitarlos y conserva progreso ajeno.
 - **Rama:** codex/orbita-auto-047-disponibilidad-ruta.
 - **Cambio y archivos:** mission-control.js deshabilita Iniciar ruta si no hay escalas y Reanudar si el índice ya no tiene una escala pendiente. Se recalcula al abrir el panel, añadir o quitar escalas. tests/mission-control.test.mjs cubre vacío, añadir, completar y quitar, conservando campaña. README/package.json 0.5.38 y sw.js caché propia v54.
 - **Validación:** regresión falló antes por botones sin estado deshabilitado; después, 106 pruebas y construcción satisfactorias. Navegador: ruta vacía anuncia ambos botones deshabilitados; añadir Luna habilita ambos; quitar la última vuelve a deshabilitarlos. Revisión en escritorio y 390 × 844, sin avisos/errores; evidencia outputs/orbita-auto-047-ruta.png. Ruta completada se cubre con el controlador real en prueba; no se afirma lector de pantalla ni teléfono físico.
-- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#102](https://github.com/fercala/pequenos-exploradores/pull/102). Commit de código: f58fc46573800d7272f3695cc6ff0c1662f0577f; incorporación a main: e0814f16a4d47535058d41ace59bd7335fcae09a.
+- **Publicación confirmada:** 2026-10-21 17:37 UTC. [GitHub Pages: ejecución 39645304103 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39645304103), sobre el commit de incorporación. mission-control.js público HTTP 200 incluye disponibilidad por escalas; package.json confirma 0.5.38 y sw.js caché v54, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
