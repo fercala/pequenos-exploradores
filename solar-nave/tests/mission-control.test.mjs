@@ -58,3 +58,10 @@ test('An empty EVA pack prevents departure without moving the ship and explains 
  const {s,w,c,$,calls,open}=fixture();s.planet=w.planet=bodyById('moon');c.evaFuel=0;s.throttle=.3;s.velocity.set(1,2,3);const before=s.position.clone(),parked=w.parkedPosition.clone(),saved=calls.saves;open('eva');$('eva-exit').onclick();assert.equal(s.vehicle,'ship');assert.ok(s.position.equals(before));assert.ok(w.parkedPosition.equals(parked));assert.equal(s.throttle,.3);assert.deepEqual(s.velocity.toArray(),[1,2,3]);assert.equal(calls.saves,saved);assert.match($('mc-notice').textContent,/mochila.*agotada.*acopla.*estación/i);
  c.evaFuel=.1;$('eva-exit').onclick();assert.equal(s.vehicle,'eva');assert.equal(c.evaFuel,.1);assert.equal(s.throttle,0);assert.equal(s.velocity.length(),0);assert.equal(s.position.distanceTo(w.parkedPosition),12);
 });
+
+test('Route start and resume availability follows adding, completing and removing stops',()=>{
+ const {c,$,open,remove}=fixture();c.storyStep=3;open('routes');assert.equal($('route-start').disabled,true);assert.equal($('route-resume').disabled,true);
+ $('route-body').value='moon';$('route-action').value='land';$('route-add').onclick();assert.equal($('route-start').disabled,false);assert.equal($('route-resume').disabled,false);assert.equal(c.routeIndex,0);
+ c.routeIndex=c.route.length;open('routes');assert.equal($('route-start').disabled,false);assert.equal($('route-resume').disabled,true);assert.equal(c.routeIndex,1);
+ remove(0);assert.equal(c.route.length,0);assert.equal($('route-start').disabled,true);assert.equal($('route-resume').disabled,true);assert.equal(c.storyStep,3);
+});
