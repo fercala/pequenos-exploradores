@@ -708,6 +708,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#100](https://github.com/fercala/pequenos-exploradores/pull/100). Commit de código: 3c19502dc36d764fd2e3af7cefa29ddb7f28cfe7; incorporación a main: d8d86f7e196ece51ee7b97d25036b73801f499d3.
 - **Publicación confirmada:** 2026-10-21 16:33 UTC. [GitHub Pages: ejecución 39635582116 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39635582116), sobre el commit de incorporación. core.js y app.js públicos HTTP 200 incluyen notificación de fallo y ruta de exportación; package.json confirma 0.5.37 y sw.js caché v53, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-047 · Mostrar cuándo una ruta puede iniciarse o reanudarse
+
+- **Inicio / última actualización:** 2026-10-21 17:35 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** con una ruta vacía, Iniciar ruta permanece habilitado y su manejador vuelve sin respuesta. Reanudar también está habilitado aunque no quedan escalas. El jugador debe probar botones que no pueden actuar para conocer el estado de la ruta.
+- **Relación / diferencia:** O4-005 (rutas), AUTO-004 (preparar rutas) y AUTO-005 (quitar escalas). Se refleja la disponibilidad de inicio/reanudación al mostrar o editar las escalas; no se cambia el itinerario ni su índice.
+- **Criterio de aceptación:** ruta vacía muestra inicio/reanudación deshabilitados; añadir una escala los habilita. Tras completar todas las escalas puede iniciarse de nuevo, pero no reanudarse. Quitar la última escala vuelve a deshabilitarlos y conserva progreso ajeno.
+- **Rama:** codex/orbita-auto-047-disponibilidad-ruta.
+- **Cambio y archivos:** mission-control.js deshabilita Iniciar ruta si no hay escalas y Reanudar si el índice ya no tiene una escala pendiente. Se recalcula al abrir el panel, añadir o quitar escalas. tests/mission-control.test.mjs cubre vacío, añadir, completar y quitar, conservando campaña. README/package.json 0.5.38 y sw.js caché propia v54.
+- **Validación:** regresión falló antes por botones sin estado deshabilitado; después, 106 pruebas y construcción satisfactorias. Navegador: ruta vacía anuncia ambos botones deshabilitados; añadir Luna habilita ambos; quitar la última vuelve a deshabilitarlos. Revisión en escritorio y 390 × 844, sin avisos/errores; evidencia outputs/orbita-auto-047-ruta.png. Ruta completada se cubre con el controlador real en prueba; no se afirma lector de pantalla ni teléfono físico.
+- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
