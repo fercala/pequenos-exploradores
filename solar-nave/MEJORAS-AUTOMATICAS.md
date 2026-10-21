@@ -645,15 +645,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-042 · Suspender el escáner cuando el juego está en pausa
 
-- **Inicio / última actualización:** 2026-10-21 12:20 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 12:20 / 12:23 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** frame pasa frozen a la expansión al pausar, abrir un panel o editar controles; expansion.tick no lo transmite al escáner. Si sigue activado, muestrea 25 puntos, busca obstáculos y redibuja cuatro veces por segundo aunque la simulación esté detenida.
 - **Relación / diferencia:** O4-004 (escáner), O2-004 (rendimiento móvil) y AUTO-030 (suspensión en atlas/foto). Se amplía la suspensión existente a la pausa de la simulación y los paneles; se conserva la selección y el último resultado.
 - **Criterio de aceptación:** frozen detiene el muestreo del escáner, como atlas/foto; al continuar vuelve a actualizarse si estaba activado. No desactiva el botón, borra el resultado ni altera la partida.
 - **Rama:** codex/orbita-auto-042-escaner-en-pausa.
 - **Cambio y archivos:** expansion.js transmite frozen a la suspensión existente del escáner, además de atlas/foto. tests/vehicle-transition.test.mjs usa los controladores reales y cuenta los dibujos de las celdas antes, durante y después de pausar; añade un contexto de lienzo a la fixture. README/package.json 0.5.33 y sw.js caché propia v49.
 - **Validación:** regresión falló antes: al pausar los dibujos subían de 25 a 50; después se mantienen en 25 durante pausa/foto/atlas y llegan a 50 al continuar, sin volver a pulsar Escáner. 101 pruebas y construcción satisfactorias. Navegador: escáner activo, pausa muestra último resultado y botón seleccionado; continuar conserva selección y panel visible. Vista 390 × 844 revisada sin avisos/errores; evidencia outputs/orbita-auto-042-escaner-pausa.png. La ausencia de trabajo se mide en la prueba del controlador, no mediante perfilado del navegador; no se afirma ahorro energético cuantificado ni teléfono físico.
-- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#92](https://github.com/fercala/pequenos-exploradores/pull/92). Commit de código: dba1644085a4199819d7b05a416bda5e3f9cbae2; incorporación a main: 8eda80a23f5d3caae9e0e7e691ca106ed657606b.
+- **Publicación confirmada:** 2026-10-21 12:23 UTC. [GitHub Pages: ejecución 39599028427 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39599028427), sobre el commit de incorporación. expansion.js público HTTP 200 transmite frozen al escáner; package.json confirma 0.5.33 y sw.js caché v49, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
