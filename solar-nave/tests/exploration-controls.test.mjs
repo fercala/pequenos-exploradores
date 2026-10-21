@@ -44,3 +44,13 @@ test('The surface map draws the current beacon and can select its coordinates wi
  s.planet=bodyById('mars');labels.length=0;$('surface-map-btn').onclick();assert.equal($('surface-beacon').disabled,true);assert.equal(labels.includes('Tu baliza'),false);s.planet=bodyById('moon');
  beacon=null;labels.length=0;$('surface-map-btn').onclick();assert.equal($('surface-beacon').disabled,true);assert.equal(labels.includes('Tu baliza'),false);
 });
+
+test('Walkers and rovers can locate the parked ship on the map without moving either anchor',()=>{
+ for(const vehicle of ['walk','rover']){
+  const labels=[],elements=new Map(),ctx={fillRect(){},drawImage(){},strokeRect(){},beginPath(){},moveTo(){},lineTo(){},stroke(){},arc(){},fill(){},fillText:text=>labels.push(text)};
+  const make=()=>({style:{},classList:{toggle(){}},append(){},insertAdjacentHTML(){},setAttribute(){},querySelectorAll:()=>[],getContext:()=>ctx,width:900,height:450});globalThis.document={createElement:make,querySelector:make,querySelectorAll:()=>[],body:make()};const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
+  const s={vehicle,planet:bodyById('moon'),settings:{weather:true},position:new T.Vector3(0,180,0)},w={parkedPosition:new T.Vector3(170,0,0),planetGroup:new T.Group(),terrainRegions:[],texture:()=>({image:null}),localNormal:n=>n,landingNormal:new T.Vector3(),landingPosition:new T.Vector3(),groundRadius:()=>170,isWater:()=>false};
+  createExploration({state:s,world:w,$,toast(){},settingsSave(){}},()=>{});const before=s.position.clone(),parked=w.parkedPosition.clone();$('surface-map-btn').onclick();assert.ok(labels.includes('Tu nave'));assert.equal($('surface-ship').hidden,false);assert.match($('surface-ship').textContent,/0.00°/);$('surface-ship').onclick();assert.equal($('surface-lat').value,'0.00');assert.equal($('surface-lon').value,'0.00');assert.ok(labels.includes('Tu nave · destino'));assert.ok(s.position.equals(before));assert.ok(w.parkedPosition.equals(parked));
+  s.vehicle='ship';labels.length=0;$('surface-map-btn').onclick();assert.equal($('surface-ship').hidden,true);assert.equal(labels.includes('Tu nave'),false);
+ }
+});
