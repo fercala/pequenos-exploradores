@@ -59,3 +59,13 @@ test('Accessible camera changes recenter the view through every mode without tur
  const {s,w,press}=fixture('ship',true),q=s.quaternion.clone(),position=s.position.clone();w.zoom=1.8;
  for(const mode of ['cockpit','observe','follow']){w.viewYaw=.8;w.viewPitch=-.5;press('camera');assert.equal(w.cameraMode,mode);assert.equal(w.viewYaw,0);assert.equal(w.viewPitch,0);assert.equal(w.zoom,1.8);assert.ok(s.quaternion.equals(q));assert.ok(s.position.equals(position));press('left');press('up');assert.ok(w.viewYaw>0);assert.ok(w.viewPitch>0);assert.ok(s.quaternion.equals(q));}
 });
+
+test('The parked rover has selectable map coordinates while walking or aboard and hides while driving or absent',()=>{
+ for(const vehicle of ['walk','ship']){
+  const labels=[],elements=new Map(),ctx={fillRect(){},drawImage(){},strokeRect(){},beginPath(){},moveTo(){},lineTo(){},stroke(){},arc(){},fill(){},fillText:text=>labels.push(text)};
+  const make=()=>({style:{},classList:{toggle(){}},append(){},insertAdjacentHTML(){},setAttribute(){},querySelectorAll:()=>[],getContext:()=>ctx,width:900,height:450});globalThis.document={createElement:make,querySelector:make,querySelectorAll:()=>[],body:make()};const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
+  const s={vehicle,planet:bodyById('moon'),settings:{weather:true},position:new T.Vector3(0,180,0)},w={roverParked:new T.Vector3(0,0,170),parkedPosition:new T.Vector3(170,0,0),planetGroup:new T.Group(),terrainRegions:[],texture:()=>({image:null}),localNormal:n=>n,landingNormal:new T.Vector3(),landingPosition:new T.Vector3(),groundRadius:()=>170,isWater:()=>false};
+  createExploration({state:s,world:w,$,toast(){},settingsSave(){}},()=>{});const before=s.position.clone(),parked=w.roverParked.clone();$('surface-map-btn').onclick();assert.ok(labels.includes('Tu rover'));assert.equal($('surface-rover').hidden,false);$('surface-rover').onclick();assert.equal($('surface-lat').value,'0.00');assert.equal($('surface-lon').value,'-90.00');assert.ok(labels.includes('Tu rover · destino'));assert.ok(s.position.equals(before));assert.ok(w.roverParked.equals(parked));
+  s.vehicle='rover';labels.length=0;$('surface-map-btn').onclick();assert.equal($('surface-rover').hidden,true);assert.equal(labels.includes('Tu rover'),false);s.vehicle='walk';w.roverParked=null;labels.length=0;$('surface-map-btn').onclick();assert.equal($('surface-rover').hidden,true);assert.equal(labels.includes('Tu rover'),false);
+ }
+});
