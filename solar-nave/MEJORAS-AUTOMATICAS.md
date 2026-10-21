@@ -736,15 +736,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-049 · Mostrar el espacio disponible para una nota
 
-- **Inicio / última actualización:** 2026-10-21 19:40 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 19:40 UTC / 2026-10-21 19:43 UTC.
+- **Estado:** Publicada.
 - **Problema / oportunidad comprobada:** la anotación tiene maxlength=600, pero el cuaderno no muestra cuánto se ha escrito ni el límite restante. Al llegar al máximo, escribir o pegar más deja de añadir texto sin explicar visualmente que la nota está llena.
 - **Relación / diferencia:** O4-017 (cuaderno) y AUTO-006 (borrador persistente de 600 caracteres). Se hace visible el uso del límite mientras se escribe y se recupera el borrador; no se cambia la longitud permitida ni se recorta más contenido.
 - **Criterio de aceptación:** contador 0/600 al empezar, actualizado con la nota y asociado al campo; refleja borradores recuperados y 600/600 al límite. Guardar la nota vuelve a 0/600 conservando la entrada científica.
 - **Rama:** codex/orbita-auto-049-limite-nota.
 - **Cambio y archivos:** contador visible y asociado al campo en mission-control.js; prueba de borradores y guardado en tests/mission-control.test.mjs. Versión 0.5.40 y caché local v56 en package.json, README.md y sw.js.
 - **Validación:** 107 pruebas y compilación satisfactorias. Navegador: 0/600, 14/600 al escribir, 600/600 al límite, 14/600 al volver y tras recargar la partida; guardar conserva la nota y vuelve a 0/600. Asociación aria-describedby comprobada. Vista móvil 390×844 sin recortes; consola sin errores. Evidencia local: outputs/orbita-auto-049-nota.png. No se ha probado lector de pantalla ni teléfono físico.
-- **Propuesta / commit / publicación:** pendientes; permanece Verificada hasta comprobar Pages.
+- **Propuesta:** [#106](https://github.com/fercala/pequenos-exploradores/pull/106). Commit de código: d9272912ce4e8192d058963bc0f6ac6bc226212f; incorporación a main: 52395dcbf722935848f3765e6f8ebaa4ddde51f4. El intento de adjuntar la propuesta al chat fue rechazado por el límite de 100 adjuntos; el enlace queda aquí para conservar la trazabilidad.
+- **Publicación confirmada:** 2026-10-21 19:43 UTC. [GitHub Pages: ejecución 39663927917 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39663927917), sobre el commit de incorporación. mission-control.js público HTTP 200 contiene note-length; package.json confirma 0.5.40 y sw.js caché v56, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
