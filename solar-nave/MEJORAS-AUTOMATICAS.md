@@ -749,15 +749,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-050 · Evitar guardar anotaciones vacías
 
-- **Inicio / última actualización:** 2026-10-21 20:34 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 20:34 / 20:36 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** Guardar nota está habilitado sin texto o con solo espacios, pero al pulsarlo no ocurre nada; el controlador retorna silenciosamente. Esto deja un control táctil aparentemente operativo sin resultado.
 - **Relación / diferencia:** O4-017, AUTO-006 y AUTO-049. Se indica la disponibilidad real de guardar según contenido significativo; no se cambia el borrador persistente, el límite ni el contador.
 - **Criterio de aceptación:** Guardar nota deshabilitado para borrador vacío o espacios; habilitado al escribir contenido y al recuperar un borrador válido. Tras guardar se conserva el registro y vuelve a deshabilitado. No se crean registros vacíos.
 - **Rama:** codex/orbita-auto-050-nota-vacia.
 - **Cambio y archivos:** mission-control.js sincroniza disabled de Guardar nota con el borrador recortado al abrir y escribir. Prueba de disponibilidad, recuperación y ausencia de registros vacíos en tests/mission-control.test.mjs. README/package.json 0.5.41 y sw.js caché propia v57.
 - **Validación:** la prueba nueva falló antes de implementar y pasó después; 108 pruebas y compilación satisfactorias. Navegador: vacío y solo espacios deshabilitados, texto habilitado, recarga/Continuar conserva borrador válido y habilitación; guardar crea una nota y vuelve a deshabilitado. Vista 390×844 revisada, consola sin errores; outputs/orbita-auto-050-nota.png. No se afirma prueba en teléfono físico ni lector de pantalla.
-- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+- **Propuesta:** [#108](https://github.com/fercala/pequenos-exploradores/pull/108). Commit de código: a5460a25c6032a28f96176b76467d3e483d9d0ff; incorporación: 0158410d5a8bbec42a15f418a17d020f5768cd66. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
+- **Publicación confirmada:** 2026-10-21 20:36 UTC. [Pages 39671535805 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39671535805) sobre el commit de incorporación. mission-control.js público HTTP 200 incluye disponibilidad según noteDraft.trim(); package.json 0.5.41 y sw.js caché v57, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
