@@ -40,3 +40,6 @@
 @media(max-width:360px){.on-foot #joystick{bottom:calc(320px + env(safe-area-inset-bottom))}}
 
 @media(max-width:360px){#simple-view{width:208px;max-width:calc(100vw - 24px);box-sizing:border-box;flex-wrap:wrap;justify-content:center}#simple-view button{min-width:44px}}
+
+/* Keep saved observations readable, including line breaks and long identifiers. */
+.notebook-list article p{white-space:pre-wrap;overflow-wrap:anywhere}

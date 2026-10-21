@@ -760,6 +760,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#108](https://github.com/fercala/pequenos-exploradores/pull/108). Commit de código: a5460a25c6032a28f96176b76467d3e483d9d0ff; incorporación: 0158410d5a8bbec42a15f418a17d020f5768cd66. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
 - **Publicación confirmada:** 2026-10-21 20:36 UTC. [Pages 39671535805 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39671535805) sobre el commit de incorporación. mission-control.js público HTTP 200 incluye disponibilidad según noteDraft.trim(); package.json 0.5.41 y sw.js caché v57, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-051 · Leer completas las anotaciones del cuaderno
+
+- **Inicio / última actualización:** 2026-10-21 21:42 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** una nota con varias líneas se muestra en un párrafo que colapsa los saltos; un identificador de 120 letras provoca scrollWidth 1017 frente a clientWidth 213 en 320 px. El panel termina con desplazamiento horizontal y texto fuera de vista.
+- **Relación / diferencia:** O4-017 y AUTO-006/049/050. Corrige la lectura de registros guardados, no el guardado, borrador, contador ni disponibilidad de Guardar nota. No altera texto almacenado ni partidas.
+- **Criterio de aceptación:** las líneas de una anotación permanecen separadas al leerla; cadenas largas se ajustan al ancho del registro sin desbordamiento horizontal, en 320 y 390 px y escritorio. Notas previas y exportación conservan exactamente el contenido.
+- **Rama:** codex/orbita-auto-051-lectura-notas.
+- **Cambio y archivos:** style.css aplica pre-wrap y overflow-wrap:anywhere a los párrafos de registros del cuaderno. Solo presentación; no cambia controladores, datos almacenados ni exportación. README/package.json 0.5.42 y sw.js caché propia v58.
+- **Validación:** 108 pruebas existentes y compilación satisfactorias. Navegador: antes se colapsaban tres líneas y había desbordamiento 1017/213; después innerText conserva las líneas y scrollWidth=clientWidth: 213 a 320 px, 283 a 390 px y 657 en escritorio. La misma nota previa se conserva tras recargar/Continuar. Capturas móviles revisadas; consola sin errores. Evidencia outputs/orbita-auto-051-lectura.png. No se afirma teléfono físico ni lector de pantalla.
+- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
