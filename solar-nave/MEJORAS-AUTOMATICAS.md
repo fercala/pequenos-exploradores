@@ -619,15 +619,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-040 · Localizar la nave estacionada en el mapa de superficie
 
-- **Inicio / última actualización:** 2026-10-21 10:20 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 10:20 / 10:24 UTC.
+- **Estado:** Publicada.
 - **Problema / oportunidad comprobada:** el mapa muestra al tripulante, lugares y baliza, pero no la nave que queda aparcada al caminar o conducir. El regreso de SOL-001 orienta al jugador; falta comparar visualmente su posición con la nave y consultar sus coordenadas desde el mapa.
 - **Relación / diferencia:** O4-001 (mapa), SOL-001 (regreso a nave) y AUTO-033 (baliza en mapa). Se añade el anclaje real de la nave estacionada, distinto de la baliza movible del jugador. No se añade teletransporte ni otro sistema de regreso.
 - **Criterio de aceptación:** a pie/en rover, mapa con marcador Tu nave y botón con sus coordenadas locales que permite marcarla como destino sin mover al jugador ni modificar el anclaje. A bordo no muestra un anclaje antiguo. Conserva baliza, puntos y controles existentes.
 - **Rama:** codex/orbita-auto-040-nave-en-mapa.
 - **Cambio y archivos:** exploration.js calcula coordenadas locales desde parkedPosition a pie/en rover, dibuja Tu nave y ofrece Marcar mi nave con coordenadas textuales. La selección reutiliza el destino existente, con etiqueta Tu nave · destino; a bordo el acceso y marcador de aparcamiento se ocultan. tests/exploration-controls.test.mjs cubre caminante/rover, selección sin mover anclajes y ocultación a bordo. README/package.json 0.5.31 y caché propia v47 en sw.js.
 - **Validación:** prueba nueva falló antes al no existir el marcador; después, 99 pruebas y construcción satisfactorias. Navegador: continuar partida lunar a pie, abrir mapa con baliza y nave distintas, Marcar mi nave fija 13.82°, -79.80° y se ve Tu nave · destino. Revisión 390 × 844, botón y texto accesibles, mapa existente conservado, sin avisos/errores. Evidencia outputs/orbita-auto-040-nave-mapa.png. Rover/ocultación se cubren en la prueba automatizada; no se afirma teléfono físico ni lector de pantalla.
-- **Propuesta / commit /publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#88](https://github.com/fercala/pequenos-exploradores/pull/88). Commit de código: a29794d86c1c7c3177597ac8145d3e1ba226c883; incorporación a main: 2416196cc2bc653edcf365b5e57cc8dcce15f809.
+- **Publicación confirmada:** 2026-10-21 10:24 UTC. [GitHub Pages: ejecución 39584153451 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39584153451), sobre el commit de incorporación. exploration.js público HTTP 200 incluye Tu nave · destino; package.json confirma 0.5.31 y sw.js caché v47, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
