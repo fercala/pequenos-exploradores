@@ -775,15 +775,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-052 · Detener únicamente la ruta activa
 
-- **Inicio / última actualización:** 2026-10-21 22:39 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 22:39 / 22:40 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** Detener ruta está habilitado sin ruta en ejecución y llama a cancelAuto si existe cualquier maniobra. Puede cancelar una órbita o aproximación iniciada por separado, aunque no haya ruta activa.
 - **Relación / diferencia:** O4-005 (rutas), O4-006 (maniobras) y AUTO-047 (disponibilidad de iniciar/reanudar). Protege las maniobras independientes frente al botón de detener rutas; no modifica el botón general de cancelación ni el itinerario.
 - **Criterio de aceptación:** sin ruta activa, Detener ruta está deshabilitado y su manejador no cancela una maniobra independiente. Con ruta activa permite detener y cancelar su maniobra; el panel refleja la parada y conserva las escalas.
 - **Rama:** codex/orbita-auto-052-detener-ruta.
 - **Cambio y archivos:** mission-control.js deshabilita Detener ruta cuando routeRunning=false y protege también el manejador. Una parada válida persiste y refresca el panel, conservando escalas. Regresión con controlador real en tests/mission-control.test.mjs. README/package.json 0.5.43; sw.js caché propia v59.
 - **Validación:** prueba nueva falló antes y pasó después; 109 pruebas y compilación satisfactorias. Navegador: sin ruta y durante órbita independiente el control está deshabilitado; la órbita sigue activa y Cancelar general sigue funcionando. Ruta terrestre activa habilita Detener; al pulsarlo quedan escalas, aviso de parada y botón deshabilitado. Vista 390×844 revisada, consola sin errores; outputs/orbita-auto-052-ruta.png. No se afirma teléfono físico ni lector de pantalla.
-- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+- **Propuesta:** [#112](https://github.com/fercala/pequenos-exploradores/pull/112). Commit de código: fe9868c2b8517efac28ef0880a4e92ea719d9780; incorporación: 067ac88a568aac4f11485f56a72a9a40ff06715a. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
+- **Publicación confirmada:** 2026-10-21 22:40 UTC. [Pages 39688065306 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39688065306) sobre el commit de incorporación. mission-control.js público HTTP 200 incluye la guarda de ruta activa y disponibilidad; package.json 0.5.43 y sw.js caché v59, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
