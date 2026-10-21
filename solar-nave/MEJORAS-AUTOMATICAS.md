@@ -658,15 +658,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-043 · Centrar la vista al cambiar cámara con botones accesibles
 
-- **Inicio / última actualización:** 2026-10-21 13:28 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 13:28 / 13:31 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** camera-btn cambia el modo y pone viewYaw/viewPitch a cero; Cambiar cámara de Orientación sin gestos conserva los ángulos de Mirar/Observación. El usuario entra en cabina mirando hacia un lado o arriba al usar el control accesible, con un resultado distinto del botón normal.
 - **Relación / diferencia:** O4-019 (orientación accesible), O2-010 (cabina), AUTO-023 (nombre de cámara) y AUTO-029 (respetar modo Mirar). Se sincroniza el centrado al cambiar de cámara; no se modifica el giro del vehículo ni la orientación mientras se mantiene un modo.
 - **Criterio de aceptación:** los tres cambios de modo accesibles centran solo la cámara como el botón estándar, conservando vehículo, orientación, posición y zoom. Los controles de mirar siguen funcionando después.
 - **Rama:** codex/orbita-auto-043-centrar-camara.
 - **Cambio y archivos:** exploration.js centra viewYaw/viewPitch al cambiar cámara desde Orientación sin gestos, igual que el botón estándar. tests/exploration-controls.test.mjs recorre cabina/observación/seguimiento desde ángulos distintos, comprueba posición/orientación/zoom conservados y vuelve a mirar en cada modo. README/package.json 0.5.34 y sw.js caché propia v50.
 - **Validación:** regresión falló antes (viewYaw 0,8 al cambiar) y pasó después. 102 pruebas y construcción satisfactorias. Navegador: activar Mirar y botones accesibles, mirar izquierda/arriba, cambiar a cabina y revisar imagen; después observación y seguimiento funcionan, etiqueta normal coincide al ocultar controles accesibles. Vista 390 × 844, sin avisos/errores; evidencia outputs/orbita-auto-043-cabina.png. Los ángulos y conservación del vehículo se verifican con el controlador real; no se afirma lector de pantalla ni teléfono físico.
-- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#94](https://github.com/fercala/pequenos-exploradores/pull/94). Commit de código: aa0a59611f7fcac33c926c53be7c4683338f31f8; incorporación a main: 57fba90e9531751dcba2766043cace15242799a8.
+- **Publicación confirmada:** 2026-10-21 13:31 UTC. [GitHub Pages: ejecución 39608626332 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39608626332), sobre el commit de incorporación. exploration.js público HTTP 200 centra viewYaw/viewPitch tras cambiar modo; package.json confirma 0.5.34 y sw.js caché v50, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
