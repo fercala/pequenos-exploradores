@@ -132,3 +132,9 @@ test('Pending PNG capture ignores repeated requests and releases the capture but
  const notebook=JSON.stringify(ex.v4.campaign.notebook);ex.togglePhoto(true);const failed=ex.capture();assert.equal(JSON.stringify(ex.v4.campaign.notebook),notebook);jobs.shift()(null);await failed;assert.equal(JSON.stringify(ex.v4.campaign.notebook),notebook);assert.equal(s.photos,1);assert.equal($('capture-photo').disabled,false);assert.match(messages.at(-1),/No se ha podido generar/);
  const retry=ex.capture();assert.equal(jobs.length,1);jobs.shift()(new Blob(['retry'],{type:'image/png'}));await retry;assert.equal(s.photos,2);assert.equal(records,2);assert.equal($('capture-photo').disabled,false);URL.revokeObjectURL(ex.photoUrl);
 });
+
+test('Repositioning the joystick stops manual motion and finishing cannot restart old propulsion',()=>{
+ for(const vehicle of ['ship','walk','rover']){
+  const {s,ex,$,settingsWrites}=fixture({joyPosition:[.2,.6]});s.vehicle=vehicle;s.throttle=.7;s.velocity.set(2,3,4);const position=s.position.clone(),quaternion=s.quaternion.clone();let done;document.body.append=node=>{done=node;};ex.renderSettings({append(){}});$('edit-controls').onclick();assert.equal(ex.editing,true);assert.equal(s.throttle,0,vehicle);assert.equal(s.velocity.length(),0,vehicle);assert.equal(s.vehicle,vehicle);assert.ok(s.position.equals(position));assert.ok(s.quaternion.equals(quaternion));assert.deepEqual(s.settings.joyPosition,[.2,.6]);assert.equal(done.id,'finish-layout');done.onclick();assert.equal(ex.editing,false);assert.equal(s.throttle,0);assert.equal(s.velocity.length(),0);assert.deepEqual(settingsWrites.at(-1).joyPosition,[.2,.6]);
+ }
+});
