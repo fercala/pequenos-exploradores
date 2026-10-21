@@ -697,15 +697,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-046 · Avisar si falla el guardado automático
 
-- **Inicio / última actualización:** 2026-10-21 16:30 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 16:30 / 16:33 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** writeSave devuelve false cuando el almacenamiento falla, pero los guardados periódicos y de ciclo de vida ignoran el resultado de persist. El jugador puede seguir explorando sin saber que los últimos cambios no se conservan; solo guardar manualmente avisa.
 - **Relación / diferencia:** O2-020 (partida portable) y AUTO-003 (proteger importación de guardados de salida). Se notifica el fallo real del guardado normal y se ofrece exportar; no se cambia el formato ni se sobrescriben las partidas anteriores.
 - **Criterio de aceptación:** primer fallo de guardado normal muestra aviso con ruta a Exportar partida; fallos consecutivos no generan avisos repetidos. Un guardado posterior correcto rearma el aviso para otro fallo futuro. Importación protegida mantiene su comportamiento y exportación sigue disponible.
 - **Rama:** codex/orbita-auto-046-aviso-guardado.
 - **Cambio y archivos:** core.js añade notificación opcional de primer fallo a createSaveSession, permite reintentos y rearma tras éxito; mantiene la protección de reemplazo. app.js muestra el aviso existente con instrucciones para exportar desde Expedición. tests/expansion.test.mjs comprueba fallos consecutivos, partida previa intacta, recuperación, nuevo fallo e importación protegida. README/package.json 0.5.37 y sw.js caché propia v53.
 - **Validación:** regresión falló antes por no notificarse el fallo; después, 105 pruebas y construcción satisfactorias. Navegador: guardado manual correcto y ruta Expedición → Exportar partida genera enlace orbita-expedicion.json, legible a 390 × 844, sin errores/avisos de consola. Evidencia outputs/orbita-auto-046-exportacion.png muestra la vía de copia, no el aviso de fallo. El almacenamiento lleno/bloqueado se simula en la prueba del controlador; no se cambiaron permisos del navegador ni se forzó el fallo allí, ni se probó teléfono físico.
-- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#100](https://github.com/fercala/pequenos-exploradores/pull/100). Commit de código: 3c19502dc36d764fd2e3af7cefa29ddb7f28cfe7; incorporación a main: d8d86f7e196ece51ee7b97d25036b73801f499d3.
+- **Publicación confirmada:** 2026-10-21 16:33 UTC. [GitHub Pages: ejecución 39635582116 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39635582116), sobre el commit de incorporación. core.js y app.js públicos HTTP 200 incluyen notificación de fallo y ruta de exportación; package.json confirma 0.5.37 y sw.js caché v53, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
