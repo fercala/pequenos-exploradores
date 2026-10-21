@@ -70,3 +70,8 @@ test('Notebook character budget follows typing, restored drafts and saving witho
  const {mc,$,open}=fixture();open('notebook');assert.equal($('note-length').textContent,'0/600 caracteres');$('field-note').value='Observo hielo.';$('field-note').oninput();assert.equal($('note-length').textContent,'14/600 caracteres');open('routes');open('notebook');assert.equal($('note-length').textContent,'14/600 caracteres');
  mc.restore({...mc.snapshot(),noteDraft:'x'.repeat(600)});open('notebook');assert.equal($('note-length').textContent,'600/600 caracteres');$('save-note').onclick();assert.equal(mc.campaign.notebook.length,1);assert.equal(mc.campaign.notebook[0].text.length,600);assert.equal($('note-length').textContent,'0/600 caracteres');
 });
+
+test('Notebook save availability rejects blank drafts and follows valid restored content',()=>{
+ const {mc,$,open}=fixture();open('notebook');assert.equal($('save-note').disabled,true);$('field-note').value='   \n ';$('field-note').oninput();assert.equal($('save-note').disabled,true);$('save-note').onclick();assert.equal(mc.campaign.notebook.length,0);
+ $('field-note').value='Observación';$('field-note').oninput();assert.equal($('save-note').disabled,false);open('routes');open('notebook');assert.equal($('save-note').disabled,false);$('save-note').onclick();assert.equal(mc.campaign.notebook.length,1);assert.equal($('save-note').disabled,true);mc.restore({...mc.snapshot(),noteDraft:'   '});open('notebook');assert.equal($('save-note').disabled,true);
+});
