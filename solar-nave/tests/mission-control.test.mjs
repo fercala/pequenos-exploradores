@@ -80,3 +80,8 @@ test('Stopping a route preserves independent maneuvers and cancels only an activ
  const {s,c,$,open,calls}=fixture();s.auto={type:'v4dock'};open('routes');assert.equal($('route-stop').disabled,true);$('route-stop').onclick();assert.equal(s.auto.type,'v4dock');assert.equal(calls.cancels,0);
  c.route=[{body:'moon',action:'land'}];c.routeRunning=true;open('routes');assert.equal($('route-stop').disabled,false);$('route-stop').onclick();assert.equal(c.routeRunning,false);assert.equal(s.auto,null);assert.equal(calls.cancels,1);assert.equal(c.route.length,1);assert.equal($('route-stop').disabled,true);assert.ok(calls.saves>0);
 });
+
+test('Route summary names the actual pending stop through edits, stopping and restore',()=>{
+ const {mc,c,$,open,remove}=fixture();open('routes');assert.match($('route-summary').textContent,/Sin escalas/);c.route=[{body:'earth',action:'orbit'},{body:'mars',action:'land'}];c.routeIndex=1;open('routes');assert.match($('route-summary').textContent,/Siguiente escala 2 de 2: Marte · Descenso/);remove(0);assert.match($('route-summary').textContent,/Siguiente escala 1 de 1: Marte/);
+ c.routeRunning=true;open('routes');assert.match($('route-summary').textContent,/Ruta en curso · escala 1 de 1: Marte/);$('route-stop').onclick();assert.match($('route-summary').textContent,/Siguiente escala 1 de 1: Marte/);mc.restore(mc.snapshot());open('routes');assert.match($('route-summary').textContent,/Siguiente escala 1 de 1: Marte/);mc.campaign.routeIndex=1;open('routes');assert.match($('route-summary').textContent,/Ruta completada/);
+});

@@ -786,6 +786,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#112](https://github.com/fercala/pequenos-exploradores/pull/112). Commit de código: fe9868c2b8517efac28ef0880a4e92ea719d9780; incorporación: 067ac88a568aac4f11485f56a72a9a40ff06715a. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
 - **Publicación confirmada:** 2026-10-21 22:40 UTC. [Pages 39688065306 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39688065306) sobre el commit de incorporación. mission-control.js público HTTP 200 incluye la guarda de ruta activa y disponibilidad; package.json 0.5.43 y sw.js caché v59, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-053 · Identificar la siguiente escala al reanudar
+
+- **Inicio / última actualización:** 2026-10-21 23:45 UTC.
+- **Estado:** Verificada.
+- **Problema / oportunidad comprobada:** el planificador guarda routeIndex al detener o completar una escala, pero la lista solo marca actual durante routeRunning. En pausa no distingue la próxima escala de las completadas; Reanudar desde siguiente escala no nombra su destino.
+- **Relación / diferencia:** O4-005, AUTO-004/005 (índice conservado), AUTO-047 (disponibilidad) y AUTO-052 (parada). Hace visible el índice existente y su destino/maniobra antes de reanudar, sin alterar el itinerario ni automatismo.
+- **Criterio de aceptación:** el panel muestra número, destino y maniobra de la próxima escala o la activa, y distingue ruta vacía/completada. Se actualiza tras añadir, quitar y detener; conserva el índice al recuperar partidas.
+- **Rama:** codex/orbita-auto-053-siguiente-escala.
+- **Cambio y archivos:** mission-control.js presenta route-summary con estado, posición, destino y maniobra, reutilizando routeIndex. Prueba de estados, eliminación, parada y recuperación en tests/mission-control.test.mjs. README/package.json 0.5.44; sw.js caché propia v60.
+- **Validación:** prueba nueva falló antes y pasó después; 110 pruebas y compilación satisfactorias. Navegador: ruta vacía, Tierra 1/2 antes y durante ejecución, parada y recarga conservan siguiente Tierra 1/2; quitar Tierra actualiza Marte 1/1, recarga conserva Marte. Vista 390×844 revisada, consola sin errores; outputs/orbita-auto-053-escala.png. El caso 2/2 y ruta completada se cubren con controlador real en prueba. No se afirma teléfono físico ni lector de pantalla.
+- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
