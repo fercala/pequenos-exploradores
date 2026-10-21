@@ -734,6 +734,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#104](https://github.com/fercala/pequenos-exploradores/pull/104). Commit de código: ed14afb0bd70e1a025a4b3de8d3cf28b98552dcd; incorporación a main: 37516df71341a99f4bda99b52820a560b6a6a67f.
 - **Publicación confirmada:** 2026-10-21 18:41 UTC. [GitHub Pages: ejecución 39654795608 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39654795608), sobre el commit de incorporación. app.js y exploration.js públicos HTTP 200 guardan y aplican extendedControls; package.json confirma 0.5.39 y sw.js caché v55, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-049 · Mostrar el espacio disponible para una nota
+
+- **Inicio / última actualización:** 2026-10-21 19:40 UTC.
+- **Estado:** Verificada.
+- **Problema / oportunidad comprobada:** la anotación tiene maxlength=600, pero el cuaderno no muestra cuánto se ha escrito ni el límite restante. Al llegar al máximo, escribir o pegar más deja de añadir texto sin explicar visualmente que la nota está llena.
+- **Relación / diferencia:** O4-017 (cuaderno) y AUTO-006 (borrador persistente de 600 caracteres). Se hace visible el uso del límite mientras se escribe y se recupera el borrador; no se cambia la longitud permitida ni se recorta más contenido.
+- **Criterio de aceptación:** contador 0/600 al empezar, actualizado con la nota y asociado al campo; refleja borradores recuperados y 600/600 al límite. Guardar la nota vuelve a 0/600 conservando la entrada científica.
+- **Rama:** codex/orbita-auto-049-limite-nota.
+- **Cambio y archivos:** contador visible y asociado al campo en mission-control.js; prueba de borradores y guardado en tests/mission-control.test.mjs. Versión 0.5.40 y caché local v56 en package.json, README.md y sw.js.
+- **Validación:** 107 pruebas y compilación satisfactorias. Navegador: 0/600, 14/600 al escribir, 600/600 al límite, 14/600 al volver y tras recargar la partida; guardar conserva la nota y vuelve a 0/600. Asociación aria-describedby comprobada. Vista móvil 390×844 sin recortes; consola sin errores. Evidencia local: outputs/orbita-auto-049-nota.png. No se ha probado lector de pantalla ni teléfono físico.
+- **Propuesta / commit / publicación:** pendientes; permanece Verificada hasta comprobar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
