@@ -671,15 +671,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-044 · Distancia a la baliza durante la marcha
 
-- **Inicio / última actualización:** 2026-10-21 14:25 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 14:25 / 14:35 UTC.
+- **Estado:** Publicada.
 - **Problema / oportunidad comprobada:** Buscar mi baliza orienta y anuncia la distancia una vez, pero al avanzar el panel de superficie solo indica distancia a la nave y objetivos. Falta comprobar sin abrir menús si el tripulante/rover se acerca a su baliza.
 - **Relación / diferencia:** SOL-001 (baliza), AUTO-032 (orientarse hacia ella) y AUTO-033 (marcarla en mapa). Se añade una distancia actualizada durante la marcha, reutilizando el anclaje renderizado del mundo actual; no otra baliza ni un nuevo sistema de orientación.
 - **Criterio de aceptación:** a pie/en rover y con baliza local, el estado de superficie muestra Nave, Baliza y objetivos; la distancia disminuye al acercarse y aumenta al alejarse. Sin baliza local no muestra distancia ajena. Conserva posición, progreso y controles.
 - **Rama:** codex/orbita-auto-044-distancia-baliza.
 - **Cambio y archivos:** field-expedition.js añade Baliza N m al estado de superficie a pie/en rover cuando existe una baliza local, usando la posición del marcador que ya se actualiza con el mundo. tests/field.test.mjs cubre acercarse, alejarse, cambio de mundo y conservación de anclajes/progreso. README/package.json 0.5.35 y sw.js caché propia v51.
 - **Validación:** prueba nueva falló antes por ausencia de distancia; después, 103 pruebas y construcción satisfactorias. Navegador lunar a pie 390 × 844: indicador pasa de 2 m a 17 m al alejarse y baja a 5 m al orientarse/volver; nave y objetivos siguen visibles, controles operativos. Sin avisos/errores; evidencia outputs/orbita-auto-044-distancia-baliza.png. Rover y ausencia de baliza local cubiertos por controlador real en prueba; no se afirma teléfono físico. Distancias del mundo comprimido, sin añadir datos astronómicos.
-- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#96](https://github.com/fercala/pequenos-exploradores/pull/96). Commit de código: c0855926fd68b1369f651f1d96f7141f587373da; incorporación a main: 9cd345750ac2bd7ae9b4c800e740a192cb31476b.
+- **Publicación confirmada:** 2026-10-21 14:35 UTC. [GitHub Pages: ejecución 39616991401 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39616991401), sobre el commit de incorporación, tras espera en cola de GitHub. field-expedition.js público HTTP 200 incluye distancia al marcador; package.json confirma 0.5.35 y sw.js caché v51, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
