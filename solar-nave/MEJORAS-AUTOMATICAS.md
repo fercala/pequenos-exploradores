@@ -632,15 +632,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-041 · Detener la marcha al recolocar el joystick
 
-- **Inicio / última actualización:** 2026-10-21 11:24 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 11:24 / 11:28 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** Mover joystick activa editing y pausa la física, pero conserva la potencia y velocidad anteriores. Al pulsar Listo, el vehículo reanuda su marcha sin una nueva orden de avance, mientras se está probando la nueva posición del control.
 - **Relación / diferencia:** O2-003 (distribución), AUTO-016 (restablecer controles) y AUTO-027 (detener propulsión al abrir atlas). Se aplica la parada al editor de posición del joystick; no al atlas ni al restablecimiento de preferencias.
 - **Criterio de aceptación:** entrar en Mover joystick deja potencia y velocidad a cero en nave, caminante y rover; terminar la edición conserva ese estado y guarda las preferencias. Mantiene vehículo, posición, orientación y posición personalizada del joystick.
 - **Rama:** codex/orbita-auto-041-editar-en-reposo.
 - **Cambio y archivos:** expansion.js pone potencia y velocidad a cero al activar el editor; el aviso indica Movimiento detenido. tests/vehicle-transition.test.mjs cubre nave, caminante y rover con marcha previa, conservación de anclajes y preferencias, y salida de edición sin reanudar. README/package.json 0.5.32 y sw.js caché propia v48.
 - **Validación:** regresión falló antes (potencia 0,7 al entrar) y pasó después. 100 pruebas y construcción satisfactorias. Navegador a 390 × 844: potencia 60 antes de editar, 0 durante y después de Listo; arrastre de mouse recoloca joystick, y recargar/Continuar conserva 13.3333vw / 53.5545dvh. Sin errores/avisos de consola; evidencia outputs/orbita-auto-041-joystick.png. Caminante/rover y velocidad interna cubiertos en prueba del controlador; no se afirma teléfono físico ni prueba táctil.
-- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#90](https://github.com/fercala/pequenos-exploradores/pull/90). Commit de código: 0c06781a34a854f4dcf8f56c47e36ceab3773218; incorporación a main: fc4d207b4f57366bf12aab8feff87ed193be63b2.
+- **Publicación confirmada:** 2026-10-21 11:28 UTC. [GitHub Pages: ejecución 39591989190 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39591989190), sobre el commit de incorporación. expansion.js público HTTP 200 incluye parada y aviso de Movimiento detenido; package.json confirma 0.5.32 y sw.js caché v48, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
