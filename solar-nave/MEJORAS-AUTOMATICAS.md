@@ -762,15 +762,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-051 · Leer completas las anotaciones del cuaderno
 
-- **Inicio / última actualización:** 2026-10-21 21:42 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 21:42 / 21:44 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** una nota con varias líneas se muestra en un párrafo que colapsa los saltos; un identificador de 120 letras provoca scrollWidth 1017 frente a clientWidth 213 en 320 px. El panel termina con desplazamiento horizontal y texto fuera de vista.
 - **Relación / diferencia:** O4-017 y AUTO-006/049/050. Corrige la lectura de registros guardados, no el guardado, borrador, contador ni disponibilidad de Guardar nota. No altera texto almacenado ni partidas.
 - **Criterio de aceptación:** las líneas de una anotación permanecen separadas al leerla; cadenas largas se ajustan al ancho del registro sin desbordamiento horizontal, en 320 y 390 px y escritorio. Notas previas y exportación conservan exactamente el contenido.
 - **Rama:** codex/orbita-auto-051-lectura-notas.
 - **Cambio y archivos:** style.css aplica pre-wrap y overflow-wrap:anywhere a los párrafos de registros del cuaderno. Solo presentación; no cambia controladores, datos almacenados ni exportación. README/package.json 0.5.42 y sw.js caché propia v58.
 - **Validación:** 108 pruebas existentes y compilación satisfactorias. Navegador: antes se colapsaban tres líneas y había desbordamiento 1017/213; después innerText conserva las líneas y scrollWidth=clientWidth: 213 a 320 px, 283 a 390 px y 657 en escritorio. La misma nota previa se conserva tras recargar/Continuar. Capturas móviles revisadas; consola sin errores. Evidencia outputs/orbita-auto-051-lectura.png. No se afirma teléfono físico ni lector de pantalla.
-- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+- **Propuesta:** [#110](https://github.com/fercala/pequenos-exploradores/pull/110). Commit de código: b66e1f69d56191b8ba2094bdbf919db22ba44ae8; incorporación: b595b4cadc3ccf5f42d615b3e124f72a860f27ab. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
+- **Publicación confirmada:** 2026-10-21 21:44 UTC. [Pages 39681021044 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39681021044) sobre el commit de incorporación. style.css público HTTP 200 incluye pre-wrap y overflow-wrap:anywhere en registros; package.json 0.5.42 y sw.js caché v58, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
