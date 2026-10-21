@@ -65,3 +65,8 @@ test('Route start and resume availability follows adding, completing and removin
  c.routeIndex=c.route.length;open('routes');assert.equal($('route-start').disabled,false);assert.equal($('route-resume').disabled,true);assert.equal(c.routeIndex,1);
  remove(0);assert.equal(c.route.length,0);assert.equal($('route-start').disabled,true);assert.equal($('route-resume').disabled,true);assert.equal(c.storyStep,3);
 });
+
+test('Notebook character budget follows typing, restored drafts and saving without changing the allowed length',()=>{
+ const {mc,$,open}=fixture();open('notebook');assert.equal($('note-length').textContent,'0/600 caracteres');$('field-note').value='Observo hielo.';$('field-note').oninput();assert.equal($('note-length').textContent,'14/600 caracteres');open('routes');open('notebook');assert.equal($('note-length').textContent,'14/600 caracteres');
+ mc.restore({...mc.snapshot(),noteDraft:'x'.repeat(600)});open('notebook');assert.equal($('note-length').textContent,'600/600 caracteres');$('save-note').onclick();assert.equal(mc.campaign.notebook.length,1);assert.equal(mc.campaign.notebook[0].text.length,600);assert.equal($('note-length').textContent,'0/600 caracteres');
+});
