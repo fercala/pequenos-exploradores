@@ -92,3 +92,10 @@ test('Old and malformed gear fields default to deployed while an explicit false 
  for(const gear of [undefined,null,0,'false',{},true])assert.equal(validatePortable({...portable(),gear}).gear,true);
  assert.equal(validatePortable({...portable(),gear:false}).gear,false);
 });
+
+test('Normal save failures notify once, preserve the old expedition, retry, and rearm after recovery',()=>{
+ const storage=memoryStore(),notices=[],session=createSaveSession(storage,{onSaveFailure:()=>notices.push('failed')}),old=portable();assert.equal(session.save(old),true);const write=storage.setItem;storage.setItem=()=>{throw Error('Storage full');};
+ for(let i=0;i<3;i++)assert.equal(session.save({...old,elapsed:100+i}),false);assert.deepEqual(notices,['failed']);assert.equal(readSave(storage).elapsed,old.elapsed);
+ storage.setItem=write;assert.equal(session.save({...old,elapsed:300}),true);assert.equal(readSave(storage).elapsed,300);storage.setItem=()=>{throw Error('Storage blocked');};assert.equal(session.save({...old,elapsed:400}),false);assert.deepEqual(notices,['failed','failed']);assert.equal(readSave(storage).elapsed,300);
+ storage.setItem=write;assert.equal(session.replace({...old,elapsed:500}),true);storage.setItem=()=>{throw Error('Outgoing save must not write');};assert.equal(session.save(old),true);assert.equal(readSave(storage).elapsed,500);assert.equal(notices.length,2);
+});

@@ -7,7 +7,7 @@ import {clamp,smoothstep,terrainHeight,isOcean,pressureAtDepth,landingResult,rea
 
 const $=id=>document.getElementById(id),panel=$('panel'),content=$('panel-content');
 const state={planet:getPlanet('earth'),position:new T.Vector3(0,220,1650),quaternion:new T.Quaternion(),velocity:new T.Vector3(),throttle:0,elapsed:0,started:false,paused:false,landed:false,shield:100,visited:new Set(['earth']),landings:new Set(),explored:new Set(),photos:0,settings:{...DEFAULT_SETTINGS},auto:null,camera:'follow'};
-const ids=new Set(PLANETS.map(p=>p.id)),saveSession=createSaveSession(localStorage);
+const ids=new Set(PLANETS.map(p=>p.id)),saveSession=createSaveSession(localStorage,{onSaveFailure:()=>toast('No se pudo guardar la expedición en este dispositivo. Exporta tu partida desde Expedición para conservarla.')});
 let world,save=readSave(localStorage),last=performance.now(),lastHud=0,saveClock=0,toastTimer,installPrompt,drag=null,look=false,holds=new Set(),joy={x:0,y:0},joyPointer=null,contextLost=false;
 try{const s=JSON.parse(localStorage.getItem('orbita-settings')||'null');if(s)state.settings={...DEFAULT_SETTINGS,...s};}catch{}
 if(matchMedia('(prefers-reduced-motion:reduce)').matches)state.settings.reducedMotion=true;
