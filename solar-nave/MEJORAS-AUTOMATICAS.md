@@ -721,6 +721,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#102](https://github.com/fercala/pequenos-exploradores/pull/102). Commit de código: f58fc46573800d7272f3695cc6ff0c1662f0577f; incorporación a main: e0814f16a4d47535058d41ace59bd7335fcae09a.
 - **Publicación confirmada:** 2026-10-21 17:37 UTC. [GitHub Pages: ejecución 39645304103 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39645304103), sobre el commit de incorporación. mission-control.js público HTTP 200 incluye disponibilidad por escalas; package.json confirma 0.5.38 y sw.js caché v54, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-048 · Conservar los controles táctiles ampliados
+
+- **Inicio / última actualización:** 2026-10-21 18:38 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** la casilla Controles táctiles ampliados solo cambia la clase extended del documento; no actualiza ni guarda ajustes. Al recargar se pierden los botones extra de giro/frenado y la casilla vuelve a desactivada.
+- **Relación / diferencia:** O2-003 (controles ajustables), O4-019 (accesibilidad) y AUTO-020 (nombre/etiqueta de la casilla). Se conserva la preferencia ya existente entre sesiones; no se añaden botones ni otra distribución.
+- **Criterio de aceptación:** activar o desactivar la casilla actualiza los ajustes y la visibilidad de controles; al recargar/continuar se conserva la elección y la casilla refleja el estado. Preferencias antiguas sin este campo siguen con el valor predeterminado desactivado.
+- **Rama:** codex/orbita-auto-048-controles-ampliados.
+- **Cambio y archivos:** data.js define extendedControls=false; app.js lee la casilla desde ajustes y guarda su cambio; exploration.js aplica la clase de controles ampliados desde esa preferencia al iniciar o aplicar ajustes. README/package.json 0.5.39 y sw.js caché propia v55. No modifica el formato de partida.
+- **Validación:** antes, navegador: activar casilla y recargar/Continuar devuelve false. Después, activar, recargar/Continuar conserva true y los tres controles extra visibles; desactivar y repetir conserva false y los oculta. Caso inicial sin preferencia desactivado. Revisión 390 × 844, sin avisos/errores; evidencia outputs/orbita-auto-048-controles.png muestra controles restaurados tras recarga. 106 pruebas existentes y construcción satisfactorias. No se afirma teléfono físico ni lector de pantalla; la comprobación específica de persistencia se hizo mediante la interfaz real del navegador.
+- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.

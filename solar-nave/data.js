@@ -9,5 +9,5 @@ export const PLANETS = [
   {id:'neptune',name:'Neptuno',kind:'Gigante de hielo',rocky:false,color:'#6fadd4',radius:24622,gravity:11.15,au:30.07,rotation:'≈16,1 horas',year:'164,8 años terrestres',temperature:'≈−200 °C (nivel de 1 bar)',pressure:'Aumenta con la profundidad',atmosphere:'Hidrógeno, helio y metano',tilt:28.32,description:'Vientos intensos en el límite de tu expedición.',detail:'Bajo la débil luz solar, sus nubes cambian y sus vientos alcanzan velocidades muy altas. Las bandas y tormentas de esta recreación son ilustrativas. La exploración se limita a la atmósfera; no existe un terreno de aterrizaje.',surface:'Nubes y turbulencia',source:'https://science.nasa.gov/neptune/neptune-facts/'}
 ];
 export const getPlanet = id => PLANETS.find(p=>p.id===id) || PLANETS[2];
-export const DEFAULT_SETTINGS={quality:'auto',sensitivity:1,reducedMotion:false,assist:true,mode:'exploration',sound:false};
+export const DEFAULT_SETTINGS={quality:'auto',sensitivity:1,reducedMotion:false,assist:true,mode:'exploration',sound:false,extendedControls:false};
 export const format=(v,d=0)=>Number(v).toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
