@@ -684,15 +684,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-045 · Encontrar el rover aparcado en el mapa
 
-- **Inicio / última actualización:** 2026-10-21 15:33 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-21 15:33 / 15:36 UTC.
+- **Estado:** Publicada.
 - **Problema / oportunidad comprobada:** el rover conserva su posición al bajar, pero el mapa no lo dibuja. Tras alejarse a pie no se pueden consultar sus coordenadas para localizarlo; Marcar mi nave y Marcar mi baliza son anclajes diferentes.
 - **Relación / diferencia:** O2-008 (rover), AUTO-010 (guardar aparcamiento), AUTO-025 (embarcar en su posición), AUTO-033 y AUTO-040 (baliza/nave en mapa). Se representa el anclaje existente del rover, sin desplegar otro, moverlo ni reemplazar la nave o baliza.
 - **Criterio de aceptación:** con rover aparcado, a pie/a bordo el mapa muestra Tu rover y un botón con coordenadas locales para marcarlo. Sin rover o conduciéndolo no muestra un aparcamiento antiguo. Seleccionar conserva anclajes, orientación, posición y progreso.
 - **Rama:** codex/orbita-auto-045-rover-en-mapa.
 - **Cambio y archivos:** exploration.js obtiene coordenadas locales de roverParked cuando se camina o se está a bordo; dibuja Tu rover y ofrece Marcar mi rover. Selección con etiqueta Tu rover · destino; oculta el aparcamiento si no existe o se conduce el rover. tests/exploration-controls.test.mjs cubre selección y anclajes conservados, navegación a pie/a bordo, conducción y ausencia. README/package.json 0.5.36 y sw.js caché propia v52.
 - **Validación:** regresión falló antes por ausencia del marcador; después, 104 pruebas y construcción satisfactorias. Navegador: partida lunar a pie, seleccionar rover a -31.36°, -85.16°, mapa y botón legibles en 390 × 844; embarcar rover oculta el botón de aparcamiento, y bajar devuelve el estado a pie. Sin avisos/errores; evidencia outputs/orbita-auto-045-rover-mapa.png. Caso a bordo/sin rover y conservación de anclajes cubiertos por controlador real en prueba; no se afirma teléfono físico ni lector de pantalla.
-- **Propuesta / commit / publicación:** pendientes de creación e incorporación.
+- **Propuesta:** [#98](https://github.com/fercala/pequenos-exploradores/pull/98). Commit de código: d01fd5c168aa8a78c22f265853f35d67019d63f2; incorporación a main: 9c963e2d14da617a281151e2234c72138d1202d3.
+- **Publicación confirmada:** 2026-10-21 15:36 UTC. [GitHub Pages: ejecución 39627082257 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39627082257), sobre el commit de incorporación. exploration.js público HTTP 200 incluye Tu rover · destino; package.json confirma 0.5.36 y sw.js caché v52, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
