@@ -29,10 +29,15 @@ export function readSave(storage){try{const p=JSON.parse(storage.getItem(STORAGE
 export function validateSave(p){return !!p&&[1,2].includes(p.version)&&typeof p.planet==='string'&&Array.isArray(p.position)&&p.position.length===3&&p.position.every(Number.isFinite)&&Math.hypot(...p.position)>1&&Math.hypot(...p.position)<1000000&&Array.isArray(p.quaternion)&&p.quaternion.length===4&&p.quaternion.every(Number.isFinite)&&Math.hypot(...p.quaternion)>.5&&Math.hypot(...p.quaternion)<1.5&&Array.isArray(p.visited)&&Array.isArray(p.landed)&&Array.isArray(p.explored)&&Number.isFinite(p.elapsed);}
 export function writeSave(storage,state){try{storage.setItem(STORAGE_KEY,JSON.stringify({...state,version:state.version||1}));return true;}catch{return false;}}
 // A successful replacement belongs to the next page; outgoing lifecycle saves must not overwrite it.
-export function createSaveSession(storage){
- let replacing=false;
+export function createSaveSession(storage,{onSaveFailure}={}){
+ let replacing=false,saveFailed=false;
  return {
-  save(snapshot){return replacing||writeSave(storage,snapshot);},
+  save(snapshot){
+   if(replacing)return true;
+   const saved=writeSave(storage,snapshot);
+   if(saved)saveFailed=false;else if(!saveFailed){saveFailed=true;onSaveFailure?.();}
+   return saved;
+  },
   replace(snapshot){
    if(replacing)return false;
    replacing=true;
