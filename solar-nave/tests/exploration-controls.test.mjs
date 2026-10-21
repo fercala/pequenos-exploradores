@@ -54,3 +54,8 @@ test('Walkers and rovers can locate the parked ship on the map without moving ei
   s.vehicle='ship';labels.length=0;$('surface-map-btn').onclick();assert.equal($('surface-ship').hidden,true);assert.equal(labels.includes('Tu nave'),false);
  }
 });
+
+test('Accessible camera changes recenter the view through every mode without turning or moving the vehicle',()=>{
+ const {s,w,press}=fixture('ship',true),q=s.quaternion.clone(),position=s.position.clone();w.zoom=1.8;
+ for(const mode of ['cockpit','observe','follow']){w.viewYaw=.8;w.viewPitch=-.5;press('camera');assert.equal(w.cameraMode,mode);assert.equal(w.viewYaw,0);assert.equal(w.viewPitch,0);assert.equal(w.zoom,1.8);assert.ok(s.quaternion.equals(q));assert.ok(s.position.equals(position));press('left');press('up');assert.ok(w.viewYaw>0);assert.ok(w.viewPitch>0);assert.ok(s.quaternion.equals(q));}
+});
