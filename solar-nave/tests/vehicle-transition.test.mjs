@@ -4,13 +4,14 @@ import * as T from '../vendor/three.module.js';
 import {createExpansion} from '../expansion.js';
 import {bodyById,bodyRadius,validatePortable} from '../simulation.js';
 function fixture(settings={}){
- const elements=new Map(),make=()=>({style:{setProperty(){}},classList:{toggle(){},add(){},remove(){}},dataset:{},append(){},remove(){},prepend(){},insertAdjacentHTML(){},setAttribute(){},querySelectorAll:()=>[]});
+ const canvasContext={fillRect(){},fillText(){}};
+ const elements=new Map(),make=()=>({style:{setProperty(){}},classList:{toggle(){},add(){},remove(){}},dataset:{},append(){},remove(){},prepend(){},insertAdjacentHTML(){},setAttribute(){},querySelector:()=>({getContext:()=>canvasContext}),querySelectorAll:()=>[]});
  const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
  globalThis.document={createElement:make,body:make(),documentElement:make(),querySelector:()=>make()};
  const planet=bodyById('moon'),r=bodyRadius(planet),s={planet,settings,position:new T.Vector3(0,r+1.7,0),velocity:new T.Vector3(),quaternion:new T.Quaternion(),landed:false,auto:null};
  const w={planet,scene:new T.Scene(),ship:new T.Group(),planetGroup:new T.Group(),parkedPosition:new T.Vector3(0,r+4.2,0),parkedQuaternion:new T.Quaternion(),groundRadius:()=>r,isWater:()=>false,setOrientation(){}};
  const messages=[],settingsWrites=[],ex=createExpansion({state:s,world:w,$,toast:t=>messages.push(t),persist(){},setThrottle:n=>s.throttle=n,resetInputs(){},brake(){s.velocity.set(0,0,0);s.throttle=0;},closePanel(){},settingsSave(){settingsWrites.push(structuredClone(s.settings));}});
- Object.assign(s,{visited:new Set(['moon']),landings:new Set(['moon']),explored:new Set(),elapsed:10,photos:0,shield:100});s.vehicle='walk';s.throttle=0;return {s,w,ex,r,messages,$,settingsWrites};
+ Object.assign(s,{visited:new Set(['moon']),landings:new Set(['moon']),explored:new Set(),elapsed:10,photos:0,shield:100});s.vehicle='walk';s.throttle=0;return {s,w,ex,r,messages,$,settingsWrites,canvasContext};
 }
 test('Boarding the rover during a jump discards airborne momentum and keeps normal rover footing',()=>{
  const {s,ex,r}=fixture();ex.jump();ex.surfacePhysics(.2,{x:0,y:0},new Set());assert.ok(ex.jumpHeight>0);assert.ok(ex.jumpSpeed>0);
@@ -137,4 +138,9 @@ test('Repositioning the joystick stops manual motion and finishing cannot restar
  for(const vehicle of ['ship','walk','rover']){
   const {s,ex,$,settingsWrites}=fixture({joyPosition:[.2,.6]});s.vehicle=vehicle;s.throttle=.7;s.velocity.set(2,3,4);const position=s.position.clone(),quaternion=s.quaternion.clone();let done;document.body.append=node=>{done=node;};ex.renderSettings({append(){}});$('edit-controls').onclick();assert.equal(ex.editing,true);assert.equal(s.throttle,0,vehicle);assert.equal(s.velocity.length(),0,vehicle);assert.equal(s.vehicle,vehicle);assert.ok(s.position.equals(position));assert.ok(s.quaternion.equals(quaternion));assert.deepEqual(s.settings.joyPosition,[.2,.6]);assert.equal(done.id,'finish-layout');done.onclick();assert.equal(ex.editing,false);assert.equal(s.throttle,0);assert.equal(s.velocity.length(),0);assert.deepEqual(settingsWrites.at(-1).joyPosition,[.2,.6]);
  }
+});
+
+test('A selected scanner stops drawing during simulation pause, photo and atlas and resumes without retoggling',()=>{
+ const {s,w,ex,$,canvasContext}=fixture();let draws=0;canvasContext.fillRect=()=>draws++;s.started=true;w.overview=false;w.localGroup=new T.Group();$('scanner-btn').onclick();ex.tick(.3,false);assert.equal(draws,25);
+ ex.tick(.3,true);assert.equal(draws,25,'pause must perform no scanner drawing');ex.photo=true;ex.tick(.3,false);assert.equal(draws,25);ex.photo=false;w.overview=true;ex.tick(.3,false);assert.equal(draws,25);w.overview=false;ex.tick(.3,false);assert.equal(draws,50,'continuing resumes the selected scanner');
 });
