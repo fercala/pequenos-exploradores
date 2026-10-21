@@ -773,6 +773,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#110](https://github.com/fercala/pequenos-exploradores/pull/110). Commit de código: b66e1f69d56191b8ba2094bdbf919db22ba44ae8; incorporación: b595b4cadc3ccf5f42d615b3e124f72a860f27ab. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
 - **Publicación confirmada:** 2026-10-21 21:44 UTC. [Pages 39681021044 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39681021044) sobre el commit de incorporación. style.css público HTTP 200 incluye pre-wrap y overflow-wrap:anywhere en registros; package.json 0.5.42 y sw.js caché v58, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-052 · Detener únicamente la ruta activa
+
+- **Inicio / última actualización:** 2026-10-21 22:39 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** Detener ruta está habilitado sin ruta en ejecución y llama a cancelAuto si existe cualquier maniobra. Puede cancelar una órbita o aproximación iniciada por separado, aunque no haya ruta activa.
+- **Relación / diferencia:** O4-005 (rutas), O4-006 (maniobras) y AUTO-047 (disponibilidad de iniciar/reanudar). Protege las maniobras independientes frente al botón de detener rutas; no modifica el botón general de cancelación ni el itinerario.
+- **Criterio de aceptación:** sin ruta activa, Detener ruta está deshabilitado y su manejador no cancela una maniobra independiente. Con ruta activa permite detener y cancelar su maniobra; el panel refleja la parada y conserva las escalas.
+- **Rama:** codex/orbita-auto-052-detener-ruta.
+- **Cambio y archivos:** mission-control.js deshabilita Detener ruta cuando routeRunning=false y protege también el manejador. Una parada válida persiste y refresca el panel, conservando escalas. Regresión con controlador real en tests/mission-control.test.mjs. README/package.json 0.5.43; sw.js caché propia v59.
+- **Validación:** prueba nueva falló antes y pasó después; 109 pruebas y compilación satisfactorias. Navegador: sin ruta y durante órbita independiente el control está deshabilitado; la órbita sigue activa y Cancelar general sigue funcionando. Ruta terrestre activa habilita Detener; al pulsarlo quedan escalas, aviso de parada y botón deshabilitado. Vista 390×844 revisada, consola sin errores; outputs/orbita-auto-052-ruta.png. No se afirma teléfono físico ni lector de pantalla.
+- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
