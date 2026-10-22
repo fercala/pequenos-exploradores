@@ -171,10 +171,11 @@ function frame(now){requestAnimationFrame(frame);const dt=Math.max(0,Math.min((n
   updateHud(now);
 }
 
+function setPaused(value){state.paused=value;$('pause-btn').textContent=value?'▶':'Ⅱ';$('pause-btn').setAttribute('aria-label',value?'Continuar':'Pausar');}
 function start(resume=false){
   if(resume&&save){try{save=validatePortable(save);}catch{toast('La partida guardada no es válida. Se iniciará una expedición nueva.');save=null;}}
   if(resume&&save){setPlanet(ids.has(save.planet)?save.planet:'earth');state.position.fromArray(save.position);state.quaternion.fromArray(save.quaternion).normalize();state.visited=new Set(save.visited.filter(id=>ids.has(id)));state.visited.add(state.planet.id);state.landings=new Set(save.landed.filter(id=>ids.has(id)));state.explored=new Set(save.explored.filter(id=>ids.has(id)));state.elapsed=save.elapsed;state.photos=Number(save.photos)||0;state.shield=clamp(Number(save.shield)||100,1,100);state.landed=!!save.onGround;expansion.restore(save);if(state.vehicle==='ship')state.position.setLength(Math.max(state.position.length(),world.groundRadius(state.position.clone().normalize())+4.2));renderStrip();}
-  state.started=true;state.paused=false;expansion.resumeAudio();$('welcome').close();last=performance.now();persist();toast(resume?'Expedición recuperada. Bienvenido a bordo.':'Arrastra para orientar y mueve Propulsión para avanzar. Destinos te lleva a otros mundos.');
+  state.started=true;setPaused(false);expansion.resumeAudio();$('welcome').close();last=performance.now();persist();toast(resume?'Expedición recuperada. Bienvenido a bordo.':'Arrastra para orientar y mueve Propulsión para avanzar. Destinos te lleva a otros mundos.');
 }
 $('start-btn').onclick=()=>start();$('resume-btn').onclick=()=>start(true);$('resume-btn').hidden=!save;
 $('map-btn').onclick=()=>showPanel('map');$('info-btn').onclick=()=>showPanel('info');$('help-btn').onclick=()=>showPanel('help');$('settings-btn').onclick=()=>showPanel('settings');$('journal-btn').onclick=()=>showPanel('journal');$('close-panel').onclick=closePanel;
@@ -186,7 +187,7 @@ $('zero-throttle').onclick=brake;$('brake-btn').onclick=brake;
 $('stabilize-btn').onclick=()=>{state.settings.assist=!state.settings.assist;updateAssist();settingsSave();};
 function updateAssist(){$('stabilize-btn').setAttribute('aria-pressed',state.settings.assist);$('stabilize-btn').innerHTML=`<span class="live-dot"></span> ESTABILIZACIÓN ${state.settings.assist?'ACTIVA':'DESACTIVADA'}`;}
 $('land-btn').onclick=startLanding;$('orbit-btn').onclick=()=>startAscent();$('cancel-travel').onclick=cancelAuto;
-$('pause-btn').onclick=()=>{state.paused=!state.paused;resetInputs();$('pause-btn').textContent=state.paused?'▶':'Ⅱ';$('pause-btn').setAttribute('aria-label',state.paused?'Continuar':'Pausar');persist();};
+$('pause-btn').onclick=()=>{setPaused(!state.paused);resetInputs();persist();};
 document.querySelector('.brand').onclick=e=>{e.preventDefault();persist();$('start-btn').innerHTML='Volver a la expedición <span>→</span>';$('resume-btn').hidden=true;resetInputs();$('welcome').showModal();};
 document.querySelectorAll('[data-hold]').forEach(b=>{const release=()=>{holds.delete(b.dataset.hold);b.classList.remove('active');};b.addEventListener('pointerdown',e=>{if(freeze()||state.auto)return;e.preventDefault();b.setPointerCapture(e.pointerId);holds.add(b.dataset.hold);b.classList.add('active');});b.addEventListener('pointerup',release);b.addEventListener('pointercancel',release);b.addEventListener('lostpointercapture',release);});
 const pointers=new Map();let pinchDistance=0;
