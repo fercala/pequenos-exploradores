@@ -74,3 +74,10 @@ test('Surface status tracks distance to the current beacon for walking and rover
   s.planet=bodyById('mars');field.tick(.3);assert.doesNotMatch($('field-status').textContent,/Baliza/);
  }
 });
+
+test('Finding the parked rover turns the walker without moving either anchor or awarding progress',()=>{
+ const {s,w,c,$,field,calls}=fixture();w.roverParked=new T.Vector3(40,0,100).normalize().multiplyScalar(w.groundRadius()+1);s.throttle=1;const before=s.position.clone(),rover=w.roverParked.clone();field.open();const log=JSON.stringify(c);assert.equal($('field-find-rover').disabled,false);$('field-find-rover').onclick();const n=before.clone().normalize(),direction=rover.clone().sub(before);direction.addScaledVector(n,-direction.dot(n)).normalize();assert.ok(new T.Vector3(0,0,-1).applyQuaternion(s.quaternion).dot(direction)>.999);assert.ok(s.position.equals(before));assert.ok(w.roverParked.equals(rover));assert.equal(s.throttle,0);assert.equal(w.viewYaw,0);assert.equal(w.viewPitch,0);assert.equal(w.cameraMode,'follow');assert.equal(JSON.stringify(c),log);assert.equal(calls.vehicles.length,0);assert.match(calls.messages.at(-1),/rover/);
+});
+test('Rover bearing rejects missing parking, jumps, other vehicles and active maneuvers',()=>{
+ const {s,w,ex,$,field,calls}=fixture();field.open();assert.equal($('field-find-rover').disabled,true);$('field-find-rover').onclick();assert.equal(calls.closed,0);w.roverParked=s.position.clone();field.open();$('field-find-rover').onclick();assert.match(calls.messages.at(-1),/junto al rover/);for(const scenario of [{vehicle:'rover'},{vehicle:'ship'},{vehicle:'walk',auto:{type:'landing'}}]){Object.assign(s,{vehicle:'walk',auto:null},scenario);const q=s.quaternion.clone();$('field-find-rover').onclick();assert.ok(s.quaternion.equals(q));}s.vehicle='walk';s.auto=null;ex.jumpHeight=1;$('field-find-rover').onclick();assert.match(calls.messages.at(-1),/suelo/);
+});
