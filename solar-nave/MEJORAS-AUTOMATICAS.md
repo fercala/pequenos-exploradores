@@ -853,15 +853,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-058 · Recuperar el encuadre de vuelo al salir de fotografía
 
-- **Inicio / última actualización:** 2026-10-22 04:49 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-22 04:49 / 04:52 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** togglePhoto guarda solo cameraMode; los arrastres y zoom de fotografía cambian viewYaw/viewPitch/zoom compartidos. Volver al vuelo restaura el tipo de cámara pero conserva el encuadre fotográfico, desplazando la referencia visual anterior al pilotar.
 - **Relación / diferencia:** O2-010/019 (cámaras y fotografía), AUTO-024 (exposición) y AUTO-043 (centrar al cambiar cámara accesible). Recupera los ángulos y zoom previos de vuelo, no una exposición ni un centrado fijo; no gira ni mueve la nave.
 - **Criterio de aceptación:** entrar en fotografía conserva la vista previa; al cerrar o completar captura vuelve al modo, ángulos y zoom que había antes de entrar. Dentro del modo siguen funcionando arrastre y zoom; posición/orientación del vehículo quedan intactas.
 - **Rama:** codex/orbita-auto-058-vista-fotografia.
 - **Cambio y archivos:** expansion.js conserva yaw/pitch/zoom al entrar y los restaura al salir, junto con el modo existente. Regresión en tests/vehicle-transition.test.mjs. README/package.json 0.5.49; sw.js caché propia v65. Sin cambios en partidas.
 - **Validación:** prueba nueva falló antes (yaw 1.1 en vez de 0.3) y pasó después; 116 pruebas y compilación satisfactorias. Prueba con Seguimiento/Cabina/Observación, encuadre no neutro y posición/cuaternión intactos. Navegador: Cabina → foto → arrastre y rueda → volver recupera encuadre; repetido en 390×844. Captura real genera imagen y vuelve a Cabina; consola sin errores. Evidencia outputs/orbita-auto-058-vista.png. No se afirma teléfono físico ni lector de pantalla.
-- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+- **Propuesta:** [#124](https://github.com/fercala/pequenos-exploradores/pull/124). Commit de código: 963c13392d4350e361a1e1ff1f7fa620c6cb072b; incorporación: 1320e043dbe9c60a2de892a94c22aa296bfff90f. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
+- **Publicación confirmada:** 2026-10-22 04:52 UTC. [Pages 39724732262 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39724732262) sobre el commit de incorporación. expansion.js público HTTP 200 restaura oldView; package.json 0.5.49 y sw.js caché v65, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
