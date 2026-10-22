@@ -864,6 +864,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#124](https://github.com/fercala/pequenos-exploradores/pull/124). Commit de código: 963c13392d4350e361a1e1ff1f7fa620c6cb072b; incorporación: 1320e043dbe9c60a2de892a94c22aa296bfff90f. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
 - **Publicación confirmada:** 2026-10-22 04:52 UTC. [Pages 39724732262 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39724732262) sobre el commit de incorporación. expansion.js público HTTP 200 restaura oldView; package.json 0.5.49 y sw.js caché v65, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-059 · Seguir la distancia al rover durante la caminata
+
+- **Inicio / última actualización:** 2026-10-22 05:48 UTC.
+- **Estado:** Verificada.
+- **Problema / oportunidad comprobada:** AUTO-056 orienta hacia el rover y anuncia distancia una vez; el indicador durante la marcha solo muestra nave, baliza y objetivos. No permite comprobar si la caminata se acerca al rover sin abrir otro panel.
+- **Relación / diferencia:** AUTO-056 (rumbo al rover), AUTO-045 (mapa) y AUTO-044 (distancia a baliza). Añade seguimiento de distancia al anclaje del rover, distinto de la baliza que puede estar en otro lugar; no añade otro rumbo, mapa ni vehículo.
+- **Criterio de aceptación:** a pie y con rover aparcado, el indicador muestra Rover N m y actualiza al acercarse/alejarse. Al conducirlo, sin anclaje o en nave no muestra ese indicador. Conserva nave/baliza/objetivos, posición y progreso.
+- **Rama:** codex/orbita-auto-059-distancia-rover.
+- **Cambio y archivos:** field-expedition.js añade distancia a roverParked al estado de caminata, reutilizando el refresco de 0,2 s y sin cálculos cuando no hay anclaje o se conduce. Regresión en tests/field.test.mjs. README/package.json 0.5.50; sw.js caché propia v66.
+- **Validación:** prueba nueva falló antes y pasó después; 117 pruebas y compilación satisfactorias. Controlador real comprueba proximidad, anclaje/posición/progreso intactos y ocultación al conducir o faltar rover. Navegador lunar: Rover 30 m baja a 9 m al caminar; conducir oculta la distancia y bajar la recupera (1 m), conservando nave, baliza y objetivos. Vista 390×844 sin recorte y consola sin errores; outputs/orbita-auto-059-distancia.png. No se afirma teléfono físico ni lector de pantalla.
+- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
