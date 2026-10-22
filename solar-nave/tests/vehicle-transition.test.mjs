@@ -150,3 +150,7 @@ test('Portable download survives expiry timers and releases the replaced save UR
  try{const {ex,$}=fixture();$('panel').open=true;const anchor={};$('panel-content').querySelector=()=>anchor;ex.exportSave();const first=anchor.href;for(const fn of timers.splice(0))fn();assert.ok(live.has(first),'Visible portable download must not expire');assert.equal(JSON.parse(await live.get(first).text()).planet,'moon');ex.exportSave();assert.equal(live.has(first),false);assert.ok(live.has(anchor.href));assert.equal(live.size,1);}
  finally{URL.createObjectURL=oldCreate;URL.revokeObjectURL=oldRevoke;globalThis.setTimeout=oldTimer;}
 });
+
+test('Leaving photo mode restores the previous flight framing without rotating or moving the vehicle',()=>{
+ const {s,w,ex,$}=fixture();w.renderer={toneMappingExposure:1.12};$('photo-exposure').value='1.1';for(const mode of ['follow','cockpit','observe']){w.cameraMode=mode;w.viewYaw=.3;w.viewPitch=-.2;w.zoom=1.7;const position=s.position.clone(),q=s.quaternion.clone();ex.togglePhoto(true);assert.equal(w.cameraMode,'observe');w.viewYaw=1.1;w.viewPitch=.8;w.zoom=.5;ex.togglePhoto(false);assert.equal(w.cameraMode,mode);assert.equal(w.viewYaw,.3);assert.equal(w.viewPitch,-.2);assert.equal(w.zoom,1.7);assert.ok(s.position.equals(position));assert.ok(s.quaternion.equals(q));}
+});
