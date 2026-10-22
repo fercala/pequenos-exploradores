@@ -840,15 +840,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-057 · Sincronizar Pausar al volver desde el inicio
 
-- **Inicio / última actualización:** 2026-10-22 03:49 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-22 03:49 / 03:53 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** navegador: Pausar → marca Órbita → Volver a la expedición reanuda el vuelo, pero pause-btn conserva símbolo ▶ y aria-label Continuar mientras flight-state dice VUELO ESPACIAL. Su siguiente pulsación pausa en vez de continuar como anuncia.
 - **Relación / diferencia:** O4-019 (accesibilidad), AUTO-007 (pausa móvil) y AUTO-009 (volver a la expedición abierta). Sincroniza nombre/símbolo con el estado real al volver; conserva la reanudación y la partida abiertas.
 - **Criterio de aceptación:** al volver, vuelo activo y botón Pausar/Ⅱ; al pulsar pausa aparecen EN PAUSA y Continuar/▶; continuar restaura vuelo/Pausar. Funciona en inicio nuevo y al recuperar partida, también en vista móvil.
 - **Rama:** codex/orbita-auto-057-pausa-inicio.
 - **Cambio y archivos:** app.js centraliza estado, símbolo y nombre accesible en setPaused, usado al iniciar/volver y al pulsar el control. README/package.json 0.5.48; sw.js caché propia v64. No cambia el formato de partida.
 - **Validación:** 115 pruebas existentes y compilación satisfactorias. Reproducción antes: regreso deja Continuar con VUELO ESPACIAL. Después: recuperar y volver deja Pausar/Ⅱ; siguiente pulsación muestra EN PAUSA y Continuar/▶; continuar/restablecer ciclo vuelve a vuelo. Ciclo repetido en 390×844, sin errores de consola. Evidencia outputs/orbita-auto-057-pausa.png. La regresión se comprobó en interfaz real; no se añadió prueba que copie las asignaciones. No se afirma teléfono físico ni lector de pantalla.
-- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+- **Propuesta:** [#122](https://github.com/fercala/pequenos-exploradores/pull/122). Commit de código: ec8fe4a4a7cfdd4dbd139824d0e2db25d703c1e5; incorporación: ac3b71b3893a6aaf572133227480094daa77c3f3. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
+- **Publicación confirmada:** 2026-10-22 03:53 UTC. [Pages 39719026076 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39719026076) sobre el commit de incorporación. app.js público HTTP 200 usa setPaused(false) al volver; package.json 0.5.48 y sw.js caché v64, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
