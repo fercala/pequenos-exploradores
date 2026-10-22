@@ -825,6 +825,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#118](https://github.com/fercala/pequenos-exploradores/pull/118). Commit de código: 0a4740c5804f33259456ac0233ff73e663a1dd16; incorporación: 02d6cd96718f00d0c35f6a35e22c6d446fdb2b66. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
 - **Publicación confirmada:** 2026-10-22 01:43 UTC. [Pages 39707225812 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39707225812) sobre el commit de incorporación. mission-control.js y expansion.js públicos HTTP 200 incluyen reemplazo de URL anterior; package.json 0.5.46 y sw.js caché v62, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-056 · Orientar la caminata hacia el rover aparcado
+
+- **Inicio / última actualización:** 2026-10-22 02:41 UTC.
+- **Estado:** Verificada.
+- **Problema / oportunidad comprobada:** la mochila orienta hacia nave y baliza, pero no hacia el rover conservado al bajar. El mapa AUTO-045 muestra sus coordenadas; falta orientar directamente la caminata hacia su anclaje para regresar a él.
+- **Relación / diferencia:** O2-008, SOL-001, AUTO-025 (embarcar junto al rover), AUTO-032 (baliza) y AUTO-045 (rover en mapa). Reutiliza el rover aparcado como destino de orientación distinto, sin desplegarlo, moverlo ni teletransportar al jugador.
+- **Criterio de aceptación:** a pie, apoyado en suelo y con rover aparcado, la mochila permite orientar hacia él, centra seguimiento y detiene propulsión. Conserva posición de jugador/rover y progreso. Sin rover, durante salto, maniobra o fuera de caminata no inicia orientación.
+- **Rama:** codex/orbita-auto-056-buscar-rover.
+- **Cambio y archivos:** field-expedition.js añade Orientar hacia el rover en la mochila, usando roverParked y dirección tangente al suelo; centra seguimiento y pone marcha a cero. Controles y mensajes para ausencia/cercanía o estado inválido. Dos regresiones en tests/field.test.mjs. README/package.json 0.5.47; sw.js caché propia v63.
+- **Validación:** pruebas nuevas fallaron antes y pasaron después; 115 pruebas y compilación satisfactorias. Orientación matemática hacia anclaje, jugador/rover/progreso intactos, ausencia, proximidad, otros vehículos, salto y maniobra cubiertos con controlador real. Navegador en partida lunar de pruebas: mensaje junto al rover, caminata de 30 m, orientación de regreso con marcha 0; vista 390×844 con botón visible y sin recorte; consola sin errores. Evidencia outputs/orbita-auto-056-rover.png. No se afirma teléfono físico ni lector de pantalla.
+- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
