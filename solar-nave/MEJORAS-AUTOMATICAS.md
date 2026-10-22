@@ -801,15 +801,16 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 
 ### AUTO-054 · Registrar suministros solo cuando reponen reservas
 
-- **Inicio / última actualización:** 2026-10-22 00:44 UTC.
-- **Estado:** Verificada.
+- **Inicio / última actualización:** 2026-10-22 00:44 / 00:45 UTC.
+- **Estado:** Publicada.
 - **Problema comprobado:** emergency-supply siempre añade un registro aunque combustible y energía ya sean al menos 25 %. Repetirlo sin déficit llena los 80 registros del cuaderno y desplaza observaciones sin conceder suministro alguno.
 - **Relación / diferencia:** O4-010 (recursos) y O4-017 (cuaderno), AUTO-001/046 (consumo y guardado). Conserva la ayuda de emergencia existente; evita registrar una reposición inexistente y muestra su umbral, sin cambiar la cantidad concedida ni borrar registros anteriores.
 - **Criterio de aceptación:** con ambas reservas >=25 %, botón deshabilitado y manejador sin cambios ni registro. Si alguna cae por debajo de 25 %, se repone solo hasta ese mínimo sin reducir la otra; se registra una vez y deshabilita tras reponer. Puede volver a usarse ante un déficit nuevo.
 - **Rama:** codex/orbita-auto-054-suministro-real.
 - **Cambio y archivos:** mission-control.js deshabilita el suministro sin déficit y protege también el manejador; añade explicación del umbral asociada con aria-describedby. Regresión en tests/mission-control.test.mjs. README/package.json 0.5.45; sw.js caché propia v61.
 - **Validación:** prueba nueva falló antes y pasó después; 111 pruebas y compilación satisfactorias. Controlador real: no-op sin guardado/registro, repone 10→25 sin reducir energía 80, segundo clic no duplica, nuevo déficit de energía permite otra reposición y 80 observaciones no se desplazan por un no-op. Navegador: reservas 100/100, botón deshabilitado y explicación asociada, cuaderno con cero registros; vista 390×844 revisada y consola sin errores. Evidencia outputs/orbita-auto-054-suministro.png. La reposición con déficit se cubre con controlador real; no se afirma teléfono físico ni lector de pantalla.
-- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+- **Propuesta:** [#116](https://github.com/fercala/pequenos-exploradores/pull/116). Commit de código: 6656376388813b0d8bb596aefe21702a7470731e; incorporación: 677ee3bc48b49a5bfd3b4495bd9ffb61b70de501. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
+- **Publicación confirmada:** 2026-10-22 00:45 UTC. [Pages 39701531054 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39701531054) sobre el commit de incorporación. mission-control.js público HTTP 200 incluye la guarda de reservas >=25; package.json 0.5.45 y sw.js caché v61, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
 ### Plantilla de entrada
 
