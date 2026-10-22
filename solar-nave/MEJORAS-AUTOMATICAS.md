@@ -838,6 +838,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#120](https://github.com/fercala/pequenos-exploradores/pull/120). Commit de código: 219247f3438303fc9d7f00fb75c654e1c0871a76; incorporación: 8f2a73ad611bca4ba36661d9010f7c12beec4a9f. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
 - **Publicación confirmada:** 2026-10-22 02:43 UTC. [Pages 39712834285 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39712834285) sobre el commit de incorporación. field-expedition.js público HTTP 200 incluye findRover; package.json 0.5.47 y sw.js caché v63, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-057 · Sincronizar Pausar al volver desde el inicio
+
+- **Inicio / última actualización:** 2026-10-22 03:49 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** navegador: Pausar → marca Órbita → Volver a la expedición reanuda el vuelo, pero pause-btn conserva símbolo ▶ y aria-label Continuar mientras flight-state dice VUELO ESPACIAL. Su siguiente pulsación pausa en vez de continuar como anuncia.
+- **Relación / diferencia:** O4-019 (accesibilidad), AUTO-007 (pausa móvil) y AUTO-009 (volver a la expedición abierta). Sincroniza nombre/símbolo con el estado real al volver; conserva la reanudación y la partida abiertas.
+- **Criterio de aceptación:** al volver, vuelo activo y botón Pausar/Ⅱ; al pulsar pausa aparecen EN PAUSA y Continuar/▶; continuar restaura vuelo/Pausar. Funciona en inicio nuevo y al recuperar partida, también en vista móvil.
+- **Rama:** codex/orbita-auto-057-pausa-inicio.
+- **Cambio y archivos:** app.js centraliza estado, símbolo y nombre accesible en setPaused, usado al iniciar/volver y al pulsar el control. README/package.json 0.5.48; sw.js caché propia v64. No cambia el formato de partida.
+- **Validación:** 115 pruebas existentes y compilación satisfactorias. Reproducción antes: regreso deja Continuar con VUELO ESPACIAL. Después: recuperar y volver deja Pausar/Ⅱ; siguiente pulsación muestra EN PAUSA y Continuar/▶; continuar/restablecer ciclo vuelve a vuelo. Ciclo repetido en 390×844, sin errores de consola. Evidencia outputs/orbita-auto-057-pausa.png. La regresión se comprobó en interfaz real; no se añadió prueba que copie las asignaciones. No se afirma teléfono físico ni lector de pantalla.
+- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.
