@@ -5,7 +5,7 @@ import {createMissionControl} from '../mission-control.js';
 import {bodyById,bodyRadius} from '../simulation.js';
 function fixture(){
  let stops=[];
- const hubs=['story','teacher','routes','notebook','eva'].map(hub=>({dataset:{hub}}));
+ const hubs=['story','teacher','routes','notebook','eva','service'].map(hub=>({dataset:{hub}}));
  const elements=new Map(),make=()=>({style:{},hidden:false,textContent:'',prepend(){},append(){},setAttribute(){}});globalThis.document={createElement:make,querySelector:()=>make(),querySelectorAll:selector=>selector==='[data-hub]'?hubs:selector==='[data-remove-stop]'?stops:[],body:{append(){}}};const $=id=>{if(!elements.has(id))elements.set(id,make());return elements.get(id);};
  const s={planet:bodyById('earth'),position:new T.Vector3(0,0,1600),quaternion:new T.Quaternion(),velocity:new T.Vector3(),vehicle:'ship',landed:false,auto:null,settings:{mode:'exploration'},started:true,days:0,elapsed:0,throttle:0,shield:100};
  const w={planet:s.planet,scene:new T.Scene(),ship:new T.Group(),parkedPosition:new T.Vector3(0,0,1600),parkedQuaternion:new T.Quaternion(),planetGroup:new T.Group(),localNormal:n=>n,groundRadius:()=>bodyRadius(s.planet)};
@@ -84,4 +84,10 @@ test('Stopping a route preserves independent maneuvers and cancels only an activ
 test('Route summary names the actual pending stop through edits, stopping and restore',()=>{
  const {mc,c,$,open,remove}=fixture();open('routes');assert.match($('route-summary').textContent,/Sin escalas/);c.route=[{body:'earth',action:'orbit'},{body:'mars',action:'land'}];c.routeIndex=1;open('routes');assert.match($('route-summary').textContent,/Siguiente escala 2 de 2: Marte · Descenso/);remove(0);assert.match($('route-summary').textContent,/Siguiente escala 1 de 1: Marte/);
  c.routeRunning=true;open('routes');assert.match($('route-summary').textContent,/Ruta en curso · escala 1 de 1: Marte/);$('route-stop').onclick();assert.match($('route-summary').textContent,/Siguiente escala 1 de 1: Marte/);mc.restore(mc.snapshot());open('routes');assert.match($('route-summary').textContent,/Siguiente escala 1 de 1: Marte/);mc.campaign.routeIndex=1;open('routes');assert.match($('route-summary').textContent,/Ruta completada/);
+});
+
+test('Emergency supplies record only real replenishment and remain available for a later deficit',()=>{
+ const {c,$,open,calls}=fixture();open('service');assert.equal($('emergency-supply').disabled,true);$('emergency-supply').onclick();assert.equal(c.notebook.length,0);assert.equal(calls.saves,0);
+ c.fuel=10;c.energy=80;open('service');assert.equal($('emergency-supply').disabled,false);$('emergency-supply').onclick();assert.equal(c.fuel,25);assert.equal(c.energy,80);assert.equal(c.notebook.length,1);assert.equal($('emergency-supply').disabled,true);$('emergency-supply').onclick();assert.equal(c.notebook.length,1);
+ c.energy=0;open('service');assert.equal($('emergency-supply').disabled,false);$('emergency-supply').onclick();assert.equal(c.energy,25);assert.equal(c.fuel,25);assert.equal(c.notebook.length,2);assert.equal($('emergency-supply').disabled,true);c.notebook=Array.from({length:80},(_,i)=>({title:'Observación '+i}));$('emergency-supply').onclick();assert.equal(c.notebook.length,80);assert.equal(c.notebook[0].title,'Observación 0');
 });
