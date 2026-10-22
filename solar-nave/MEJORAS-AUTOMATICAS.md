@@ -812,6 +812,18 @@ Antes de asignar un ID nuevo, comprueba `main`, las entradas siguientes y las pr
 - **Propuesta:** [#116](https://github.com/fercala/pequenos-exploradores/pull/116). Commit de código: 6656376388813b0d8bb596aefe21702a7470731e; incorporación: 677ee3bc48b49a5bfd3b4495bd9ffb61b70de501. Intento de adjuntar rechazado por el límite conocido de 100 adjuntos; se conserva el enlace.
 - **Publicación confirmada:** 2026-10-22 00:45 UTC. [Pages 39701531054 satisfactoria](https://github.com/fercala/pequenos-exploradores/actions/runs/39701531054) sobre el commit de incorporación. mission-control.js público HTTP 200 incluye la guarda de reservas >=25; package.json 0.5.45 y sw.js caché v61, ambos HTTP 200. [Abrir Órbita](https://fercala.github.io/pequenos-exploradores/solar-nave/).
 
+### AUTO-055 · Mantener válidas las descargas JSON visibles
+
+- **Inicio / última actualización:** 2026-10-22 01:41 UTC.
+- **Estado:** Verificada.
+- **Problema comprobado:** downloadReport y exportSave revocan sus blob URL a los 120000 ms aunque Descargar cuaderno/partida sigan visibles. Si el jugador espera para guardar, el enlace apunta a un archivo ya revocado.
+- **Relación / diferencia:** O4-017 (exportación científica), O2-020 (partida portable) y AUTO-046 (recuperación ante fallo de guardado). Conserva la descarga existente y su contenido; corrige la caducidad silenciosa en ambos enlaces JSON, sin modificar importación ni formato.
+- **Criterio de aceptación:** ambos enlaces siguen válidos después de dos minutos. Generar una nueva exportación del mismo tipo libera la URL anterior y conserva solo la nueva; fotografía y archivos ya descargados no se alteran.
+- **Rama:** codex/orbita-auto-055-descargas-json.
+- **Cambio y archivos:** mission-control.js conserva reportUrl y expansion.js saveUrl; al regenerar cada tipo revocan su URL anterior sin temporizador de caducidad. Se mantiene como máximo una URL por exportación y sesión. Pruebas en tests/mission-control.test.mjs y tests/vehicle-transition.test.mjs. README/package.json 0.5.46; sw.js caché propia v62.
+- **Validación:** ambas regresiones fallaron antes al ejecutar el temporizador antiguo y pasaron después; 113 pruebas y compilación satisfactorias. Comprueban URL válida tras temporizadores simulados, JSON con observación/planeta originales, liberación de URL anterior y una sola URL vigente al repetir. Navegador: exportaciones de cuaderno y partida generan enlaces blob y nombres JSON correctos, vista 390×844 revisada y consola sin errores; outputs/orbita-auto-055-descarga.png. La espera de dos minutos se comprueba con temporizadores simulados; no se afirma transferencia entre dispositivos ni teléfono físico.
+- **Propuesta / commit / publicación:** pendientes; Verificada hasta confirmar Pages.
+
 ### Plantilla de entrada
 
 - **ID / título:** AUTO-XXX · Nombre concreto.

@@ -91,3 +91,9 @@ test('Emergency supplies record only real replenishment and remain available for
  c.fuel=10;c.energy=80;open('service');assert.equal($('emergency-supply').disabled,false);$('emergency-supply').onclick();assert.equal(c.fuel,25);assert.equal(c.energy,80);assert.equal(c.notebook.length,1);assert.equal($('emergency-supply').disabled,true);$('emergency-supply').onclick();assert.equal(c.notebook.length,1);
  c.energy=0;open('service');assert.equal($('emergency-supply').disabled,false);$('emergency-supply').onclick();assert.equal(c.energy,25);assert.equal(c.fuel,25);assert.equal(c.notebook.length,2);assert.equal($('emergency-supply').disabled,true);c.notebook=Array.from({length:80},(_,i)=>({title:'Observación '+i}));$('emergency-supply').onclick();assert.equal(c.notebook.length,80);assert.equal(c.notebook[0].title,'Observación 0');
 });
+
+test('Notebook download stays valid after timers and replaces only its previous export URL',async()=>{
+ const oldCreate=URL.createObjectURL,oldRevoke=URL.revokeObjectURL,oldTimer=globalThis.setTimeout,live=new Map(),timers=[];let serial=0;URL.createObjectURL=blob=>{const u='blob:report-'+(++serial);live.set(u,blob);return u;};URL.revokeObjectURL=u=>live.delete(u);globalThis.setTimeout=fn=>{timers.push(fn);return 1;};
+ try{const {mc,$,open}=fixture();mc.record('note','Observación','Rocas');open('notebook');$('export-notebook').onclick();const first=$('report-download').href;for(const fn of timers.splice(0))fn();assert.ok(live.has(first),'The visible link must survive the old two-minute expiry');assert.equal(JSON.parse(await live.get(first).text()).notebook[0].text,'Rocas');open('notebook');$('export-notebook').onclick();assert.equal(live.has(first),false);assert.ok(live.has($('report-download').href));assert.equal(live.size,1);}
+ finally{URL.createObjectURL=oldCreate;URL.revokeObjectURL=oldRevoke;globalThis.setTimeout=oldTimer;}
+});

@@ -144,3 +144,9 @@ test('A selected scanner stops drawing during simulation pause, photo and atlas 
  const {s,w,ex,$,canvasContext}=fixture();let draws=0;canvasContext.fillRect=()=>draws++;s.started=true;w.overview=false;w.localGroup=new T.Group();$('scanner-btn').onclick();ex.tick(.3,false);assert.equal(draws,25);
  ex.tick(.3,true);assert.equal(draws,25,'pause must perform no scanner drawing');ex.photo=true;ex.tick(.3,false);assert.equal(draws,25);ex.photo=false;w.overview=true;ex.tick(.3,false);assert.equal(draws,25);w.overview=false;ex.tick(.3,false);assert.equal(draws,50,'continuing resumes the selected scanner');
 });
+
+test('Portable download survives expiry timers and releases the replaced save URL',async()=>{
+ const oldCreate=URL.createObjectURL,oldRevoke=URL.revokeObjectURL,oldTimer=globalThis.setTimeout,live=new Map(),timers=[];let serial=0;URL.createObjectURL=blob=>{const u='blob:save-'+(++serial);live.set(u,blob);return u;};URL.revokeObjectURL=u=>live.delete(u);globalThis.setTimeout=fn=>{timers.push(fn);return 1;};
+ try{const {ex,$}=fixture();$('panel').open=true;const anchor={};$('panel-content').querySelector=()=>anchor;ex.exportSave();const first=anchor.href;for(const fn of timers.splice(0))fn();assert.ok(live.has(first),'Visible portable download must not expire');assert.equal(JSON.parse(await live.get(first).text()).planet,'moon');ex.exportSave();assert.equal(live.has(first),false);assert.ok(live.has(anchor.href));assert.equal(live.size,1);}
+ finally{URL.createObjectURL=oldCreate;URL.revokeObjectURL=oldRevoke;globalThis.setTimeout=oldTimer;}
+});
